@@ -12,7 +12,7 @@ import com.alexandros.p.gialamas.duetodo.data.models.TaskReminderTable
 interface TaskReminderDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE) //TODO { be aware of the conflict strategy }
-    suspend fun addTaskReminder(taskReminderTable: TaskReminderTable)
+    suspend fun insertTaskReminder(taskReminderTable: TaskReminderTable)
 
     @Update
     suspend fun updateTaskReminder(taskReminderTable: TaskReminderTable)

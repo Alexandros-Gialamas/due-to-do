@@ -104,6 +104,7 @@ dependencies {
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose.v270)
 
+
     // Lifecycle utilities for Compose
     implementation(libs.androidx.lifecycle.runtime.compose.v270)
 
@@ -111,10 +112,10 @@ dependencies {
 //    implementation(libs.symbol.processing.api)
 
     // Compose Navigation
-//    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
 
     // Accompanist Navigation Animation
-    implementation(libs.accompanist.navigation.animation)
+//    implementation(libs.accompanist.navigation.animation)
 
     // Room Database
     implementation(libs.androidx.room.runtime)
@@ -128,6 +129,7 @@ dependencies {
     // Dagger - Hilt
 //    implementation("com.google.dagger:hilt-android:2.48")
     implementation(libs.hilt.android)
+    implementation (libs.androidx.hilt.navigation.compose)
     // Kapt
     kapt(libs.dagger.compiler)
     kapt(libs.hilt.android.compiler)

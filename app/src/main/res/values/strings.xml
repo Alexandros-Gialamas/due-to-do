@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">dueToDo</string>
+
+    // FAB
+    <string name="add_task_button">Add Task Button</string>
+
+    // App Bar
+    <string name="App_Bar_Title_Description">dueToDo</string>
+    <string name="App_Bar_Search_Description">Search Tasks</string>
+    <string name="App_Bar_Sort_Description">Sort Tasks</string>
+    <string name="App_Bar_Delete_All_Description">Delete All Tasks</string>
+    <string name="App_Bar_Delete_All_Text">Delete All Tasks</string>
+
+    // Search Bar
+    <string name="Search_Bar_Placeholder">Search</string>
+    <string name="Search_Bar_Search_Description">Search</string>
+    <string name="Search_Bar_CloseClear_Description">Close/Clear</string>
+
+
+    // Empty Content
+    <string name="Sad_face_Description">Sad Face Icon</string>
+    <string name="No_Tasks_Found">No Tasks Found</string>
 </resources>

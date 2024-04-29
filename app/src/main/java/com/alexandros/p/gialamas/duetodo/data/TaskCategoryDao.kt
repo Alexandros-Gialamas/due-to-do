@@ -11,7 +11,7 @@ import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 interface TaskCategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE) //TODO { be aware of the conflict strategy }
-    suspend fun addTaskCategory(taskCategoryTable: TaskCategoryTable)
+    suspend fun insertTaskCategory(taskCategoryTable: TaskCategoryTable)
 
     @Update
     suspend fun updateTaskCategory(taskCategoryTable: TaskCategoryTable)

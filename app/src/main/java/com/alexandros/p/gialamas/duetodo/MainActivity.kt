@@ -3,21 +3,31 @@ package com.alexandros.p.gialamas.duetodo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.alexandros.p.gialamas.duetodo.navigation.NavigationComposable
 import com.alexandros.p.gialamas.duetodo.ui.theme.DueToDoTheme
+import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private lateinit var navController : NavHostController
+    private val taskViewModel : TaskViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             DueToDoTheme {
-                Text(text = "Hello")
+                navController = rememberNavController()
+                NavigationComposable(
+                    context = applicationContext, // TODO { context }
+                    navController = navController,
+                    taskViewModel = taskViewModel
+                    )
+
             }
         }
     }
