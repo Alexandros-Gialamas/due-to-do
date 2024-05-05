@@ -1,4 +1,4 @@
-package com.alexandros.p.gialamas.duetodo.ui.components.topbar.actions.menu
+package com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.actions.menu
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
@@ -23,7 +23,8 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
 
 @Composable
 fun VerticalMenuAction(
-    onMenuItemClicked: () -> Unit
+    onMenuItemClicked: () -> Unit,
+    onDeleteAllTasksClicked : () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -54,6 +55,7 @@ fun VerticalMenuAction(
                             onClick = {
                                 expanded = false
                                 onMenuItemClicked()
+                                onDeleteAllTasksClicked()
                             })
 
                     })
@@ -67,6 +69,7 @@ fun VerticalMenuAction(
 @Preview
 private fun VerticalMenuActionPreview() {
     VerticalMenuAction(
-        onMenuItemClicked = {}
+        onMenuItemClicked = {},
+        onDeleteAllTasksClicked = {}
     )
 }

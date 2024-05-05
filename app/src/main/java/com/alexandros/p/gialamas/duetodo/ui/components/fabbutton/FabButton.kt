@@ -9,9 +9,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
 import com.alexandros.p.gialamas.duetodo.ui.theme.fabBackgroundColor
@@ -19,7 +21,8 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.fabContentColor
 
 @Composable
 fun FabButton(
-        onFabClicked : (taskId : Int) -> Unit
+    navController : NavHostController,
+    onFabClicked : (taskId : Int) -> Unit
 ){
     FloatingActionButton(
         onClick = { onFabClicked(-1) },
@@ -41,6 +44,7 @@ fun FabButton(
 @Preview
 private fun FabButtonPreview() {
     FabButton(
+        navController = NavHostController(LocalContext.current),
        onFabClicked = {}
     )
 }

@@ -16,4 +16,6 @@ object Constants {
 
     const val REMINDER_WORKER_TASK_ID = "TASK_ID"
     const val REMINDER_WORKER_ACTIVE = "IS_POP_ALARM_SELECTED"
+
+    const val MAX_TASK_TITLE_LENGTH = 20
 }

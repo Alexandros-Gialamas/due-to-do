@@ -1,4 +1,4 @@
-package com.alexandros.p.gialamas.duetodo.ui.components.topbar.searchbar
+package com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.searchbar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +31,7 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
 import com.alexandros.p.gialamas.duetodo.ui.theme.SEARCH_BAR_SHADOW_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.SEARCH_BAR_TONAL_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TOP_APP_BAR_HEIGHT
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextFieldColors
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
 
@@ -99,21 +100,7 @@ fun SearchBar(
                         keyboardActions = KeyboardActions(
                             onSearch = { onSearchClicked(text) }
                         ),
-                        colors = TextFieldDefaults.colors(
-                            cursorColor = colorScheme.topAppBarrContentColor,
-                            focusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            focusedLeadingIconColor = Color.Red,
-                            selectionColors = TextSelectionColors(
-                                handleColor = Color.Yellow,
-                                backgroundColor = Color.Blue
-                            ),
-                            focusedContainerColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                            unfocusedContainerColor = colorScheme.topAppBarrBackgroundColor
-                        )
-                    )
+                        colors = TextFieldDefaults.myTextFieldColors)
                 }
             )
         })

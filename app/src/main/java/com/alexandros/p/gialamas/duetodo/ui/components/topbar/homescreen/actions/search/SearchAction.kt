@@ -1,4 +1,4 @@
-package com.alexandros.p.gialamas.duetodo.ui.components.topbar.actions.search
+package com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.actions.search
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search

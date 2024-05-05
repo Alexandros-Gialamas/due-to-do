@@ -20,4 +20,23 @@
     // Empty Content
     <string name="Sad_face_Description">Sad Face Icon</string>
     <string name="No_Tasks_Found">No Tasks Found</string>
+
+
+    //Task Screen
+    <string name="New_Task_Top_Bar_Title">Add Task</string>
+    <string name="Go_Back_Icon_Description">Go Back</string>
+    <string name="Add_Task_Icon_Description">Add Task</string>
+    <string name="Close_Task_Icon_Description">Close Task</string>
+    <string name="Delete_Task_Icon_Description">Delete Task</string>
+    <string name="Update_Task_Icon_Description">Update Task</string>
+    <string name="Arrow_Drop_Down_Menu_Icon_description">Priority Drop Down Menu Icon</string>
+    <string name="Display_Task_Title">Title</string>
+    <string name="Display_Task_Description">Description</string>
+
+
+    // Toast Messages
+    <string name="Validate_Fields">Please fill in all the fields</string>
+
+
+
 </resources>

@@ -1,4 +1,4 @@
-package com.alexandros.p.gialamas.duetodo.ui.components.topbar.actions.sort
+package com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.actions.sort
 
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem

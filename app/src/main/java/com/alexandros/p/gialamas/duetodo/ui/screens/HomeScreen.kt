@@ -1,51 +1,42 @@
 package com.alexandros.p.gialamas.duetodo.ui.screens
 
 import android.content.Context
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.alexandros.p.gialamas.duetodo.R
+import com.alexandros.p.gialamas.duetodo.ui.components.BottomSearchBar
+import com.alexandros.p.gialamas.duetodo.ui.components.DisplaySnackBar
 import com.alexandros.p.gialamas.duetodo.ui.components.fabbutton.FabButton
-import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTasks
-import com.alexandros.p.gialamas.duetodo.ui.components.tasks.TaskList
+import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTasksList
+import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.TopBarOrSearchBar
+import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
+import com.alexandros.p.gialamas.duetodo.ui.theme.SCAFFOLD_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
-import com.alexandros.p.gialamas.duetodo.ui.components.topbar.TopBarOrSearchBar
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
-
-
-//var previewTopBar : Boolean = true
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
     context: Context,
-    navigateToTask: (taskId: Int) -> Unit,
+    navigateToTaskScreen: (taskId: Int) -> Unit,
     taskViewModel: TaskViewModel
 ) {
 
@@ -53,57 +44,111 @@ fun HomeScreen(
         taskViewModel.getAllTasks()
     }
 
+    val action by taskViewModel.action
+
     val allTasks by taskViewModel.allTasks.collectAsState()
-    val searchBarState : SearchBarState by taskViewModel.searchBarState
-    val searchTextState : String by taskViewModel.searchTextState
+    val searchedTasks by taskViewModel.searchedTasks.collectAsState()
+    val searchBarState: SearchBarState by taskViewModel.searchBarState
+    val searchTextState: String by taskViewModel.searchTextState
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = searchTextState) {
+        taskViewModel.searchTextState.value = searchTextState
+    }
+
+//    taskViewModel.handleDatabaseActions(action)
+
+//    val actionSnackBar =
+    DisplaySnackBar(
+        snackBarHostState = snackBarHostState,
+        handleDatabaseActions = { taskViewModel.handleDatabaseActions(action) },
+        onUndoClicked = { taskViewModel.action.value = it },
+        taskTitle = taskViewModel.title.value,
+        action = action
+    )
 
     MaterialTheme(
-        shapes = shapes.copy(RoundedCornerShape(16.dp)),
+        shapes = shapes.copy(HOME_SCREEN_ROUNDED_CORNERS),
         content = {
             Scaffold(
-                containerColor = colorScheme.topAppBarrBackgroundColor,
-                contentColor = colorScheme.topAppBarrContentColor,
-                topBar = { TopBarOrSearchBar(
-                    taskViewModel = taskViewModel,
-                    searchBarState = searchBarState,
-                    searchTextState = searchTextState
-                ) },
-                floatingActionButton = { FabButton(onFabClicked = {}) },
-                bottomBar = {},
                 modifier = Modifier
                     .fillMaxSize(),
-                content = {
-                    MaterialTheme (
+                snackbarHost = { SnackbarHost(snackBarHostState) },  // TODO { snackBar don't work }
+                containerColor = colorScheme.topAppBarrBackgroundColor,
+                contentColor = colorScheme.topAppBarrContentColor,
+                topBar = {
+                    Column (
                         content = {
-                    Surface(
-                        modifier = Modifier
-                            .padding(it)
-                            .border(BorderStroke(
-                                color = Color.Gray,
-                                width = 6.dp,
-                                ),
-                                shape = RoundedCornerShape(40.dp)
+                            TopBarOrSearchBar(
+                                taskViewModel = taskViewModel,
+                                searchBarState = searchBarState,
+                                searchTextState = searchTextState
                             )
-                        .border(BorderStroke(
-                        color = Color.LightGray,
-                        width = 2.dp,
-                    ), shape = RoundedCornerShape(40.dp),
-                        ),
-                        color = colorScheme.topAppBarrBackgroundColor,
-                        shape = RoundedCornerShape(40.dp),
+
+                            BottomSearchBar(
+                                text = searchTextState,
+                                onTextChange = { newText ->
+                                    taskViewModel.searchTextState.value = newText
+                                },
+                                onClearClicked = { taskViewModel.searchTextState.value = "" },
+                                onSearchClicked = { searchQuery ->
+                                    taskViewModel.searchDatabase(searchQuery)
+                                }
+                            )
+                        }
+                    )
+
+
+                },
+                floatingActionButton = {
+                    FabButton(
+                        onFabClicked = { navigateToTaskScreen(-1) },
+                        navController = navController
+                    )
+                },
+                bottomBar = {},
+                content = {
+
+                    MaterialTheme(
                         content = {
-                            DisplayTasks(
-                                taskTableList = allTasks,
-                                navigateToTaskScreen = navigateToTask
-                                )
-                        })
-                }
+                            Surface(
+                                modifier = Modifier
+                                    .padding(it)
+                                    .fillMaxWidth(),
+                                color = Color.Transparent,
+//                        modifier = Modifier
+//                            .padding(it)
+//                            .border(BorderStroke(
+//                                color = Color.Gray,
+//                                width = 6.dp,
+//                                ),
+//                                shape = RoundedCornerShape(40.dp)
+//                            )
+//                        .border(BorderStroke(
+//                        color = Color.LightGray,
+//                        width = 2.dp,
+//                    ),
+//                            shape = RoundedCornerShape(40.dp),
+//                        ),
+//                        color = colorScheme.topAppBarrBackgroundColor,
+                                shape = SCAFFOLD_ROUNDED_CORNERS,
+                                content = {
+                                    DisplayTasksList(
+                                        taskTableList = allTasks,
+                                        navigateToTaskScreen = navigateToTaskScreen,
+                                        searchedTasks = searchedTasks,
+                                        searchBarState = searchBarState,
+                                    )
+                                }
+                            )
+                        }
                     )
                 }
             )
         }
     )
 }
+
 
 //@Composable
 //@Preview
