@@ -13,9 +13,9 @@ import com.alexandros.p.gialamas.duetodo.util.Action
 
 @Composable
 fun DeleteAction(
-    onDeleteClicked : (Action) -> Unit
+    onDeleteClicked : () -> Unit
 ){
-    IconButton(onClick = { onDeleteClicked(Action.DELETE) }) {
+    IconButton(onClick = { onDeleteClicked() }) {
         Icon(imageVector = Icons.Filled.Delete,
             contentDescription = stringResource(id = R.string.Delete_Task_Icon_Description),
             tint = MyTheme.MyCloud)

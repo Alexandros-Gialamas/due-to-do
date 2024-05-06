@@ -12,6 +12,7 @@ import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.CloseAction
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.DeleteAction
+import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.EditTaskTopBarActions
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.UpdateAction
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
@@ -37,11 +38,11 @@ fun EditTaskTopBar(
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(MaterialTheme.colorScheme.topAppBarrBackgroundColor),
         actions = {
-            DeleteAction(onDeleteClicked = navigateToHomeScreen)
-            UpdateAction(onUpdateClicked = navigateToHomeScreen)
-
+            EditTaskTopBarActions(
+                selectedTask = selectedTask,
+                navigateToHomeScreen = navigateToHomeScreen
+            )
         }
-
     )
 }
 

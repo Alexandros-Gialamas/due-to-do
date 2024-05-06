@@ -13,6 +13,9 @@ object Constants {
     const val TASK_SCREEN = "task/{taskId}"
     const val TASK_SCREEN_ARGUMENT_KEY = "taskId"
 
+    const val PREFERENCE_NAME = "todo_preferences"
+    const val PREFERENCE_KEY = "sort_state"
+
 
     const val REMINDER_WORKER_TASK_ID = "TASK_ID"
     const val REMINDER_WORKER_ACTIVE = "IS_POP_ALARM_SELECTED"

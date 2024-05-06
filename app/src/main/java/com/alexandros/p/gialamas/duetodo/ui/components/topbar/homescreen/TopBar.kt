@@ -22,21 +22,26 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
     onSearchClicked : () -> Unit,
     onSortClicked : (taskPriority : TaskPriority) -> Unit,
     onMenuItemClicked : () -> Unit,
+    onMenuClicked : () -> Unit,
+    onLayoutClicked : () -> Unit,
     onDeleteAllTasksClicked : () -> Unit
     ) {
         MaterialTheme (
             content = {
                 TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.App_Bar_Title_Description),
-                            color = colorScheme.topAppBarrContentColor)
-                    },
+                    title = { Text(text = "")},
+//                    {
+//                        Text(text = stringResource(id = R.string.App_Bar_Title_Description),
+//                            color = colorScheme.topAppBarrContentColor)
+//                    },
                     colors = TopAppBarDefaults.mediumTopAppBarColors(colorScheme.topAppBarrBackgroundColor),
-                    actions = { Actions(
-                        onSearchClicked = onSearchClicked,
+                    actions = {
+                        Actions(
+                            onMenuClicked = onMenuClicked,
                         onSortClicked = onSortClicked,
                         onDeleteAllTasksClicked = onDeleteAllTasksClicked,
-                        onMenuItemClicked = onMenuItemClicked // TODO { check this action }
+                        onMenuItemClicked = onMenuItemClicked, // TODO { check this action }
+                            onLayoutClicked = onLayoutClicked
                     )
                     }
                 )
@@ -52,5 +57,7 @@ private fun TopBarPreview() {
         onSortClicked = {},
         onMenuItemClicked = {},
         onDeleteAllTasksClicked = {},
+        onMenuClicked = {},
+        onLayoutClicked = {}
     )
 }

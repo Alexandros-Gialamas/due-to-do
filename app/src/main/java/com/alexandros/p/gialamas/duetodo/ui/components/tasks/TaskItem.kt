@@ -40,11 +40,13 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_PRIORITY_ITEM_INDICATOR_S
 import com.alexandros.p.gialamas.duetodo.ui.theme.TINY_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.taskItemTextColor
+import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
+import com.alexandros.p.gialamas.duetodo.util.Action
 
 @Composable
 fun TaskItem(
     taskTable: TaskTable,
-    navigateToTaskScreen: (taskId: Int) -> Unit
+    navigateToTaskScreen: (taskId: Int) -> Unit,
 ) {
 
     val surfaceBackgroundColor = Brush.myBackgroundBrush(radius = 6090f)

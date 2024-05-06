@@ -1,7 +1,7 @@
 package com.alexandros.p.gialamas.duetodo.ui.screens
 
 import android.content.Context
-import androidx.compose.foundation.background
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,7 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTask
@@ -22,7 +21,7 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.Action
 import com.alexandros.p.gialamas.duetodo.util.Constants.MAX_TASK_TITLE_LENGTH
-import com.alexandros.p.gialamas.duetodo.util.ToastMessages
+import com.alexandros.p.gialamas.duetodo.util.SnackToastMessages
 
 @Composable
 fun TaskScreen(
@@ -37,6 +36,10 @@ fun TaskScreen(
     val dueDate: Long? by taskViewModel.dueDate
     val isCompleted: Boolean by taskViewModel.isCompleted
     val isPopAlarmSelected: Boolean by taskViewModel.isPopAlarmSelected
+
+    BackHandler(enabled = true) {
+        navigateToHomeScreen(Action.NO_ACTION)
+    }
 
     MaterialTheme(
         shapes = MaterialTheme.shapes.copy(HOME_SCREEN_ROUNDED_CORNERS),
@@ -55,7 +58,7 @@ fun TaskScreen(
                                 if (taskViewModel.validateFields()) {
                                     navigateToHomeScreen(action)
                                 } else {
-                                    ToastMessages.EMPTY_FIELDS.showToast(context)
+                                    SnackToastMessages.EMPTY_FIELDS.showToast(context)
                                 }
                             }
                         }

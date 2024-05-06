@@ -8,9 +8,9 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class MyDueToDoApplication : Application() {
-    companion object {
-        lateinit var instance : MyDueToDoApplication
-    }
+//    companion object {
+//        lateinit var instance : MyDueToDoApplication
+//    }
 
 
 //
@@ -18,5 +18,5 @@ class MyDueToDoApplication : Application() {
 //        super.onCreate()
 //        instance = this
 //    }
-  fun getAppContext() : Context = instance.applicationContext
+//  fun getAppContext() : Context = instance.applicationContext
 }

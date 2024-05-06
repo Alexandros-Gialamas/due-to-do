@@ -37,7 +37,7 @@ class ReminderWorker(context: Context, workerParams: WorkerParameters) :
 //            .setConstraints(constraints)
             .build()
         // Enqueue the work request with WorkManager
-        WorkManager.getInstance(MyDueToDoApplication.instance.getAppContext()).enqueue(reminderWorkRequest)
+//        WorkManager.getInstance(MyDueToDoApplication.instance.getAppContext()).enqueue(reminderWorkRequest) //TODO { work with Context }
     }
 }
 

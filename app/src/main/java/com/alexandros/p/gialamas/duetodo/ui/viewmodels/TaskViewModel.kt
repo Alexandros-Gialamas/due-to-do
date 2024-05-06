@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
+import com.alexandros.p.gialamas.duetodo.data.repositories.DataStoreRepository
 import com.alexandros.p.gialamas.duetodo.data.repositories.TaskRepository
 import com.alexandros.p.gialamas.duetodo.util.Action
 import com.alexandros.p.gialamas.duetodo.util.RequestState
@@ -13,12 +14,18 @@ import com.alexandros.p.gialamas.duetodo.util.SearchBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TaskViewModel @Inject constructor(private val taskRepository: TaskRepository) : ViewModel() {
+class TaskViewModel @Inject constructor(
+    private val taskRepository: TaskRepository,
+    private val dataStoreRepository : DataStoreRepository
+) : ViewModel() {
 
 
 
@@ -55,7 +62,7 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
     val action : MutableState<Action> = mutableStateOf(Action.NO_ACTION)
     fun validateFields() : Boolean {
         return title.value.isNotBlank() && description.value.isNotBlank()
-    }
+    } //TODO { Only Title is enough }
 
     private fun insertTask(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -124,8 +131,11 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
 
             }
         }
-        this.action.value = Action.NO_ACTION
+         this.action.value = Action.NO_ACTION
     }
+
+
+
 
 
     // Search Bar
@@ -151,6 +161,53 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
     }
 
 
+
+
+
+
+    // Sorting Persist
+    val lowTaskPrioritySort : StateFlow<List<TaskTable>> =
+        taskRepository.sortByLowPriority.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+    val highTaskPrioritySort : StateFlow<List<TaskTable>> =
+        taskRepository.sortByHighPriority.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
+    private val _sortState =
+        MutableStateFlow<RequestState<TaskPriority>>(RequestState.Idle)
+    val sortState: StateFlow<RequestState<TaskPriority>> = _sortState
+
+    fun readSortState(){
+        _sortState.value = RequestState.Loading
+        try {
+            viewModelScope.launch {
+                dataStoreRepository.readSortState.map { TaskPriority.valueOf(it) }
+                    .collect {
+                    _sortState.value = RequestState.Success(it)
+                }
+            }
+        } catch (e: Exception) {
+            _sortState.value = RequestState.Error(e)
+        }
+    }
+
+    fun persistSortState(taskPriority: TaskPriority){
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistSortState(taskPriority = taskPriority)
+        }
+    }
+
+
+
+
+
+
     // Get All Tasks
     private val _allTasks =
         MutableStateFlow<RequestState<List<TaskTable>>>(RequestState.Idle)
@@ -168,6 +225,10 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
             _allTasks.value = RequestState.Error(e)
         }
     }
+
+
+
+
 
     // Get Selected Task
     private val _selectedTask: MutableStateFlow<TaskTable?> = MutableStateFlow(null)

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -20,12 +19,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
 import com.alexandros.p.gialamas.duetodo.ui.theme.SEARCH_BAR_SHADOW_ELEVATION
@@ -88,7 +85,7 @@ fun SearchBar(
                                 Icon(
                                     imageVector = Icons.Filled.Close,
                                     contentDescription = stringResource(
-                                        id = R.string.Search_Bar_CloseClear_Description
+                                        id = R.string.Search_Bar_Clear_Description
                                     ),
                                     tint = colorScheme.topAppBarrContentColor
                                 )

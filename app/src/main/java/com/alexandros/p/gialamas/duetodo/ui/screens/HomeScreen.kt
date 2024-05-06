@@ -20,16 +20,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
-import com.alexandros.p.gialamas.duetodo.ui.components.BottomSearchBar
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.alexandros.p.gialamas.duetodo.ui.components.TasksSearchBar
 import com.alexandros.p.gialamas.duetodo.ui.components.DisplaySnackBar
 import com.alexandros.p.gialamas.duetodo.ui.components.fabbutton.FabButton
 import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTasksList
-import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.TopBarOrSearchBar
+import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.TopBar
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.SCAFFOLD_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
+import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
 
 @Composable
@@ -40,14 +43,20 @@ fun HomeScreen(
     taskViewModel: TaskViewModel
 ) {
 
+
     LaunchedEffect(key1 = true) {
         taskViewModel.getAllTasks()
+        taskViewModel.readSortState()
     }
 
     val action by taskViewModel.action
 
     val allTasks by taskViewModel.allTasks.collectAsState()
     val searchedTasks by taskViewModel.searchedTasks.collectAsState()
+    val sortState by taskViewModel.sortState.collectAsState()
+    val lowTaskPrioritySort by taskViewModel.lowTaskPrioritySort.collectAsState()
+    val highTaskPrioritySort by taskViewModel.highTaskPrioritySort.collectAsState()
+
     val searchBarState: SearchBarState by taskViewModel.searchBarState
     val searchTextState: String by taskViewModel.searchTextState
     val snackBarHostState = remember { SnackbarHostState() }
@@ -64,7 +73,8 @@ fun HomeScreen(
         handleDatabaseActions = { taskViewModel.handleDatabaseActions(action) },
         onUndoClicked = { taskViewModel.action.value = it },
         taskTitle = taskViewModel.title.value,
-        action = action
+        action = action,
+        context = context
     )
 
     MaterialTheme(
@@ -79,13 +89,16 @@ fun HomeScreen(
                 topBar = {
                     Column (
                         content = {
-                            TopBarOrSearchBar(
-                                taskViewModel = taskViewModel,
-                                searchBarState = searchBarState,
-                                searchTextState = searchTextState
+                            TopBar(
+                                onSortClicked = { taskViewModel.persistSortState(it) },
+                                onSearchClicked = { taskViewModel.searchBarState.value = SearchBarState.OPENED },
+                                onMenuItemClicked = {},
+                                onDeleteAllTasksClicked = { taskViewModel.action.value = Action.DELETE_ALL },
+                                onLayoutClicked = {},
+                                onMenuClicked = {}
                             )
 
-                            BottomSearchBar(
+                            TasksSearchBar(
                                 text = searchTextState,
                                 onTextChange = { newText ->
                                     taskViewModel.searchTextState.value = newText
@@ -93,7 +106,8 @@ fun HomeScreen(
                                 onClearClicked = { taskViewModel.searchTextState.value = "" },
                                 onSearchClicked = { searchQuery ->
                                     taskViewModel.searchDatabase(searchQuery)
-                                }
+                                },
+                                textState = searchTextState
                             )
                         }
                     )
@@ -138,6 +152,13 @@ fun HomeScreen(
                                         navigateToTaskScreen = navigateToTaskScreen,
                                         searchedTasks = searchedTasks,
                                         searchBarState = searchBarState,
+                                        lowTaskPrioritySort = lowTaskPrioritySort,
+                                        highTaskPrioritySort = highTaskPrioritySort,
+                                        sortState = sortState,
+                                        onSwipeToDelete = { action, task ->
+                                            taskViewModel.action.value = action
+                                            taskViewModel.updateDisplayTaskFields(selectedTask = task)
+                                        }
                                     )
                                 }
                             )
