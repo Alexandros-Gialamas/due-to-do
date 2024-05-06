@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,19 +22,21 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.fabContentColor
 
 @Composable
 fun FabButton(
-    navController : NavHostController,
-    onFabClicked : (taskId : Int) -> Unit
+    onFabClicked : (taskId : Int) -> Unit,
+    myFabBackgroundColor : Color,
+    myFabContentColor : Color,
+    myFabIconColor : Color
 ){
     FloatingActionButton(
         onClick = { onFabClicked(-1) },
-        contentColor = MaterialTheme.colorScheme.fabContentColor,
-        containerColor = MaterialTheme.colorScheme.fabBackgroundColor,
+        contentColor = myFabContentColor,
+        containerColor = myFabBackgroundColor,
         elevation = FloatingActionButtonDefaults.elevation(10.dp),
         content = {
             Icon(
                 imageVector = Icons.Filled.Add,
                 contentDescription = stringResource(id = R.string.add_task_button),
-                tint = MyTheme.MyGreen,
+                tint = myFabIconColor,
                 modifier = Modifier
             )
         }
@@ -44,8 +47,11 @@ fun FabButton(
 @Preview
 private fun FabButtonPreview() {
     FabButton(
-        navController = NavHostController(LocalContext.current),
-       onFabClicked = {}
+       onFabClicked = {},
+        myFabBackgroundColor = MaterialTheme.colorScheme.fabBackgroundColor,
+        myFabContentColor = MaterialTheme.colorScheme.fabContentColor,
+        myFabIconColor = MyTheme.MyGreen
+
     )
 }
 

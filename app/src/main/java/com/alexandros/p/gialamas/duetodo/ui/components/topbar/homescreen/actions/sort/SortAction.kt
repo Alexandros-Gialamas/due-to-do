@@ -10,20 +10,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
-import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun SortAction(
-    onSortClicked: (taskPriority : TaskPriority) -> Unit
+    onSortClicked: (taskPriority: TaskPriority) -> Unit,
+    myBackgroundColor: Color,
+    myContentColor: Color,
+    myTextColor: Color
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    MaterialTheme (
+    MaterialTheme(
         content = {
             IconButton(
                 onClick = { expanded = !expanded },
@@ -31,14 +37,14 @@ fun SortAction(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_filter_tasks),
                     contentDescription = stringResource(id = R.string.App_Bar_Sort_Description),
-                    tint = MyTheme.MyCloud
+                    tint = myContentColor
                 )
 
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                     content = {
-                        TaskPriority.values().slice(setOf(0,2,3)).forEach { taskPriority ->
+                        TaskPriority.values().slice(setOf(0, 2, 3)).forEach { taskPriority ->
 
                             DropdownMenuItem(
                                 text = { TaskPriorityItem(taskPriority = taskPriority) },
@@ -86,5 +92,8 @@ fun SortAction(
 private fun SortActionPreview() {
     SortAction(
         onSortClicked = {},
+        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
+        myContentColor = MaterialTheme.colorScheme.myContentColor,
+        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

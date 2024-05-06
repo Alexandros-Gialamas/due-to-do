@@ -1,5 +1,6 @@
 package com.alexandros.p.gialamas.duetodo.ui.components.tasks
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -39,13 +39,13 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_TONAL_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_PRIORITY_ITEM_INDICATOR_SIZE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TINY_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
-import com.alexandros.p.gialamas.duetodo.ui.theme.taskItemTextColor
-import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
-import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TaskItem(
     taskTable: TaskTable,
+//    animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToTaskScreen: (taskId: Int) -> Unit,
 ) {
 
@@ -91,7 +91,7 @@ fun TaskItem(
                                                         start = LARGE_PADDING
                                                     ),
                                                 text = taskTable.title,
-                                                color = colorScheme.taskItemTextColor,
+                                                color = colorScheme.myTextColor,
                                                 style = typography.titleLarge,
                                                 fontWeight = FontWeight.SemiBold,
                                                 maxLines = 1,
@@ -106,7 +106,7 @@ fun TaskItem(
                                                     )
                                                     .fillMaxWidth(),
                                                 text = taskTable.description,
-                                                color = colorScheme.taskItemTextColor,
+                                                color = colorScheme.myTextColor,
                                                 style = typography.bodyMedium,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis

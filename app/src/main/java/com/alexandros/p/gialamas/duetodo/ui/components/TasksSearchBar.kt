@@ -27,18 +27,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.R
+import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
-import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_ROUNDED_CORNERS
+import com.alexandros.p.gialamas.duetodo.ui.theme.SCAFFOLD_ROUNDED_CORNERS
+import com.alexandros.p.gialamas.duetodo.ui.theme.SEARCH_BAR_ICON_ALPHA_VALUE
+import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TOP_APP_BAR_HEIGHT
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextFieldColors
-import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 
 @Composable
 fun TasksSearchBar(
@@ -46,14 +51,18 @@ fun TasksSearchBar(
     onTextChange: (String) -> Unit,
     onClearClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
-    textState : String
+    textState : String,
+    myBackgroundColor : Color,
+    myContentColor : Color,
+    myTextColor : Color
 ) {
 
     val iconVisible = textState.isNotBlank()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Surface(
         modifier = Modifier
-            .clip(TASK_ITEM_ROUNDED_CORNERS)
+            .clip(SCAFFOLD_ROUNDED_CORNERS)
             .height(TOP_APP_BAR_HEIGHT),
         color = Color.Transparent,
         content = {
@@ -65,47 +74,47 @@ fun TasksSearchBar(
                 content = {
                     Card(
                         modifier = Modifier,
-                        shape = TASK_ITEM_ROUNDED_CORNERS,
+                        shape = SCAFFOLD_ROUNDED_CORNERS,
                         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                         elevation = CardDefaults.elevatedCardElevation(),
                         content = {
                             TextField(
                                 modifier = Modifier
-                                    .fillMaxWidth(0.94f)
+                                    .fillMaxWidth(0.94f) // TODO { Hardcoded fraction }
                                     .border(
-                                        BorderStroke(2.dp, Color.White.copy(alpha = 0.7f)),
-                                        shape = TASK_ITEM_ROUNDED_CORNERS
+                                        BorderStroke(width = FIRST_BORDER_STROKE, color = myContentColor),
+                                        shape = SCAFFOLD_ROUNDED_CORNERS
                                     )
                                     .border(
-                                        BorderStroke(4.dp, color = MyTheme.MyGreen),
-                                        shape = TASK_ITEM_ROUNDED_CORNERS
+                                        BorderStroke(width = SECOND_BORDER_STROKE, color = myContentColor),
+                                        shape = SCAFFOLD_ROUNDED_CORNERS
                                     ),
                                 value = text,
                                 onValueChange = { onTextChange(it) },
                                 placeholder = {
                                     Text(
                                         modifier = Modifier
-                                            .alpha(0.8f),
+                                            .alpha(SEARCH_BAR_ICON_ALPHA_VALUE),
                                         text = stringResource(id = R.string.Search_Bar_Placeholder),
-                                        color = MyTheme.MyCloud
+                                        color = myTextColor
                                     )
                                 },
                                 textStyle = TextStyle(
-                                    color = MaterialTheme.colorScheme.topAppBarrContentColor,
+                                    color = myTextColor,
                                     fontSize = MaterialTheme.typography.titleMedium.fontSize
                                 ),
                                 singleLine = true,
                                 leadingIcon = {
                                     IconButton(
                                         modifier = Modifier
-                                            .alpha(0.5f),
+                                            .alpha(SEARCH_BAR_ICON_ALPHA_VALUE),
                                         onClick = { /*TODO*/ }) {
                                         Icon(
                                             modifier = Modifier
                                                 .padding(start = LARGE_PADDING),
                                             imageVector = Icons.Filled.Search,
                                             contentDescription = stringResource(id = R.string.Search_Bar_Search_Description),
-                                            tint = MaterialTheme.colorScheme.topAppBarrContentColor
+                                            tint = myContentColor
                                         )
                                     }
                                 },
@@ -119,7 +128,7 @@ fun TasksSearchBar(
                                                 contentDescription = stringResource(
                                                     id = R.string.Search_Bar_Clear_Description
                                                 ),
-                                                tint = MaterialTheme.colorScheme.topAppBarrContentColor
+                                                tint = myContentColor
                                             )
                                         }
                                     }
@@ -128,7 +137,10 @@ fun TasksSearchBar(
                                     imeAction = ImeAction.Search
                                 ),
                                 keyboardActions = KeyboardActions(
-                                    onSearch = { onSearchClicked(text) }
+                                    onSearch = {
+                                        onSearchClicked(text)
+                                        keyboardController?.hide()
+                                    }
                                 ),
                                 colors = TextFieldDefaults.myTextFieldColors)
                         }
@@ -147,6 +159,9 @@ private fun TasksSearchBarPreview() {
         onTextChange = {},
         onClearClicked = {},
         onSearchClicked = {},
-        textState = ""
+        textState = "",
+        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
+        myContentColor = MaterialTheme.colorScheme.myContentColor,
+        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

@@ -1,6 +1,6 @@
 package com.alexandros.p.gialamas.duetodo.ui.viewmodels
 
-import androidx.compose.runtime.MutableState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +10,7 @@ import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.data.repositories.DataStoreRepository
 import com.alexandros.p.gialamas.duetodo.data.repositories.TaskRepository
+import com.alexandros.p.gialamas.duetodo.ui.theme.taskItemBackgroundColor
 import com.alexandros.p.gialamas.duetodo.util.Action
 import com.alexandros.p.gialamas.duetodo.util.Constants.MAX_TASK_TITLE_LENGTH
 import com.alexandros.p.gialamas.duetodo.util.RequestState
@@ -33,39 +34,62 @@ class TaskViewModel @Inject constructor(
 
 
     // Display Task
-    val taskId: MutableState<Int> = mutableStateOf(0)
-    val title: MutableState<String> = mutableStateOf("")
-    val description: MutableState<String> = mutableStateOf("")
-    val dueDate: MutableState<Long?> = mutableStateOf(null)
-    val taskPriority: MutableState<TaskPriority> = mutableStateOf(TaskPriority.LOW)
-    val isCompleted : MutableState<Boolean> = mutableStateOf(false)
-    val isPopAlarmSelected : MutableState<Boolean> = mutableStateOf(false)
+    var taskId by mutableStateOf(0)
+        private set
+    var title by mutableStateOf("")
+        private set
+    fun updateTitle(newTitle : String){
+        if (newTitle.length <= MAX_TASK_TITLE_LENGTH) {
+            title = newTitle
+        }
+    }
+    var description by mutableStateOf("")
+        private set
+    fun updateDescription(newDescription : String){
+        description = newDescription
+    }
+    var dueDate by mutableStateOf(null)
+        private set
+    fun updateDueDate(newDueDate : Long?){
+        dueDate = newDueDate as Nothing? // TODO { Be careful with that too }
+    }
+    var taskPriority by mutableStateOf(TaskPriority.LOW)
+        private set
+    fun updateTaskPriority(newTaskPriority : TaskPriority){
+        taskPriority = newTaskPriority
+    }
+    var isCompleted by mutableStateOf(false)
+        private set
+    fun updateIsCompleted(newIsCompleted : Boolean){
+        isCompleted = newIsCompleted
+    }
+    var isPopAlarmSelected by mutableStateOf(false)
+        private set
+    fun updateIsPopAlarmSelected(newIsPopAlarmSelected : Boolean){
+        isPopAlarmSelected = newIsPopAlarmSelected
+    }
 
     fun updateDisplayTaskFields(selectedTask: TaskTable?) {
         if (selectedTask != null) {
-            taskId.value = selectedTask.taskId
-            title.value = selectedTask.title
-            description.value = selectedTask.description
-            dueDate.value = selectedTask.dueDate
-            taskPriority.value = selectedTask.taskPriority
-            isCompleted.value = selectedTask.isCompleted
-            isPopAlarmSelected.value = selectedTask.isPopAlarmSelected
+            taskId = selectedTask.taskId
+            title = selectedTask.title
+            description = selectedTask.description
+            dueDate = selectedTask.dueDate as Nothing?  // TODO { Be careful with that }
+            taskPriority = selectedTask.taskPriority
+            isCompleted = selectedTask.isCompleted
+            isPopAlarmSelected = selectedTask.isPopAlarmSelected
         }else {
-            taskId.value = 0
-            title.value = ""
-            description.value = ""
-            dueDate.value = null
-            taskPriority.value = TaskPriority.LOW
-            isCompleted.value = false
-            isPopAlarmSelected.value = false
+            taskId = 0
+            title = ""
+            description = ""
+            dueDate = null
+            taskPriority = TaskPriority.LOW
+            isCompleted = false
+            isPopAlarmSelected = false
         }
     }
 
-    fun updateTitle(newTitle : String){
-        if (newTitle.length <= MAX_TASK_TITLE_LENGTH) {
-            title.value = newTitle
-        }
-    }
+
 
     // Task CRUD Operations
 //    val action : MutableState<Action> = mutableStateOf(Action.NO_ACTION)
@@ -76,31 +100,31 @@ class TaskViewModel @Inject constructor(
     }
 
     fun validateFields() : Boolean {
-        return title.value.isNotBlank() && description.value.isNotBlank()
+        return title.isNotBlank() && description.isNotBlank()
     } //TODO { Only Title is enough }
 
     private fun insertTask(){
         viewModelScope.launch(Dispatchers.IO) {
             val task = TaskTable(
-                title = title.value,
-                description = description.value,
-                taskPriority = taskPriority.value,
-                dueDate = dueDate.value,
-                isPopAlarmSelected = isPopAlarmSelected.value,
+                title = title,
+                description = description,
+                taskPriority = taskPriority,
+                dueDate = dueDate,
+                isPopAlarmSelected = isPopAlarmSelected,
             )
             taskRepository.insertTask(task)
         }
-        searchBarState.value = SearchBarState.CLOSED
+        searchBarState = SearchBarState.CLOSED
     }
     private fun updateTask(){
         viewModelScope.launch(Dispatchers.IO) {
             val task = TaskTable(
-                taskId = taskId.value,
-                title = title.value,
-                description = description.value,
-                taskPriority = taskPriority.value,
-                dueDate = dueDate.value,
-                isPopAlarmSelected = isPopAlarmSelected.value,
+                taskId = taskId,
+                title = title,
+                description = description,
+                taskPriority = taskPriority,
+                dueDate = dueDate,
+                isPopAlarmSelected = isPopAlarmSelected,
             )
             taskRepository.updateTask(task)
         }
@@ -108,12 +132,12 @@ class TaskViewModel @Inject constructor(
     private fun deleteTask(){
         viewModelScope.launch(Dispatchers.IO) {
             val task = TaskTable(
-                taskId = taskId.value,
-                title = title.value,
-                description = description.value,
-                taskPriority = taskPriority.value,
-                dueDate = dueDate.value,
-                isPopAlarmSelected = isPopAlarmSelected.value,
+                taskId = taskId,
+                title = title,
+                description = description,
+                taskPriority = taskPriority,
+                dueDate = dueDate,
+                isPopAlarmSelected = isPopAlarmSelected,
             )
             taskRepository.deleteTask(task)
         }
@@ -143,7 +167,7 @@ class TaskViewModel @Inject constructor(
                 insertTask()
             }
             else -> {
-
+                Action.NO_ACTION  // TODO { check if it works }
             }
         }
     }
@@ -153,9 +177,16 @@ class TaskViewModel @Inject constructor(
 
 
     // Search Bar
-    val searchBarState: MutableState<SearchBarState> =
-        mutableStateOf(SearchBarState.CLOSED)
-    val searchTextState: MutableState<String> = mutableStateOf("")
+    var searchBarState by mutableStateOf(SearchBarState.CLOSED)
+        private set
+    fun updateSearchBarState(newSearchBarState : SearchBarState){
+        searchBarState = newSearchBarState
+    }
+    var searchTextState by mutableStateOf("")
+        private set
+    fun updateSearchTextState(newSearchTextState : String){
+        searchTextState = newSearchTextState
+    }
     private val _searchedTasks =
         MutableStateFlow<RequestState<List<TaskTable>>>(RequestState.Idle)
     val searchedTasks: StateFlow<RequestState<List<TaskTable>>> = _searchedTasks
@@ -171,7 +202,7 @@ class TaskViewModel @Inject constructor(
         } catch (e: Exception) {
             _searchedTasks.value = RequestState.Error(e)
         }
-        searchBarState.value = SearchBarState.TRIGGERED
+        searchBarState = SearchBarState.TRIGGERED
     }
 
 
@@ -240,12 +271,6 @@ class TaskViewModel @Inject constructor(
         }
     }
 
-    init {
-        getAllTasks()
-        readSortState()
-    }
-
-
 
     // Get Selected Task
     private val _selectedTask: MutableStateFlow<TaskTable?> = MutableStateFlow(null)
@@ -258,4 +283,15 @@ class TaskViewModel @Inject constructor(
             }
         }
     }
+
+
+
+
+
+    init {
+        getAllTasks()
+        readSortState()
+    }
+
+
 }

@@ -14,21 +14,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
-import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun VerticalMenuAction(
     onMenuItemClicked: () -> Unit,
-    onDeleteAllTasksClicked : () -> Unit
+    onDeleteAllTasksClicked: () -> Unit,
+    myBackgroundColor: Color,
+    myContentColor: Color,
+    myTextColor: Color
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    MaterialTheme (
+    MaterialTheme(
         content = {
             IconButton(
                 onClick = { expanded = !expanded },
@@ -36,7 +42,7 @@ fun VerticalMenuAction(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_vertical_menu),
                     contentDescription = stringResource(id = R.string.App_Bar_Delete_All_Description),
-                    tint = MyTheme.MyCloud  // TODO { maybe need theme color }
+                    tint = myContentColor
                 )
 
                 DropdownMenu(
@@ -70,6 +76,9 @@ fun VerticalMenuAction(
 private fun VerticalMenuActionPreview() {
     VerticalMenuAction(
         onMenuItemClicked = {},
-        onDeleteAllTasksClicked = {}
+        onDeleteAllTasksClicked = {},
+        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
+        myContentColor = MaterialTheme.colorScheme.myContentColor,
+        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

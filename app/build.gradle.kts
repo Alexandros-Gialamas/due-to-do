@@ -119,8 +119,6 @@ dependencies {
     // Shared Element Transition
     implementation(libs.androidx.compose.animation)
 
-    // Accompanist Navigation Animation
-//    implementation(libs.accompanist.navigation.animation)
 
     // Room Database
     implementation(libs.androidx.room.runtime)

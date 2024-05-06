@@ -2,7 +2,7 @@ package com.alexandros.p.gialamas.duetodo.ui.screens
 
 import android.content.Context
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,8 +29,11 @@ import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTasksList
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.TopBar
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.SCAFFOLD_ROUNDED_CORNERS
-import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.fabBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.fabContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.Action
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
@@ -56,24 +59,28 @@ fun HomeScreen(
     val lowTaskPrioritySort by taskViewModel.lowTaskPrioritySort.collectAsState()
     val highTaskPrioritySort by taskViewModel.highTaskPrioritySort.collectAsState()
 
-    val searchBarState: SearchBarState by taskViewModel.searchBarState
-    val searchTextState: String by taskViewModel.searchTextState
+    val searchBarState: SearchBarState = taskViewModel.searchBarState
+    val searchTextState: String = taskViewModel.searchTextState
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = searchTextState) {
-        taskViewModel.searchTextState.value = searchTextState
+        taskViewModel.updateSearchTextState(newSearchTextState = searchTextState)
     }
 
-//    taskViewModel.handleDatabaseActions(action)
 
-//    val actionSnackBar =
+    val myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor
+    val myContentColor = MaterialTheme.colorScheme.myContentColor
+    val myTextColor = MaterialTheme.colorScheme.myTextColor
+    val myFabBackgroundColor = MaterialTheme.colorScheme.fabBackgroundColor
+    val myFabContentColor = MaterialTheme.colorScheme.fabContentColor
+    val myFabIconColor = MaterialTheme.colorScheme.fabContentColor // create one
+
     DisplaySnackBar(
         snackBarHostState = snackBarHostState,
         onComplete = { taskViewModel.updateAction(newAction = it) },
         onUndoClicked = { taskViewModel.updateAction(newAction = it) },
-        taskTitle = taskViewModel.title.value,
+        taskTitle = taskViewModel.title,
         action = action,
-        context = context
     )
 
     MaterialTheme(
@@ -81,32 +88,43 @@ fun HomeScreen(
         content = {
             Scaffold(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.myBackgroundColor),
                 snackbarHost = { SnackbarHost(snackBarHostState) },  // TODO { snackBar don't work }
-                containerColor = colorScheme.topAppBarrBackgroundColor,
-                contentColor = colorScheme.topAppBarrContentColor,
+                containerColor = colorScheme.myBackgroundColor,
+                contentColor = colorScheme.myContentColor,
                 topBar = {
-                    Column (
+                    Column(
                         content = {
                             TopBar(
                                 onSortClicked = { taskViewModel.persistSortState(it) },
-                                onSearchClicked = { taskViewModel.searchBarState.value = SearchBarState.OPENED },
+//                                onSearchClicked = { taskViewModel.updateSearchBarState(newSearchBarState = SearchBarState.OPENED) },
                                 onMenuItemClicked = {},
                                 onDeleteAllTasksClicked = { taskViewModel.updateAction(newAction = Action.DELETE_ALL) },
                                 onLayoutClicked = {},
-                                onMenuClicked = {}
+                                onMenuClicked = {},
+                                myBackgroundColor = myBackgroundColor,
+                                myContentColor = myContentColor,
+                                myTextColor = myTextColor
                             )
 
                             TasksSearchBar(
                                 text = searchTextState,
                                 onTextChange = { newText ->
-                                    taskViewModel.searchTextState.value = newText
+                                    taskViewModel.updateSearchTextState(newSearchTextState = newText)
                                 },
-                                onClearClicked = { taskViewModel.searchTextState.value = "" },
+                                onClearClicked = {
+                                    taskViewModel.updateSearchTextState(
+                                        newSearchTextState = ""
+                                    )
+                                },
                                 onSearchClicked = { searchQuery ->
                                     taskViewModel.searchDatabase(searchQuery)
                                 },
-                                textState = searchTextState
+                                textState = searchTextState,
+                                myBackgroundColor = myBackgroundColor,
+                                myContentColor = myContentColor,
+                                myTextColor = myTextColor
                             )
                         }
                     )
@@ -116,52 +134,37 @@ fun HomeScreen(
                 floatingActionButton = {
                     FabButton(
                         onFabClicked = { navigateToTaskScreen(-1) },
-                        navController = navController
+                        myFabBackgroundColor = myFabBackgroundColor,
+                        myFabContentColor = myFabContentColor,
+                        myFabIconColor = myFabIconColor
                     )
                 },
-                bottomBar = {},
+                bottomBar = { },
                 content = {
 
-                    MaterialTheme(
+                    Surface(
+                        modifier = Modifier
+                            .padding(it)
+                            .fillMaxWidth(),
+                        color = Color.Transparent,
+                        shape = SCAFFOLD_ROUNDED_CORNERS,
                         content = {
-                            Surface(
-                                modifier = Modifier
-                                    .padding(it)
-                                    .fillMaxWidth(),
-                                color = Color.Transparent,
-//                        modifier = Modifier
-//                            .padding(it)
-//                            .border(BorderStroke(
-//                                color = Color.Gray,
-//                                width = 6.dp,
-//                                ),
-//                                shape = RoundedCornerShape(40.dp)
-//                            )
-//                        .border(BorderStroke(
-//                        color = Color.LightGray,
-//                        width = 2.dp,
-//                    ),
-//                            shape = RoundedCornerShape(40.dp),
-//                        ),
-//                        color = colorScheme.topAppBarrBackgroundColor,
-                                shape = SCAFFOLD_ROUNDED_CORNERS,
-                                content = {
-                                    DisplayTasksList(
-                                        taskTableList = allTasks,
-                                        navigateToTaskScreen = navigateToTaskScreen,
-                                        searchedTasks = searchedTasks,
-                                        searchBarState = searchBarState,
-                                        lowTaskPrioritySort = lowTaskPrioritySort,
-                                        highTaskPrioritySort = highTaskPrioritySort,
-                                        sortState = sortState,
-                                        onSwipeToDelete = { action, task ->
-//                                            taskViewModel.action.value = action
-                                            taskViewModel.updateAction(newAction = action)
-                                            taskViewModel.updateDisplayTaskFields(selectedTask = task)
-                                            snackBarHostState.currentSnackbarData?.dismiss()
-                                        }
-                                    )
-                                }
+                            DisplayTasksList(
+                                taskTableList = allTasks,
+                                navigateToTaskScreen = navigateToTaskScreen,
+                                searchedTasks = searchedTasks,
+                                searchBarState = searchBarState,
+                                lowTaskPrioritySort = lowTaskPrioritySort,
+                                highTaskPrioritySort = highTaskPrioritySort,
+                                sortState = sortState,
+                                onSwipeToDelete = { action, task ->
+                                    taskViewModel.updateAction(newAction = action)
+                                    taskViewModel.updateDisplayTaskFields(selectedTask = task)
+                                    snackBarHostState.currentSnackbarData?.dismiss()
+                                },
+                                myBackgroundColor = myBackgroundColor,
+                                myContentColor = myContentColor,
+                                myTextColor =myTextColor
                             )
                         }
                     )

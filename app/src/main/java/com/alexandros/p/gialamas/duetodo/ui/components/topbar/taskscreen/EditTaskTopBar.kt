@@ -6,41 +6,54 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.CloseAction
-import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.DeleteAction
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.EditTaskTopBarActions
-import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.actions.UpdateAction
-import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.util.Action
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditTaskTopBar(
-    selectedTask : TaskTable?,
-    navigateToHomeScreen : (Action) -> Unit,
+    selectedTask: TaskTable?,
+    navigateToHomeScreen: (Action) -> Unit,
+    myBackgroundColor: Color,
+    myContentColor: Color,
+    myTextColor: Color
 ) {
     TopAppBar(
-        navigationIcon = { CloseAction(onCloseClicked = navigateToHomeScreen) },
+        navigationIcon = {
+            CloseAction(
+                onCloseClicked = navigateToHomeScreen,
+                myBackgroundColor = myBackgroundColor,
+                myContentColor = myContentColor,
+                myTextColor = myTextColor
+            )
+        },
         title = {
             selectedTask?.title?.let {
                 Text(
                     text = it,
-                    color = MaterialTheme.colorScheme.topAppBarrContentColor,
+                    color = myTextColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
             }
         },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(MaterialTheme.colorScheme.topAppBarrBackgroundColor),
+        colors = TopAppBarDefaults.largeTopAppBarColors(myBackgroundColor),
         actions = {
             EditTaskTopBarActions(
                 selectedTask = selectedTask,
-                navigateToHomeScreen = navigateToHomeScreen
+                navigateToHomeScreen = navigateToHomeScreen,
+                myBackgroundColor = myBackgroundColor,
+                myContentColor = myContentColor,
+                myTextColor = myTextColor
             )
         }
     )
@@ -56,6 +69,10 @@ private fun EditTaskTopBarPreview() {
             taskId = 0,
             title = "Go to Gym",
             description = "Tomorrow at 5 pm",
-            taskPriority = TaskPriority.MEDIUM)
-        )
+            taskPriority = TaskPriority.MEDIUM,
+        ),
+        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
+        myContentColor = MaterialTheme.colorScheme.myContentColor,
+        myTextColor = MaterialTheme.colorScheme.myTextColor
+    )
 }

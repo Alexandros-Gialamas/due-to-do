@@ -4,12 +4,14 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.wear.compose.material.ContentAlpha
 
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -20,15 +22,12 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val LightGray = Color(0xFFFCFCFC)
-val MediumGray = Color(0xFF9C9C9C)
-val DarkGray = Color(0xFF141414)
-
 
 val TaskPriorityColor_Low = Color(0xFF00C980)
 val TaskPriorityColor_Medium = Color(0xFFFFC114)
 val TaskPriorityColor_High = Color(0xFFFF4646)
 val TaskPriorityColor_None = MyTheme.MyGraphite
+
 
 object MyTheme {
     val MyGreen = Color(0xFF495E57)
@@ -45,26 +44,34 @@ object MyTheme {
     val NewBlue = Color(0xFF283593)
 }
 
+
 val Color.statusBarColor: Color  // TODO { check Theme }
     @Composable
     get() = if (isSystemInDarkTheme()) Color.Black else Purple40
 
 
+val ColorScheme.dropDownMenuColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) colorScheme.onSurface.copy(alpha = ContentAlpha.disabled) else colorScheme.onSurface.copy(
+        alpha = ContentAlpha.disabled
+    )
+
 // Tasks
-val ColorScheme.taskItemBackgroundColor: Color
+val ColorScheme.taskItemBackgroundColor: Color // TODO { check This }
     @Composable
     get() = if (isSystemInDarkTheme()) MyTheme.YInMnBlue.copy(0.5f) else MyTheme.MyGreen.copy(0.5f)
-val ColorScheme.taskItemTextColor: Color
+
+
+val ColorScheme.myTextColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) MyTheme.MyCloud else MyTheme.MyCloud
 
 
-// App Top Bar Theme Colors
-val ColorScheme.topAppBarrContentColor: Color
+val ColorScheme.myContentColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) MyTheme.MyCloud else MyTheme.MyCloud
 
-val ColorScheme.topAppBarrBackgroundColor: Color
+val ColorScheme.myBackgroundColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) MyTheme.YInMnBlue else MyTheme.MyGreen
 
@@ -83,24 +90,24 @@ val ColorScheme.fabContentColor: Color
 val TextFieldDefaults.myTextFieldColors: TextFieldColors
     @Composable
     get() = colors(
-        cursorColor = MaterialTheme.colorScheme.topAppBarrContentColor,
+        cursorColor = MaterialTheme.colorScheme.myContentColor,
 
         focusedContainerColor = Color.Transparent,
         disabledContainerColor = Color.Transparent,
-        unfocusedContainerColor = MaterialTheme.colorScheme.topAppBarrBackgroundColor,
+        unfocusedContainerColor = MaterialTheme.colorScheme.myBackgroundColor,
 
         selectionColors = TextSelectionColors(
             handleColor = Color.Yellow,
             backgroundColor = Color.Blue
         ),
 
-        disabledLabelColor = MaterialTheme.colorScheme.topAppBarrContentColor,
-        focusedLabelColor = MaterialTheme.colorScheme.topAppBarrContentColor,
-        unfocusedLabelColor = MaterialTheme.colorScheme.topAppBarrContentColor,
+        disabledLabelColor = MaterialTheme.colorScheme.myContentColor,
+        focusedLabelColor = MaterialTheme.colorScheme.myContentColor,
+        unfocusedLabelColor = MaterialTheme.colorScheme.myContentColor,
 
-        focusedTextColor = MaterialTheme.colorScheme.topAppBarrContentColor,
-        disabledTextColor = MaterialTheme.colorScheme.topAppBarrContentColor,
-        unfocusedTextColor = MaterialTheme.colorScheme.topAppBarrContentColor,
+        focusedTextColor = MaterialTheme.colorScheme.myContentColor,
+        disabledTextColor = MaterialTheme.colorScheme.myContentColor,
+        unfocusedTextColor = MaterialTheme.colorScheme.myContentColor,
 
         focusedIndicatorColor = Color.Transparent,
         disabledIndicatorColor = Color.Transparent,
