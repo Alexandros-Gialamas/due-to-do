@@ -108,7 +108,7 @@ fun TaskItem(
                                                 text = taskTable.description,
                                                 color = colorScheme.taskItemTextColor,
                                                 style = typography.bodyMedium,
-                                                maxLines = 2,
+                                                maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
                                             )
 

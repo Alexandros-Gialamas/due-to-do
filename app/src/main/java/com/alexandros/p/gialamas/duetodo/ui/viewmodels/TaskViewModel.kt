@@ -1,7 +1,9 @@
 package com.alexandros.p.gialamas.duetodo.ui.viewmodels
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
@@ -9,6 +11,7 @@ import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.data.repositories.DataStoreRepository
 import com.alexandros.p.gialamas.duetodo.data.repositories.TaskRepository
 import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.util.Constants.MAX_TASK_TITLE_LENGTH
 import com.alexandros.p.gialamas.duetodo.util.RequestState
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,8 +61,20 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+    fun updateTitle(newTitle : String){
+        if (newTitle.length <= MAX_TASK_TITLE_LENGTH) {
+            title.value = newTitle
+        }
+    }
+
     // Task CRUD Operations
-    val action : MutableState<Action> = mutableStateOf(Action.NO_ACTION)
+//    val action : MutableState<Action> = mutableStateOf(Action.NO_ACTION)
+    var action by mutableStateOf(Action.NO_ACTION)
+        private set
+    fun updateAction(newAction : Action) {
+        action = newAction
+    }
+
     fun validateFields() : Boolean {
         return title.value.isNotBlank() && description.value.isNotBlank()
     } //TODO { Only Title is enough }
@@ -131,7 +146,6 @@ class TaskViewModel @Inject constructor(
 
             }
         }
-         this.action.value = Action.NO_ACTION
     }
 
 
@@ -183,7 +197,7 @@ class TaskViewModel @Inject constructor(
         MutableStateFlow<RequestState<TaskPriority>>(RequestState.Idle)
     val sortState: StateFlow<RequestState<TaskPriority>> = _sortState
 
-    fun readSortState(){
+    private fun readSortState(){
         _sortState.value = RequestState.Loading
         try {
             viewModelScope.launch {
@@ -213,7 +227,7 @@ class TaskViewModel @Inject constructor(
         MutableStateFlow<RequestState<List<TaskTable>>>(RequestState.Idle)
     val allTasks: StateFlow<RequestState<List<TaskTable>>> = _allTasks
 
-    fun getAllTasks() {
+    private fun getAllTasks() {
         _allTasks.value = RequestState.Loading
         try {
             viewModelScope.launch {
@@ -226,7 +240,10 @@ class TaskViewModel @Inject constructor(
         }
     }
 
-
+    init {
+        getAllTasks()
+        readSortState()
+    }
 
 
 

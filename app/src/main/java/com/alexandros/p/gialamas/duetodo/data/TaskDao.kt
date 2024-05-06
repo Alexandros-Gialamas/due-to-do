@@ -35,16 +35,28 @@ interface TaskDao {
             "LOWER(description) LIKE '%' || LOWER(:searchQuery) || '%'")
     fun searchDatabase(searchQuery : String) : Flow<List<TaskTable>>
 
-    @Query("SELECT * FROM task_table ORDER BY CASE " +
-            "WHEN taskPriority LIKE 'L%' THEN 1 " +
-            "WHEN taskPriority LIKE 'M%' THEN 2 " +
-            "WHEN taskPriority LIKE 'H%'THEN 3 END")
+    @Query(
+        """
+            SELECT * FROM task_table ORDER BY
+        CASE
+            WHEN taskPriority LIKE 'L%' THEN 1
+            WHEN taskPriority LIKE 'M%' THEN 2
+            WHEN taskPriority LIKE 'H%' THEN 3
+        END
+        """
+    )
     fun sortByLowPriority() : Flow<List<TaskTable>>
 
-    @Query("SELECT * FROM task_table ORDER BY CASE " +
-            "WHEN taskPriority LIKE 'H%' THEN 1 " +
-            "WHEN taskPriority LIKE 'M%' THEN 2 " +
-            "WHEN taskPriority LIKE 'L%'THEN 3 END")
+    @Query(
+        """
+            SELECT * FROM task_table ORDER BY
+        CASE
+            WHEN taskPriority LIKE 'H%' THEN 1
+            WHEN taskPriority LIKE 'M%' THEN 2
+            WHEN taskPriority LIKE 'L%' THEN 3
+        END
+        """
+    )
     fun sortByHighPriority() : Flow<List<TaskTable>>
 
     @Query("SELECT * FROM task_table WHERE taskPriority LIKE 'L%'")

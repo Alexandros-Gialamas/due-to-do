@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -30,8 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.Icon
@@ -54,9 +58,12 @@ fun NewTaskPriorityDropDownMenu(
         targetValue = if (expanded) 180f else 0f, label = ""
     )
 
+    var parentSize by remember { mutableStateOf(IntSize.Zero) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .onGloballyPositioned { parentSize = it.size }
             .background(MaterialTheme.colorScheme.topAppBarrBackgroundColor)
             .height(TASK_PRIORITY_DROP_DOWN_MENU_HEIGHT)
             .clickable { expanded = !expanded }
@@ -93,31 +100,42 @@ fun NewTaskPriorityDropDownMenu(
             }
             DropdownMenu(
                 modifier = Modifier
-                    .fillMaxWidth(0.94f),
+                    .width(with(LocalDensity.current) { parentSize.width.toDp() }),
                 expanded = expanded,
                 onDismissRequest = { expanded = false })
             {
-                DropdownMenuItem(
-                    text = { TaskPriorityItem(taskPriority = TaskPriority.LOW) },
-                    onClick = {
-                        expanded = false
-                        onTaskPrioritySelected(TaskPriority.LOW)
-                    }
-                )
-                DropdownMenuItem(
-                    text = { TaskPriorityItem(taskPriority = TaskPriority.MEDIUM) },
-                    onClick = {
-                        expanded = false
-                        onTaskPrioritySelected(TaskPriority.MEDIUM)
-                    }
-                )
-                DropdownMenuItem(
-                    text = { TaskPriorityItem(taskPriority = TaskPriority.HIGH) },
-                    onClick = {
-                        expanded = false
-                        onTaskPrioritySelected(TaskPriority.HIGH)
-                    }
-                )
+                TaskPriority.values().slice(0..2).forEach { taskPriority ->
+
+                    DropdownMenuItem(
+                        text = { TaskPriorityItem(taskPriority = taskPriority) }, // TODO { resize Text }
+                        onClick = {
+                            expanded = false
+                            onTaskPrioritySelected(taskPriority)
+                        }
+                    )
+
+                }
+//                DropdownMenuItem(
+//                    text = { TaskPriorityItem(taskPriority = TaskPriority.LOW) }, // TODO { resize Text }
+//                    onClick = {
+//                        expanded = false
+//                        onTaskPrioritySelected(TaskPriority.LOW)
+//                    }
+//                )
+//                DropdownMenuItem(
+//                    text = { TaskPriorityItem(taskPriority = TaskPriority.MEDIUM) },
+//                    onClick = {
+//                        expanded = false
+//                        onTaskPrioritySelected(TaskPriority.MEDIUM)
+//                    }
+//                )
+//                DropdownMenuItem(
+//                    text = { TaskPriorityItem(taskPriority = TaskPriority.HIGH) },
+//                    onClick = {
+//                        expanded = false
+//                        onTaskPrioritySelected(TaskPriority.HIGH)
+//                    }
+//                )
             }
         }
     )

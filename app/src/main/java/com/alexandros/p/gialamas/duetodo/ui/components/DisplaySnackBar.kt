@@ -17,13 +17,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun DisplaySnackBar(
     snackBarHostState: SnackbarHostState,
-    handleDatabaseActions: () -> Unit,
+    onComplete : (Action) -> Unit,
+//    handleDatabaseActions: () -> Unit,
     onUndoClicked: (Action) -> Unit,
     taskTitle: String,
     action: Action,
     context: Context
 ) {
-    handleDatabaseActions()
+//    handleDatabaseActions()
 
     val scope = rememberCoroutineScope()
 
@@ -49,6 +50,7 @@ fun DisplaySnackBar(
                     onUndoClicked = onUndoClicked
                 )
             }
+            onComplete(Action.NO_ACTION)
         }
     }
 }

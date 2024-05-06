@@ -116,6 +116,9 @@ dependencies {
     // Compose Navigation
     implementation(libs.androidx.navigation.compose)
 
+    // Shared Element Transition
+    implementation(libs.androidx.compose.animation)
+
     // Accompanist Navigation Animation
 //    implementation(libs.accompanist.navigation.animation)
 

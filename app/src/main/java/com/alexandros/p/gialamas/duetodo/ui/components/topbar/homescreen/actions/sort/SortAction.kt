@@ -38,30 +38,40 @@ fun SortAction(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                     content = {
-                        DropdownMenuItem(
-                            text = { TaskPriorityItem(taskPriority = TaskPriority.NONE) },
-                            onClick = {
-                                expanded = false
-                                onSortClicked(TaskPriority.NONE)
-                            })
-                        DropdownMenuItem(
-                            text = { TaskPriorityItem(taskPriority = TaskPriority.LOW) },
-                            onClick = {
-                                expanded = false
-                                onSortClicked(TaskPriority.LOW)
-                            })
-                        DropdownMenuItem(
-                            text = { TaskPriorityItem(taskPriority = TaskPriority.MEDIUM) },
-                            onClick = {
-                                expanded = false
-                                onSortClicked(TaskPriority.MEDIUM)
-                            })
-                        DropdownMenuItem(
-                            text = { TaskPriorityItem(taskPriority = TaskPriority.HIGH) },
-                            onClick = {
-                                expanded = false
-                                onSortClicked(TaskPriority.HIGH)
-                            })
+                        TaskPriority.values().slice(setOf(0,2,3)).forEach { taskPriority ->
+
+                            DropdownMenuItem(
+                                text = { TaskPriorityItem(taskPriority = taskPriority) },
+                                onClick = {
+                                    expanded = false
+                                    onSortClicked(taskPriority)
+                                })
+
+                        }
+//                        DropdownMenuItem(
+//                            text = { TaskPriorityItem(taskPriority = TaskPriority.NONE) },
+//                            onClick = {
+//                                expanded = false
+//                                onSortClicked(TaskPriority.NONE)
+//                            })
+//                        DropdownMenuItem(
+//                            text = { TaskPriorityItem(taskPriority = TaskPriority.LOW) },
+//                            onClick = {
+//                                expanded = false
+//                                onSortClicked(TaskPriority.LOW)
+//                            })
+//                        DropdownMenuItem(
+//                            text = { TaskPriorityItem(taskPriority = TaskPriority.MEDIUM) },
+//                            onClick = {
+//                                expanded = false
+//                                onSortClicked(TaskPriority.MEDIUM)
+//                            })
+//                        DropdownMenuItem(
+//                            text = { TaskPriorityItem(taskPriority = TaskPriority.HIGH) },
+//                            onClick = {
+//                                expanded = false
+//                                onSortClicked(TaskPriority.HIGH)
+//                            })
                     }
                 )
             }

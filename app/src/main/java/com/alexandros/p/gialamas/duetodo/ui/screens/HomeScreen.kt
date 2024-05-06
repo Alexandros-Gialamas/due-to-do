@@ -1,6 +1,8 @@
 package com.alexandros.p.gialamas.duetodo.ui.screens
 
 import android.content.Context
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,9 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.alexandros.p.gialamas.duetodo.ui.components.TasksSearchBar
 import com.alexandros.p.gialamas.duetodo.ui.components.DisplaySnackBar
+import com.alexandros.p.gialamas.duetodo.ui.components.TasksSearchBar
 import com.alexandros.p.gialamas.duetodo.ui.components.fabbutton.FabButton
 import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTasksList
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.TopBar
@@ -32,24 +33,22 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.Action
-import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
 
+
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
+    action: Action,
     navController: NavHostController,
     context: Context,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     taskViewModel: TaskViewModel
 ) {
 
-
-    LaunchedEffect(key1 = true) {
-        taskViewModel.getAllTasks()
-        taskViewModel.readSortState()
+    LaunchedEffect(key1 = action) {
+        taskViewModel.handleDatabaseActions(action = action)
     }
-
-    val action by taskViewModel.action
 
     val allTasks by taskViewModel.allTasks.collectAsState()
     val searchedTasks by taskViewModel.searchedTasks.collectAsState()
@@ -70,8 +69,8 @@ fun HomeScreen(
 //    val actionSnackBar =
     DisplaySnackBar(
         snackBarHostState = snackBarHostState,
-        handleDatabaseActions = { taskViewModel.handleDatabaseActions(action) },
-        onUndoClicked = { taskViewModel.action.value = it },
+        onComplete = { taskViewModel.updateAction(newAction = it) },
+        onUndoClicked = { taskViewModel.updateAction(newAction = it) },
         taskTitle = taskViewModel.title.value,
         action = action,
         context = context
@@ -93,7 +92,7 @@ fun HomeScreen(
                                 onSortClicked = { taskViewModel.persistSortState(it) },
                                 onSearchClicked = { taskViewModel.searchBarState.value = SearchBarState.OPENED },
                                 onMenuItemClicked = {},
-                                onDeleteAllTasksClicked = { taskViewModel.action.value = Action.DELETE_ALL },
+                                onDeleteAllTasksClicked = { taskViewModel.updateAction(newAction = Action.DELETE_ALL) },
                                 onLayoutClicked = {},
                                 onMenuClicked = {}
                             )
@@ -156,8 +155,10 @@ fun HomeScreen(
                                         highTaskPrioritySort = highTaskPrioritySort,
                                         sortState = sortState,
                                         onSwipeToDelete = { action, task ->
-                                            taskViewModel.action.value = action
+//                                            taskViewModel.action.value = action
+                                            taskViewModel.updateAction(newAction = action)
                                             taskViewModel.updateDisplayTaskFields(selectedTask = task)
+                                            snackBarHostState.currentSnackbarData?.dismiss()
                                         }
                                     )
                                 }

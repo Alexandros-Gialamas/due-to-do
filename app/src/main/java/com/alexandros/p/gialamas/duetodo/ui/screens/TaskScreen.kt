@@ -2,6 +2,8 @@ package com.alexandros.p.gialamas.duetodo.ui.screens
 
 import android.content.Context
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,9 +22,11 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.topAppBarrContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.util.BackHandlerInterception
 import com.alexandros.p.gialamas.duetodo.util.Constants.MAX_TASK_TITLE_LENGTH
 import com.alexandros.p.gialamas.duetodo.util.SnackToastMessages
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TaskScreen(
     taskViewModel: TaskViewModel,
@@ -37,7 +41,7 @@ fun TaskScreen(
     val isCompleted: Boolean by taskViewModel.isCompleted
     val isPopAlarmSelected: Boolean by taskViewModel.isPopAlarmSelected
 
-    BackHandler(enabled = true) {
+    BackHandler(true) {
         navigateToHomeScreen(Action.NO_ACTION)
     }
 
@@ -72,10 +76,7 @@ fun TaskScreen(
                         content = {
                             DisplayTask(
                                 title = title,
-                                onTitleChange = {
-                                    if (title.length < MAX_TASK_TITLE_LENGTH) taskViewModel.title.value =
-                                        it
-                                },
+                                onTitleChange = { taskViewModel.updateTitle(it) },
                                 description = description,
                                 onDescriptionChange = { taskViewModel.description.value = it },
                                 taskPriority = taskPriority,

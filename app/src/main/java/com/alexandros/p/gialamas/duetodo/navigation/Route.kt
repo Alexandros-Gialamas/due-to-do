@@ -3,7 +3,6 @@ package com.alexandros.p.gialamas.duetodo.navigation
 import androidx.navigation.NavHostController
 import com.alexandros.p.gialamas.duetodo.util.Action
 import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN
-import com.alexandros.p.gialamas.duetodo.util.Constants.TASK_SCREEN
 
 
 object Route : Destinations {
