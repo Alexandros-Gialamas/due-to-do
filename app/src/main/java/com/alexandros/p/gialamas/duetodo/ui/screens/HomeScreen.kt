@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -20,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.alexandros.p.gialamas.duetodo.ui.components.DisplaySnackBar
@@ -31,9 +31,10 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.SCAFFOLD_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.fabBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.fabContentColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.Action
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
@@ -61,19 +62,20 @@ fun HomeScreen(
 
     val searchBarState: SearchBarState = taskViewModel.searchBarState
     val searchTextState: String = taskViewModel.searchTextState
+
     val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = searchTextState) {
-        taskViewModel.updateSearchTextState(newSearchTextState = searchTextState)
-    }
-
-
+    val mySecondBackgroundColor = Brush.myBackgroundBrush(radius = 6800f / 1.1f)
     val myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor
     val myContentColor = MaterialTheme.colorScheme.myContentColor
     val myTextColor = MaterialTheme.colorScheme.myTextColor
     val myFabBackgroundColor = MaterialTheme.colorScheme.fabBackgroundColor
     val myFabContentColor = MaterialTheme.colorScheme.fabContentColor
-    val myFabIconColor = MaterialTheme.colorScheme.fabContentColor // create one
+    val myFabIconColor = MaterialTheme.colorScheme.fabContentColor // TODO { create one }
+
+    LaunchedEffect(key1 = searchTextState) {
+        taskViewModel.updateSearchTextState(newSearchTextState = searchTextState)
+    }
 
     DisplaySnackBar(
         snackBarHostState = snackBarHostState,
@@ -89,10 +91,10 @@ fun HomeScreen(
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.myBackgroundColor),
-                snackbarHost = { SnackbarHost(snackBarHostState) },  // TODO { snackBar don't work }
-                containerColor = colorScheme.myBackgroundColor,
-                contentColor = colorScheme.myContentColor,
+                    .background(mySecondBackgroundColor),
+                containerColor = Color.Transparent,
+                contentColor = myContentColor,
+                snackbarHost = { SnackbarHost(snackBarHostState) },
                 topBar = {
                     Column(
                         content = {
@@ -164,7 +166,7 @@ fun HomeScreen(
                                 },
                                 myBackgroundColor = myBackgroundColor,
                                 myContentColor = myContentColor,
-                                myTextColor =myTextColor
+                                myTextColor = myTextColor
                             )
                         }
                     )

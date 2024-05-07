@@ -34,7 +34,7 @@ fun EmptyContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(myBackgroundColor),
+            .background(Color.Transparent),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {

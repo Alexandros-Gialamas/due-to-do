@@ -6,10 +6,10 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
     // KSP
-//    id("com.google.devtools.ksp")
+    id("com.google.devtools.ksp")
 
     // Kapt
-    kotlin("kapt")
+//    kotlin("kapt")
 //    id ("kotlin-kapt")
 
     // Room
@@ -85,7 +85,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.compose.material)  // Added for ContentAlpha
+//    implementation(libs.androidx.compose.material)  // Added for ContentAlpha
 //    implementation(libs.androidx.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -125,22 +125,22 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 //    implementation(libs.androidx.room.compiler)
     // Kapt
-    kapt(libs.androidx.room.compiler)
+//    kapt(libs.androidx.room.compiler)
     // KSP
-//    ksp(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     // Dagger - Hilt
 //    implementation("com.google.dagger:hilt-android:2.48")
     implementation(libs.hilt.android)
     implementation (libs.androidx.hilt.navigation.compose)
     // Kapt
-    kapt(libs.dagger.compiler)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.hilt.compiler)
+//    kapt(libs.dagger.compiler)
+//    kapt(libs.hilt.android.compiler)
+//    kapt(libs.hilt.compiler)
     // KSP
-//    ksp(libs.dagger.compiler)
-//    ksp(libs.hilt.android.compiler)
-//    ksp (libs.hilt.compiler)
+    ksp(libs.dagger.compiler)
+    ksp(libs.hilt.android.compiler)
+    ksp (libs.hilt.compiler)
 
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")

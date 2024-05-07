@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,9 +33,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
+import com.alexandros.p.gialamas.duetodo.ui.theme.HIGH_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
 import com.alexandros.p.gialamas.duetodo.ui.theme.SCAFFOLD_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.SEARCH_BAR_ICON_ALPHA_VALUE
@@ -63,7 +67,8 @@ fun TasksSearchBar(
     Surface(
         modifier = Modifier
             .clip(SCAFFOLD_ROUNDED_CORNERS)
-            .height(TOP_APP_BAR_HEIGHT),
+            .height(IntrinsicSize.Max)
+            .padding(top = LARGE_PADDING),
         color = Color.Transparent,
         content = {
             Box(
@@ -81,12 +86,13 @@ fun TasksSearchBar(
                             TextField(
                                 modifier = Modifier
                                     .fillMaxWidth(0.94f) // TODO { Hardcoded fraction }
+                                    .background(myBackgroundColor)
                                     .border(
-                                        BorderStroke(width = FIRST_BORDER_STROKE, color = myContentColor),
+                                        BorderStroke(width = FIRST_BORDER_STROKE, color = myContentColor.copy(alpha = LIGHT_BORDER_STROKE_ALPHA)),
                                         shape = SCAFFOLD_ROUNDED_CORNERS
                                     )
                                     .border(
-                                        BorderStroke(width = SECOND_BORDER_STROKE, color = myContentColor),
+                                        BorderStroke(width = SECOND_BORDER_STROKE, color = myContentColor.copy(alpha = HIGH_BORDER_STROKE_ALPHA)),
                                         shape = SCAFFOLD_ROUNDED_CORNERS
                                     ),
                                 value = text,

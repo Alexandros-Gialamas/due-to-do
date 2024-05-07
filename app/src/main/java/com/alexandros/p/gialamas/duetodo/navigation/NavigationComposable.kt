@@ -1,6 +1,7 @@
 package com.alexandros.p.gialamas.duetodo.navigation
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
@@ -14,6 +15,8 @@ import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.animation.core.EaseOutQuart
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOut
@@ -49,85 +52,101 @@ import com.alexandros.p.gialamas.duetodo.util.toAction
 fun NavigationComposable(
     context: Context,
     navController: NavHostController,
-    taskViewModel : TaskViewModel
+    taskViewModel: TaskViewModel
 ) {
 
 //    SharedTransitionScope {
 
-        val screen = remember(navController) { Route }
+    val screen = remember(navController) { Route }
 
-        val homeArguments = listOf(navArgument(HOME_SCREEN_ARGUMENT_KEY) {
-            type = NavType.StringType
-        })
-        val taskArguments = listOf(navArgument(TASK_SCREEN_ARGUMENT_KEY) {
-            type = NavType.IntType
-        })
+    val homeArguments = listOf(navArgument(HOME_SCREEN_ARGUMENT_KEY) {
+        type = NavType.StringType
+    })
+    val taskArguments = listOf(navArgument(TASK_SCREEN_ARGUMENT_KEY) {
+        type = NavType.IntType
+    })
 
-        NavHost(navController = navController, startDestination = HOME_SCREEN) {
+    NavHost(navController = navController, startDestination = HOME_SCREEN) {
 
-            composable(route = HOME_SCREEN, arguments = homeArguments,
-                enterTransition = {
-                    slideInHorizontally(
-                        initialOffsetX = {-it},
-                        animationSpec = tween(durationMillis = 1000, easing = EaseInOutCubic)
-                    )
-                },
-                exitTransition = {
-                    slideOutHorizontally(
-                        targetOffsetX = {-it},
-                        animationSpec = tween(durationMillis = 1000, easing = EaseInOutCubic)
-                    )
-                }
-                ) {navBackStackEntry ->
-
-                val action = navBackStackEntry?.arguments?.getString(HOME_SCREEN_ARGUMENT_KEY).toAction()
-
-                var myAction by rememberSaveable { mutableStateOf(Action.NO_ACTION) }
-
-                LaunchedEffect(key1 = myAction) {
-                    if (action != myAction){
-                        myAction = action
-                        taskViewModel.updateAction(newAction = action)
-                    }
-                }
-
-                val databaseAction = taskViewModel.action
-
-                HomeScreen(
-                    action = databaseAction,
-                    navController,
-                    context,
-                    taskViewModel = taskViewModel,
-                    navigateToTaskScreen = screen.taskScreen(navController)
+        composable(
+            route = HOME_SCREEN, arguments = homeArguments,
+//            enterTransition = {
+//                slideInHorizontally(
+//                    initialOffsetX = { -it },
+//                    animationSpec = tween(durationMillis = 500, easing = EaseInOutCubic)
+//                )
+//            }
+//            ,
+            exitTransition = {
+                fadeOut(
+                    targetAlpha = 0.2f,
+                    animationSpec = tween(durationMillis = 400, easing = EaseInOutCubic)
                 )
             }
+        ) { navBackStackEntry ->
 
-            composable(route = TASK_SCREEN,
-                arguments = taskArguments,
+            val action =
+                navBackStackEntry?.arguments?.getString(HOME_SCREEN_ARGUMENT_KEY).toAction()
 
-            ) { navBackStackEntry ->
-                val taskId = navBackStackEntry.arguments?.getInt(TASK_SCREEN_ARGUMENT_KEY)
+            var myAction by rememberSaveable { mutableStateOf(Action.NO_ACTION) }
 
-                LaunchedEffect(key1 = taskId) {
-                    taskViewModel.getSelectedTask(taskId = taskId ?: -1)
+            LaunchedEffect(key1 = myAction) {
+                if (action != myAction) {
+                    myAction = action
+                    taskViewModel.updateAction(newAction = action)
                 }
-
-                val selectedTask by taskViewModel.selectedTask.collectAsState()
-
-                LaunchedEffect(key1 = selectedTask) {
-                    if (selectedTask != null || taskId == -1){
-                        taskViewModel.updateDisplayTaskFields(selectedTask = selectedTask)
-                    }
-                }
-
-
-                TaskScreen(
-                    selectedTask = selectedTask,
-                    taskViewModel = taskViewModel,
-                    navigateToHomeScreen = screen.homeScreen(navController),
-                    context = context
-                )
             }
+
+            val databaseAction = taskViewModel.action
+
+            HomeScreen(
+                action = databaseAction,
+                navController,
+                context,
+                taskViewModel = taskViewModel,
+                navigateToTaskScreen = screen.taskScreen(navController)
+            )
         }
+
+        composable(
+            route = TASK_SCREEN,
+            arguments = taskArguments,
+//            enterTransition = {
+//                slideInHorizontally(
+//                    initialOffsetX = { -it },
+//                    animationSpec = tween(durationMillis = 500, easing = EaseInOutCubic)
+//                )
+//            }
+//            ,
+            exitTransition = {
+                fadeOut(
+                    targetAlpha = 0.2f,
+                    animationSpec = tween(durationMillis = 400, easing = EaseInOutCubic)
+                )
+            }
+            ) { navBackStackEntry ->
+            val taskId = navBackStackEntry.arguments?.getInt(TASK_SCREEN_ARGUMENT_KEY)
+
+            LaunchedEffect(key1 = taskId) {
+                taskViewModel.getSelectedTask(taskId = taskId ?: -1)
+            }
+
+            val selectedTask by taskViewModel.selectedTask.collectAsState()
+
+            LaunchedEffect(key1 = selectedTask) {
+                if (selectedTask != null || taskId == -1) {
+                    taskViewModel.updateDisplayTaskFields(selectedTask = selectedTask)
+                }
+            }
+
+
+            TaskScreen(
+                selectedTask = selectedTask,
+                taskViewModel = taskViewModel,
+                navigateToHomeScreen = screen.homeScreen(navController),
+                context = context
+            )
+        }
+    }
 //    }
 }

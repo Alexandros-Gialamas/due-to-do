@@ -1,7 +1,5 @@
 package com.alexandros.p.gialamas.duetodo.ui.theme
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 
 val ONE_TAB_PADDING = 24.dp
@@ -16,6 +14,10 @@ val TASK_PRIORITY_ITEM_INDICATOR_SIZE = 16.dp
 
 val TOP_APP_BAR_HEIGHT = 56.dp
 
+val DROP_DOWN_MENU_ICON_ANGLE_ANIMATION_ALPHA = 0.6f
+
+
+
 val SEARCH_BAR_TONAL_ELEVATION = 1.dp
 val SEARCH_BAR_SHADOW_ELEVATION = 2.dp
 val SEARCH_BAR_ICON_ALPHA_VALUE = 0.7f
@@ -29,6 +31,13 @@ val HOME_SCREEN_ROUNDED_CORNERS = RoundedCornerShape(16.dp)
 
 val FIRST_BORDER_STROKE = 1.dp
 val SECOND_BORDER_STROKE = 2.dp
+val HIGH_BORDER_STROKE_ALPHA = 0.5f
+val LIGHT_BORDER_STROKE_ALPHA = 0.7f
+
+val DIALOG_BUTTON_SECOND_BORDER_STROKE = 8.dp
+val DIALOG_BUTTON_WIDTH = 100.dp
+
+
 
 val TASK_PRIORITY_DROP_DOWN_MENU_HEIGHT = 60.dp
 

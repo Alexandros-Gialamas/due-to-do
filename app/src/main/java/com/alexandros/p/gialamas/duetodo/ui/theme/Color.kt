@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.wear.compose.material.ContentAlpha
+
 
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -52,8 +52,8 @@ val Color.statusBarColor: Color  // TODO { check Theme }
 
 val ColorScheme.dropDownMenuColor: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) colorScheme.onSurface.copy(alpha = ContentAlpha.disabled) else colorScheme.onSurface.copy(
-        alpha = ContentAlpha.disabled
+    get() = if (isSystemInDarkTheme()) colorScheme.onSurface.copy(alpha = 0.38f) else colorScheme.onSurface.copy(
+        alpha = 0.38f
     )
 
 // Tasks
@@ -92,43 +92,63 @@ val TextFieldDefaults.myTextFieldColors: TextFieldColors
     get() = colors(
         cursorColor = MaterialTheme.colorScheme.myContentColor,
 
-        focusedContainerColor = Color.Transparent,
-        disabledContainerColor = Color.Transparent,
-        unfocusedContainerColor = MaterialTheme.colorScheme.myBackgroundColor,
-
         selectionColors = TextSelectionColors(
-            handleColor = Color.Yellow,
-            backgroundColor = Color.Blue
+            handleColor = MyTheme.SecondGreen,
+            backgroundColor = MyTheme.SecondGreen
+
         ),
 
-        disabledLabelColor = MaterialTheme.colorScheme.myContentColor,
-        focusedLabelColor = MaterialTheme.colorScheme.myContentColor,
-        unfocusedLabelColor = MaterialTheme.colorScheme.myContentColor,
+        focusedContainerColor = Color.Transparent,
+        disabledContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+
+        disabledLabelColor = MaterialTheme.colorScheme.myBackgroundColor,
+        focusedLabelColor = MyTheme.SecondGreen,
+        unfocusedLabelColor = MaterialTheme.colorScheme.myBackgroundColor,
 
         focusedTextColor = MaterialTheme.colorScheme.myContentColor,
         disabledTextColor = MaterialTheme.colorScheme.myContentColor,
         unfocusedTextColor = MaterialTheme.colorScheme.myContentColor,
 
-        focusedIndicatorColor = Color.Transparent,
-        disabledIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent,
-        focusedLeadingIconColor = Color.Transparent,
+        focusedIndicatorColor = MyTheme.SecondGreen,
+        disabledIndicatorColor = MaterialTheme.colorScheme.myBackgroundColor,
+        unfocusedIndicatorColor = MaterialTheme.colorScheme.myBackgroundColor,
+        focusedLeadingIconColor = MaterialTheme.colorScheme.myBackgroundColor,
+
     )
 
 
 @Composable
 fun Brush.Companion.myBackgroundBrush(radius: Float): Brush {
-    return Brush.radialGradient(
-        colors = listOf(
-            Color(0xFF43614B).copy(alpha = 0.7f),
-            Color(0xFF495E57),
-            Color(0xFFFFFFFF),
+    return if (isSystemInDarkTheme()){
+        Brush.radialGradient(
 
-            MaterialTheme.colorScheme.onSurface,
+            colors = listOf(
+                Color(0x85FFFFFF).copy(alpha = 0.7f),
+                Color(0xFD000000),
+                Color(0x12010A01),
 
-            ),
-        Offset.Unspecified,
-        radius = radius
-    )
+                MaterialTheme.colorScheme.onSurface,
+
+                ),
+            Offset.Unspecified,
+            radius = radius
+        )
+    }else {
+        Brush.radialGradient(
+
+            colors = listOf(
+                Color(0xFF43614B).copy(alpha = 0.7f),
+                Color(0xFF495E57),
+                Color(0xFFFFFFFF),
+
+                MaterialTheme.colorScheme.onSurface,
+
+                ),
+            Offset.Unspecified,
+            radius = radius
+        )
+    }
+
 }
 

@@ -30,6 +30,11 @@ fun DisplaySnackBar(
                         actionLabel = setActionLabel(action),
                         duration = SnackbarDuration.Short
                     )
+//                if (snackBarResult == SnackbarResult.ActionPerformed && action == Action.DELETE) {
+//                    onUndoClicked(Action.UNDO)
+//                } else if (snackBarResult == SnackbarResult.Dismissed || action != Action.DELETE) {
+//                    onComplete(Action.NO_ACTION)
+//                }
                 undoDeletedTask(
                     action = action,
                     snackBarResult = snackBarResult,

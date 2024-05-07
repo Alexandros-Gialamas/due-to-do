@@ -1,7 +1,13 @@
 package com.alexandros.p.gialamas.duetodo.ui.components.tasks
 
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseInOutQuart
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,27 +22,40 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.wear.compose.material.Icon
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_SMALL_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.Action
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskItemList(
+    taskViewModel : TaskViewModel = hiltViewModel(),
     taskTableList: List<TaskTable> = listOf(),
     onSwipeToDelete: (Action, TaskTable) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
@@ -58,7 +77,7 @@ fun TaskItemList(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(myBackgroundColor),
+            .background(Color.Transparent),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
         contentPadding = PaddingValues(LARGE_PADDING), // TODO { paddings }
@@ -70,6 +89,10 @@ fun TaskItemList(
                 val dismissDirection = dismissState.dismissDirection
                 val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)
                 if (isDismissed && dismissDirection == DismissDirection.EndToStart) {
+
+                    taskViewModel.viewModelScope.launch { // TODO { remove scope from here }
+                        delay(400)
+                    }
                     onSwipeToDelete(Action.DELETE, task)
                 }
                 val degrees by animateFloatAsState(
@@ -78,8 +101,25 @@ fun TaskItemList(
                         0f
                     else
                         -45f,
-                    label = "Swipe for Delete"
+                    label = stringResource(id = R.string.Swipe_to_Delete_description_label)
                 )
+
+                var itemAppear by remember { mutableStateOf(false) }
+                
+                LaunchedEffect(key1 = true) {
+                    itemAppear = true
+                }
+
+                AnimatedVisibility(
+                    visible = itemAppear && !isDismissed,
+                    enter = expandVertically(
+                        animationSpec = tween(400, easing = EaseInOutQuart)
+                    ),
+                    exit = shrinkVertically(
+                        animationSpec = tween(400, easing = EaseInOutQuart)
+                    )
+
+                    ) {
 
                 SwipeToDismiss(
                     state = dismissState,
@@ -87,7 +127,7 @@ fun TaskItemList(
                     background = {
                         SwipeBackground(
                             degrees = degrees,
-                            backgroundColor = myBackgroundColor,
+                            backgroundColor = Color.Transparent,
                             iconColor = myContentColor
                         )
                     }, // TODO { revisit color }
@@ -95,18 +135,22 @@ fun TaskItemList(
                         Box(
                             modifier = Modifier
                                 .clip(HOME_SCREEN_ROUNDED_CORNERS)
-                                .fillMaxWidth(0.9f)
-                                .background(myBackgroundColor)
+                                .fillMaxWidth(0.9f)   // TODO { hardcode value }
+                                .background(Color.Transparent)
                                 .padding(EXTRA_SMALL_PADDING),
                             content = {
                                 TaskItem(
                                     taskTable = task,
                                     navigateToTaskScreen = navigateToTaskScreen,
+                                    myBackgroundColor = myBackgroundColor,
+                                    myContentColor = myContentColor,
+                                    myTextColor = myTextColor
                                 )
                             }
                         )
                     }
                 )
+            }
             }
         }
     )

@@ -1,18 +1,24 @@
 package com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen
 
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.actions.Actions
+import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.actions.menu.MenuAction
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
@@ -31,16 +37,20 @@ fun TopBar(
     myTextColor : Color
 ) {
 
-
+    val editedBackgroundColor = myBackgroundColor.copy(alpha = 0.3f)
 
     TopAppBar(
+        modifier = Modifier
+            .background(editedBackgroundColor),
         title = { Text(text = "") },
-        colors = TopAppBarDefaults.largeTopAppBarColors(myBackgroundColor),
+        colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ })
-            {
-                Icons.Filled.Menu
-            }
+            MenuAction(
+                onMenuClicked = { /*TODO*/ },
+                myBackgroundColor = myBackgroundColor,
+                myContentColor = myContentColor,
+                myTextColor = myTextColor
+            )
         },
         actions = {
             Actions(

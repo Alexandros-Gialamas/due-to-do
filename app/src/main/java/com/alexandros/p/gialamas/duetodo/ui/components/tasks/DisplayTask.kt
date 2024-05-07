@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -17,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
+import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.theme.ONE_TAB_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextFieldColors
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
@@ -37,9 +40,8 @@ fun DisplayTask(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(myBackgroundColor),
-//            .padding(LARGE_PADDING),
+            .background(Color.Gray)
+            .padding(ONE_TAB_PADDING),
         content = {
             OutlinedTextField(
                 modifier = Modifier
@@ -69,7 +71,8 @@ fun DisplayTask(
 
             OutlinedTextField(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(color = Color.Transparent),
                 value = description,
                 onValueChange = { onDescriptionChange(it) },
                 label = {

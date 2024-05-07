@@ -39,6 +39,8 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_TONAL_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_PRIORITY_ITEM_INDICATOR_SIZE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TINY_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -47,9 +49,13 @@ fun TaskItem(
     taskTable: TaskTable,
 //    animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToTaskScreen: (taskId: Int) -> Unit,
+    myBackgroundColor: Color,
+    myContentColor: Color,
+    myTextColor: Color
 ) {
 
-    val surfaceBackgroundColor = Brush.myBackgroundBrush(radius = 6090f)
+    val surfaceBackgroundColor = Brush.myBackgroundBrush(radius = 1000f / 0.9f)
+
 
 
     MaterialTheme(
@@ -58,16 +64,16 @@ fun TaskItem(
                 modifier = Modifier
                     .clip(TASK_ITEM_ROUNDED_CORNERS)
 //                    .fillMaxWidth()
-                    .background(surfaceBackgroundColor)
+                    .background(myBackgroundColor)
 //        .background(MaterialTheme.colorScheme.primary)  // TODO { try colors }
 //        .background(MyTheme.SecondGreen)
 //        .padding(vertical = 8.dp, horizontal = 24.dp)
                     .border(
-                        BorderStroke(2.dp, Color.White.copy(alpha = 0.7f)),
+                        BorderStroke(1.dp, myContentColor.copy(alpha = 0.7f)),
                         shape = TASK_ITEM_ROUNDED_CORNERS
                     )
                     .border(
-                        BorderStroke(4.dp, color = MyTheme.MyGreen),
+                        BorderStroke(3.dp, color = myContentColor.copy(alpha = 0.5f)),
                         shape = TASK_ITEM_ROUNDED_CORNERS
                     ),
                 color = Color.Transparent,
@@ -107,7 +113,7 @@ fun TaskItem(
                                                     .fillMaxWidth(),
                                                 text = taskTable.description,
                                                 color = colorScheme.myTextColor,
-                                                style = typography.bodyMedium,
+                                                style = typography.bodyLarge,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
                                             )
@@ -155,6 +161,9 @@ fun TaskItemPreview() {
         description = "Tomorrow at 5 pm",
         taskPriority = TaskPriority.MEDIUM
     ),
-        navigateToTaskScreen = {}
+        navigateToTaskScreen = {},
+        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
+        myContentColor = MaterialTheme.colorScheme.myContentColor,
+        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

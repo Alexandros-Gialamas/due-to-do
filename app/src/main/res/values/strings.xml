@@ -33,6 +33,8 @@
     <string name="Arrow_Drop_Down_Menu_Icon_description">Priority Drop Down Menu Icon</string>
     <string name="Display_Task_Title">Title</string>
     <string name="Display_Task_Description">Description</string>
+    <string name="Angle_Animation_description_label">Angle Animation</string>
+    <string name="Swipe_to_Delete_description_label">Swipe to Delete</string>
 
 
     // Toast/Snack Messages
@@ -44,8 +46,8 @@
     // Alert Dialog
     <string name="Confirm_Yes">Yes</string>
     <string name="Cancel_No">No</string>
-    <string name="Delete_Task">Delete \'%1$s\'?</string>
-    <string name="Delete_Task_confirmation">Are you sure that you want to delete \'%1$s\'?</string>
+    <string name="Delete_Task">Delete \n \'%1$s\' ?</string>
+    <string name="Delete_Task_confirmation">Are you sure that you want to delete \'%1$s\' ?</string>
     <string name="Delete_All_Task">Delete All Tasks?</string>
     <string name="Delete_All_Task_confirmation">Are you sure that you want to delete all tasks? This action will be irreversible.</string>
 

@@ -21,6 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
+    background = Color(0xFF030907), // TODO { overrided color }
 
 )
 
@@ -28,7 +29,9 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    background = Color(0xFFEDEFEE)
+    background = Color(0xFF495E57), // TODO { overrided color }
+
+
 
 
 
@@ -63,8 +66,14 @@ fun DueToDoTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.onSurface.toArgb()
+            window.statusBarColor = colorScheme.background.toArgb()
+            window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+
+//            val wic = WindowCompat.getInsetsController(window, view)
+//            wic.isAppearanceLightStatusBars = darkTheme
+//            wic.isAppearanceLightNavigationBars = !darkTheme
+
         }
     }
 

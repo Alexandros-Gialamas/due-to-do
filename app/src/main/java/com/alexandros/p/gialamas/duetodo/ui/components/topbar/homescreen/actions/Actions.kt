@@ -46,12 +46,6 @@ fun Actions(
         myTextColor = myTextColor
     )
 
-    MenuAction(
-        onMenuClicked = onMenuClicked,
-        myBackgroundColor = myBackgroundColor,
-        myContentColor = myContentColor,
-        myTextColor = myTextColor
-    )
     SortAction(
         onSortClicked = onSortClicked,
         myBackgroundColor = myBackgroundColor,

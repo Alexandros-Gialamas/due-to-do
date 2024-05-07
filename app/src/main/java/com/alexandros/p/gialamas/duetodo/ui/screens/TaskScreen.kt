@@ -11,11 +11,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTask
 import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.EditOrNewTopBar
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
@@ -38,6 +41,7 @@ fun TaskScreen(
     val isCompleted: Boolean = taskViewModel.isCompleted
     val isPopAlarmSelected: Boolean = taskViewModel.isPopAlarmSelected
 
+    val mySecondBackgroundColor = Brush.myBackgroundBrush(radius = 6800f / 1.1f)
     val myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor
     val myContentColor = MaterialTheme.colorScheme.myContentColor
     val myTextColor = MaterialTheme.colorScheme.myTextColor
@@ -51,8 +55,9 @@ fun TaskScreen(
         content = {
             Scaffold(
                 modifier = Modifier
-                    .fillMaxSize(),
-                containerColor = myBackgroundColor,
+                    .fillMaxSize()
+                    .background(Color.Transparent),
+                containerColor = Color.Transparent,
                 contentColor = myContentColor,
                 topBar = {
                     EditOrNewTopBar(
@@ -78,7 +83,7 @@ fun TaskScreen(
                     Column(
                         modifier = Modifier
                             .padding(innerPadding)
-                            .background(myBackgroundColor),
+                            .background(mySecondBackgroundColor),
                         content = {
                             DisplayTask(
                                 title = title,
