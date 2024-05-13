@@ -1,12 +1,12 @@
 package com.alexandros.p.gialamas.duetodo.navigation
 
 import androidx.navigation.NavHostController
-import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.util.CrudAction
 import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN
 
 
 object Route : Destinations {
-    override fun homeScreen(navController: NavHostController): (Action) -> Unit = { action ->
+    override fun homeScreen(navController: NavHostController): (CrudAction) -> Unit = { action ->
         navController.navigate(
             "home/${action.name}"
         ) {

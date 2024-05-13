@@ -4,18 +4,22 @@
     // FAB
     <string name="add_task_button">Add Task Button</string>
 
-    // App Bar
+    // Bottom Bar
+    <string name="BottomBar_Action_Layout_Icon_Description">Change Layout Of Tasks</string>
+    <string name="BottomBar_Action_Sort_Description">Sort Tasks</string>
+    <string name="BottomBar_Action_CheckList_Description">Sort Tasks</string>
+    <string name="VerticalMenu_Action_Delete_All_Description">Delete All Tasks</string>
+    <string name="VerticalMenu_Action_Delete_All_Text">Delete All Tasks</string>
+
     <string name="App_Bar_Title_Description">dueToDo</string>
-    <string name="App_Bar_Layout_Icon_Description">Change Layout Of Tasks</string>
-    <string name="App_Bar_Menu_Icon_Description">Menu</string>
-    <string name="App_Bar_Sort_Description">Sort Tasks</string>
-    <string name="App_Bar_Delete_All_Description">Delete All Tasks</string>
-    <string name="App_Bar_Delete_All_Text">Delete All Tasks</string>
+
 
     // Search Bar
-    <string name="Search_Bar_Placeholder">Search your tasks</string>
-    <string name="Search_Bar_Search_Description">Search</string>
-    <string name="Search_Bar_Clear_Description">Clear</string>
+    <string name="SearchBar_Placeholder">Search your tasks</string>
+    <string name="SearchBar_Action_Search_Description">Search</string>
+    <string name="SearchBar_Action_Clear_Description">Clear</string>
+    <string name="SearchBar_Action_Menu_Icon_Description">Menu</string>
+
 
 
     // Empty Content
@@ -29,6 +33,7 @@
     <string name="Add_Task_Icon_Description">Add Task</string>
     <string name="Close_Task_Icon_Description">Close Task</string>
     <string name="Delete_Task_Icon_Description">Delete Task</string>
+    <string name="Reminder_Task_Icon_Description">Remind Task</string>
     <string name="Update_Task_Icon_Description">Update Task</string>
     <string name="Arrow_Drop_Down_Menu_Icon_description">Priority Drop Down Menu Icon</string>
     <string name="Display_Task_Title">Title</string>
@@ -43,13 +48,15 @@
     <string name="Snack_Bar_Label_OK">OK</string>
     <string name="Snack_Bar_Label_UNDO">UNDO</string>
 
+
+
     // Alert Dialog
     <string name="Confirm_Yes">Yes</string>
     <string name="Cancel_No">No</string>
-    <string name="Delete_Task">Delete \n \'%1$s\' ?</string>
+    <string name="Delete_Task">Delete \n \'%1$s\'</string>
     <string name="Delete_Task_confirmation">Are you sure that you want to delete \'%1$s\' ?</string>
     <string name="Delete_All_Task">Delete All Tasks?</string>
-    <string name="Delete_All_Task_confirmation">Are you sure that you want to delete all tasks? This action will be irreversible.</string>
+    <string name="Delete_All_Task_confirmation">Are you sure that you want to delete all tasks? This crudAction will be irreversible.</string>
 
 
 </resources>

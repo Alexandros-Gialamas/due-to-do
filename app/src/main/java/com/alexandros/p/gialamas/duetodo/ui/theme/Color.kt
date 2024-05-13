@@ -102,9 +102,9 @@ val TextFieldDefaults.myTextFieldColors: TextFieldColors
         disabledContainerColor = Color.Transparent,
         unfocusedContainerColor = Color.Transparent,
 
-        disabledLabelColor = MaterialTheme.colorScheme.myBackgroundColor,
+        disabledLabelColor = MaterialTheme.colorScheme.myTextColor,
         focusedLabelColor = MyTheme.SecondGreen,
-        unfocusedLabelColor = MaterialTheme.colorScheme.myBackgroundColor,
+        unfocusedLabelColor = MaterialTheme.colorScheme.myTextColor,
 
         focusedTextColor = MaterialTheme.colorScheme.myContentColor,
         disabledTextColor = MaterialTheme.colorScheme.myContentColor,

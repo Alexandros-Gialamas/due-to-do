@@ -95,6 +95,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.androidx.foundation)
+    implementation(libs.ui)
+
     // WorkManager Kotlin + coroutines
     implementation(libs.androidx.work.runtime.ktx)
     // WorkManager - Multiprocess support

@@ -3,6 +3,8 @@ package com.alexandros.p.gialamas.duetodo.ui.components.fabbutton
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -35,19 +37,8 @@ fun FabButton(
     myFabIconColor : Color
 ){
     FloatingActionButton(
-//        modifier = Modifier
-//            .clip(HOME_SCREEN_ROUNDED_CORNERS)
-//            .background(Color.Transparent)
-//            .border(
-//                width = FIRST_BORDER_STROKE,
-//                color = Color.White.copy(alpha = LIGHT_BORDER_STROKE_ALPHA),
-//                shape = HOME_SCREEN_ROUNDED_CORNERS
-//            )
-//            .border(
-//                width = SECOND_BORDER_STROKE,
-//                color = MyTheme.MyGreen,
-//                shape = HOME_SCREEN_ROUNDED_CORNERS
-//            ),
+        modifier = Modifier
+            .offset(x = (-18).dp, y = (50).dp),  // TODO { play with this value }
         onClick = { onFabClicked(-1) },
         contentColor = myFabContentColor,
         containerColor = myFabBackgroundColor,

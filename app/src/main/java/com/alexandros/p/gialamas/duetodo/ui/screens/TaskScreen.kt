@@ -10,20 +10,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
-import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTask
-import com.alexandros.p.gialamas.duetodo.ui.components.topbar.taskscreen.EditOrNewTopBar
+import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.bottom_bar.BottomBarTaskScreen
+import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.top_bar.TopBarTaskScreen
+import com.alexandros.p.gialamas.duetodo.ui.components.tasks.taskscreen.DisplayTask
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
+import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
-import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.util.CrudAction
+import com.alexandros.p.gialamas.duetodo.util.SettingAction
 import com.alexandros.p.gialamas.duetodo.util.SnackToastMessages
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -31,23 +36,33 @@ import com.alexandros.p.gialamas.duetodo.util.SnackToastMessages
 fun TaskScreen(
     taskViewModel: TaskViewModel,
     selectedTask: TaskTable?,
-    navigateToHomeScreen: (Action) -> Unit,
-    context: Context
+    navigateToHomeScreen: (CrudAction) -> Unit,
+    context: Context,
+//    onRemindClicked: (settingAction: Setting_Action) -> Unit,
+//    onLabelClicked: (settingAction: Setting_Action) -> Unit,
 ) {
-    val title: String = taskViewModel.title
+
+
+    val title = taskViewModel.title
+    val category = taskViewModel.category
     val description: String = taskViewModel.description
-    val taskPriority: TaskPriority = taskViewModel.taskPriority
+    val taskPriority = taskViewModel.taskPriority
     val dueDate: Long? = taskViewModel.dueDate
-    val isCompleted: Boolean = taskViewModel.isCompleted
-    val isPopAlarmSelected: Boolean = taskViewModel.isPopAlarmSelected
+    val isCompleted = taskViewModel.isCompleted
+    val isPinned = taskViewModel.isPinned
+    val isPopAlarmSelected = taskViewModel.isPopAlarmSelected
+
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val mySecondBackgroundColor = Brush.myBackgroundBrush(radius = 6800f / 1.1f)
+    val myActivatedColor = MyTheme.MyYellow
     val myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor
     val myContentColor = MaterialTheme.colorScheme.myContentColor
     val myTextColor = MaterialTheme.colorScheme.myTextColor
 
     BackHandler(true) {
-        navigateToHomeScreen(Action.NO_ACTION)
+        navigateToHomeScreen(CrudAction.NO_ACTION)
     }
 
     MaterialTheme(
@@ -60,25 +75,49 @@ fun TaskScreen(
                 containerColor = Color.Transparent,
                 contentColor = myContentColor,
                 topBar = {
-                    EditOrNewTopBar(
+                    TopBarTaskScreen(
                         selectedTask = selectedTask,
-                        navigateToHomeScreen = { action: Action ->
-                            if (action == Action.NO_ACTION) {
-                                navigateToHomeScreen(action)
+                        navigateToHomeScreen = { crudAction: CrudAction ->
+                            if (crudAction == CrudAction.NO_ACTION) {
+                                navigateToHomeScreen(crudAction)
                             } else {
                                 if (taskViewModel.validateFields()) {
-                                    navigateToHomeScreen(action)
+                                    navigateToHomeScreen(crudAction)
                                 } else {
                                     SnackToastMessages.EMPTY_FIELDS.showToast(context)
                                 }
                             }
                         },
+                        scope = coroutineScope,
+                        keyboardController = keyboardController,
                         myBackgroundColor = myBackgroundColor,
                         myContentColor = myContentColor,
                         myTextColor = myTextColor
                     )
                 },
-                bottomBar = {},
+                bottomBar = {
+                            BottomBarTaskScreen(
+                                onNewCheckListClicked = { /*TODO*/ },
+                                dueDate = dueDate,
+                                onRemindClicked = { },
+                                category = category,
+                                onCategoryClicked = {},
+                                taskPriority = taskPriority,
+                                onTaskPrioritySelected = { taskViewModel.updateTaskPriority(it) },
+                                pin = isPinned,
+                                onPinClicked = { settingAction : SettingAction->
+                                               if (settingAction == SettingAction.SET) {
+                                                   taskViewModel.updateIsPinned(true)
+                                               } else if (settingAction == SettingAction.DISCARD){
+                                                   taskViewModel.updateIsPinned(false)
+                                               }
+                                },
+                                myActivatedColor = myActivatedColor,
+                                myBackgroundColor = myBackgroundColor,
+                                myContentColor = myContentColor,
+                                myTextColor = myTextColor
+                            )
+                },
                 content = { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -87,7 +126,9 @@ fun TaskScreen(
                         content = {
                             DisplayTask(
                                 title = title,
-                                onTitleChange = { taskViewModel.updateTitle(it) },
+                                onTitleChange = { taskViewModel.updateTitle(newTitle = it) },
+                                category = category,
+                                onCategoryChange = { taskViewModel.updateCategory(newCategory = it) },
                                 description = description,
                                 onDescriptionChange = {
                                     taskViewModel.updateDescription(

@@ -29,9 +29,9 @@ object DatabaseModule {
     @Provides
     fun provideTaskCategoryDao(database: Database) = database.taskCategoryDao()
 
-    @Singleton
-    @Provides
-    fun provideTaskReminderDao(database: Database) = database.taskReminderDao()
+//    @Singleton
+//    @Provides
+//    fun provideTaskReminderDao(database: Database) = database.taskReminderDao()
 
 //    @Singleton
 //    @Provides

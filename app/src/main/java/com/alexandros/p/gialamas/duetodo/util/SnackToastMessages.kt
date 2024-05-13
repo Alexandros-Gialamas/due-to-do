@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import com.alexandros.p.gialamas.duetodo.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -21,10 +20,10 @@ sealed class SnackToastMessages(val stringMessage : Int ) {
     fun showSnackBar( // TODO { delete or find the logic }
         context: Context,
         snackBarHostState: SnackbarHostState,
-        action: Action,
+        crudAction: CrudAction,
         scope : CoroutineScope
     ){
-        val label = if (action.name == Action.DELETE.toString()) {
+        val label = if (crudAction.name == CrudAction.DELETE.toString()) {
             context.getString(R.string.Snack_Bar_Label_UNDO)
         } else {
             context.getString(R.string.Snack_Bar_Label_OK)

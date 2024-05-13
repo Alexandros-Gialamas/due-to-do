@@ -18,6 +18,10 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE taskId=:taskId")
     fun getSelectedTask(taskId : Int) : Flow<TaskTable>
 
+
+    @Query("SELECT * FROM task_table WHERE category = :category COLLATE NOCASE")
+    fun getTasksByCategory(category: String): Flow<List<TaskTable>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE) //TODO { be aware of the conflict strategy }
     suspend fun insertTask(taskTable: TaskTable)
 
@@ -57,7 +61,8 @@ interface TaskDao {
         END
         """
     )
-    fun sortByHighPriority() : Flow<List<TaskTable>>
+    fun sortByHighPriority(): Flow<List<TaskTable>>
+
 
     @Query("SELECT * FROM task_table WHERE taskPriority LIKE 'L%'")
     fun getLowPriorityTasks() : Flow<List<TaskTable>>

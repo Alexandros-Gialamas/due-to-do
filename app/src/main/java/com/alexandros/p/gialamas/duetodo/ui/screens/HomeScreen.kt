@@ -1,7 +1,6 @@
 package com.alexandros.p.gialamas.duetodo.ui.screens
 
 import android.content.Context
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,15 +17,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavHostController
-import com.alexandros.p.gialamas.duetodo.ui.components.DisplaySnackBar
-import com.alexandros.p.gialamas.duetodo.ui.components.TasksSearchBar
+import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.bottom_bar.BottomBarHomeScreen
 import com.alexandros.p.gialamas.duetodo.ui.components.fabbutton.FabButton
-import com.alexandros.p.gialamas.duetodo.ui.components.tasks.DisplayTasksList
-import com.alexandros.p.gialamas.duetodo.ui.components.topbar.homescreen.TopBar
+import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.top_bar.SearchBarHomeScreen
+import com.alexandros.p.gialamas.duetodo.ui.components.snackbar.DisplaySnackBar
+import com.alexandros.p.gialamas.duetodo.ui.components.tasks.homescreen.TaskListSearchedAndSorted
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.SCAFFOLD_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.fabBackgroundColor
@@ -36,32 +37,37 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
-import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.util.CrudAction
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
 
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
-    action: Action,
+    crudAction: CrudAction,
     navController: NavHostController,
     context: Context,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     taskViewModel: TaskViewModel
 ) {
 
-    LaunchedEffect(key1 = action) {
-        taskViewModel.handleDatabaseActions(action = action)
+    LaunchedEffect(key1 = crudAction) {
+        taskViewModel.handleDatabaseActions(crudAction = crudAction)
     }
 
+    val allCategories by taskViewModel.allCategories.collectAsState()
     val allTasks by taskViewModel.allTasks.collectAsState()
     val searchedTasks by taskViewModel.searchedTasks.collectAsState()
     val sortState by taskViewModel.sortState.collectAsState()
-    val lowTaskPrioritySort by taskViewModel.lowTaskPrioritySort.collectAsState()
-    val highTaskPrioritySort by taskViewModel.highTaskPrioritySort.collectAsState()
+    val lowTaskPrioritySort by taskViewModel.lowTaskPrioritySort().collectAsState()
+    val highTaskPrioritySort by taskViewModel.highTaskPrioritySort().collectAsState()
+    val isGridLayout by taskViewModel.isGridLayout.collectAsState()
 
     val searchBarState: SearchBarState = taskViewModel.searchBarState
     val searchTextState: String = taskViewModel.searchTextState
+
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
 
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -77,12 +83,14 @@ fun HomeScreen(
         taskViewModel.updateSearchTextState(newSearchTextState = searchTextState)
     }
 
+
+
     DisplaySnackBar(
         snackBarHostState = snackBarHostState,
-        onComplete = { taskViewModel.updateAction(newAction = it) },
-        onUndoClicked = { taskViewModel.updateAction(newAction = it) },
+        onComplete = { taskViewModel.updateAction(newCrudAction = it) },
+        onUndoClicked = { taskViewModel.updateAction(newCrudAction = it) },
         taskTitle = taskViewModel.title,
-        action = action,
+        crudAction = crudAction,
     )
 
     MaterialTheme(
@@ -98,19 +106,8 @@ fun HomeScreen(
                 topBar = {
                     Column(
                         content = {
-                            TopBar(
-                                onSortClicked = { taskViewModel.persistSortState(it) },
-//                                onSearchClicked = { taskViewModel.updateSearchBarState(newSearchBarState = SearchBarState.OPENED) },
-                                onMenuItemClicked = {},
-                                onDeleteAllTasksClicked = { taskViewModel.updateAction(newAction = Action.DELETE_ALL) },
-                                onLayoutClicked = {},
-                                onMenuClicked = {},
-                                myBackgroundColor = myBackgroundColor,
-                                myContentColor = myContentColor,
-                                myTextColor = myTextColor
-                            )
 
-                            TasksSearchBar(
+                            SearchBarHomeScreen(
                                 text = searchTextState,
                                 onTextChange = { newText ->
                                     taskViewModel.updateSearchTextState(newSearchTextState = newText)
@@ -123,6 +120,8 @@ fun HomeScreen(
                                 onSearchClicked = { searchQuery ->
                                     taskViewModel.searchDatabase(searchQuery)
                                 },
+                                onDeleteAllTasksClicked = { taskViewModel.updateAction(newCrudAction = CrudAction.DELETE_ALL) },
+                                onMenuClicked = { /*TODO */ },
                                 textState = searchTextState,
                                 myBackgroundColor = myBackgroundColor,
                                 myContentColor = myContentColor,
@@ -130,8 +129,6 @@ fun HomeScreen(
                             )
                         }
                     )
-
-
                 },
                 floatingActionButton = {
                     FabButton(
@@ -141,7 +138,19 @@ fun HomeScreen(
                         myFabIconColor = myFabIconColor
                     )
                 },
-                bottomBar = { },
+                bottomBar = {
+                    BottomBarHomeScreen(
+                        taskCategories = allCategories,
+                        onCategoryClicked = {},
+                        onSortClicked = { taskViewModel.persistSortState(it) },
+                        onLayoutClicked = { taskViewModel.enableGridLayout() },
+                        onNewCheckListClicked = { /* TODO */ },
+                        isGridLayout = isGridLayout,
+                        myBackgroundColor = myBackgroundColor,
+                        myContentColor = myContentColor,
+                        myTextColor = myTextColor
+                    )
+                },
                 content = {
 
                     Surface(
@@ -151,7 +160,7 @@ fun HomeScreen(
                         color = Color.Transparent,
                         shape = SCAFFOLD_ROUNDED_CORNERS,
                         content = {
-                            DisplayTasksList(
+                            TaskListSearchedAndSorted(
                                 taskTableList = allTasks,
                                 navigateToTaskScreen = navigateToTaskScreen,
                                 searchedTasks = searchedTasks,
@@ -160,13 +169,14 @@ fun HomeScreen(
                                 highTaskPrioritySort = highTaskPrioritySort,
                                 sortState = sortState,
                                 onSwipeToDelete = { action, task ->
-                                    taskViewModel.updateAction(newAction = action)
+                                    taskViewModel.updateAction(newCrudAction = action)
                                     taskViewModel.updateDisplayTaskFields(selectedTask = task)
                                     snackBarHostState.currentSnackbarData?.dismiss()
                                 },
                                 myBackgroundColor = myBackgroundColor,
                                 myContentColor = myContentColor,
-                                myTextColor = myTextColor
+                                myTextColor = myTextColor,
+                                isGridLayout = isGridLayout
                             )
                         }
                     )

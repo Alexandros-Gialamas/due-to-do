@@ -1,5 +1,7 @@
 package com.alexandros.p.gialamas.duetodo.util
 
+import kotlin.time.Duration
+
 object Constants {
 
     const val TASK_TABLE = "task_table"
@@ -21,4 +23,10 @@ object Constants {
     const val REMINDER_WORKER_ACTIVE = "IS_POP_ALARM_SELECTED"
 
     const val MAX_TASK_TITLE_LENGTH = 20
+
+    const val KEYBOARD_DELAY : Long = 70
+
+    const val ICON_ROTATION : Float = 30f
+    const val ICON_NO_ROTATION : Float = 0f
+
 }

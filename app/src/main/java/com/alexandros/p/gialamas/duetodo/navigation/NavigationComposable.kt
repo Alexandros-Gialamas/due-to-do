@@ -1,26 +1,10 @@
 package com.alexandros.p.gialamas.duetodo.navigation
 
 import android.content.Context
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.EaseInCubic
-import androidx.compose.animation.core.EaseInOutCirc
 import androidx.compose.animation.core.EaseInOutCubic
-import androidx.compose.animation.core.EaseInOutElastic
-import androidx.compose.animation.core.EaseInOutQuint
-import androidx.compose.animation.core.EaseInOutSine
-import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.EaseOutCubic
-import androidx.compose.animation.core.EaseOutQuart
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOut
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,9 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.center
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toIntRect
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,7 +21,7 @@ import androidx.navigation.navArgument
 import com.alexandros.p.gialamas.duetodo.ui.screens.HomeScreen
 import com.alexandros.p.gialamas.duetodo.ui.screens.TaskScreen
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
-import com.alexandros.p.gialamas.duetodo.util.Action
+import com.alexandros.p.gialamas.duetodo.util.CrudAction
 import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN
 import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN_ARGUMENT_KEY
 import com.alexandros.p.gialamas.duetodo.util.Constants.TASK_SCREEN
@@ -85,22 +66,23 @@ fun NavigationComposable(
             }
         ) { navBackStackEntry ->
 
+
             val action =
                 navBackStackEntry?.arguments?.getString(HOME_SCREEN_ARGUMENT_KEY).toAction()
 
-            var myAction by rememberSaveable { mutableStateOf(Action.NO_ACTION) }
+            var myCrudAction by rememberSaveable { mutableStateOf(CrudAction.NO_ACTION) }
 
-            LaunchedEffect(key1 = myAction) {
-                if (action != myAction) {
-                    myAction = action
-                    taskViewModel.updateAction(newAction = action)
+            LaunchedEffect(key1 = myCrudAction) {
+                if (action != myCrudAction) {
+                    myCrudAction = action
+                    taskViewModel.updateAction(newCrudAction = action)
                 }
             }
 
-            val databaseAction = taskViewModel.action
+            val databaseAction = taskViewModel.crudAction
 
             HomeScreen(
-                action = databaseAction,
+                crudAction = databaseAction,
                 navController,
                 context,
                 taskViewModel = taskViewModel,
@@ -124,7 +106,9 @@ fun NavigationComposable(
                     animationSpec = tween(durationMillis = 400, easing = EaseInOutCubic)
                 )
             }
-            ) { navBackStackEntry ->
+        ) { navBackStackEntry ->
+
+
             val taskId = navBackStackEntry.arguments?.getInt(TASK_SCREEN_ARGUMENT_KEY)
 
             LaunchedEffect(key1 = taskId) {
@@ -144,7 +128,7 @@ fun NavigationComposable(
                 selectedTask = selectedTask,
                 taskViewModel = taskViewModel,
                 navigateToHomeScreen = screen.homeScreen(navController),
-                context = context
+                context = context,
             )
         }
     }
