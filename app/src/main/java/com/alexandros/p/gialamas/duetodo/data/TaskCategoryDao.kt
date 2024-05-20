@@ -19,6 +19,12 @@ interface TaskCategoryDao {
     @Query("SELECT * FROM category_task_table WHERE categoryId=:categoryId")
     fun getSelectedCategory(categoryId : Int) : Flow<TaskCategoryTable>
 
+    @Query("DELETE FROM category_task_table WHERE categoryName NOT IN (:usedCategories)")
+    suspend fun deleteUnusedCategories(usedCategories: List<String>)
+
+    @Query("SELECT * FROM category_task_table WHERE categoryName = :name")
+    suspend fun getCategoryByName(name: String) : TaskCategoryTable?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE) //TODO { be aware of the conflict strategy }
     suspend fun insertTaskCategory(taskCategoryTable: TaskCategoryTable)
 

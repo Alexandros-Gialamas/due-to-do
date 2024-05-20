@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
@@ -42,7 +43,7 @@ fun BottomBarHomeScreen(
     TopAppBar(
         modifier = Modifier
             .background(editedBackgroundColor)
-            .height(40.dp),  // TODO { hardcode value }
+            .height(Dp.Unspecified),
         title = { Text(text = "") },
         colors = TopAppBarDefaults.topAppBarColors(Color.Transparent),
         navigationIcon = {

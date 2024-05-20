@@ -20,7 +20,7 @@ interface TaskDao {
 
 
     @Query("SELECT * FROM task_table WHERE category = :category COLLATE NOCASE")
-    fun getTasksByCategory(category: String): Flow<List<TaskTable>>
+    fun getTasksByCategory(category: String): Flow<List<TaskTable>>   // TODO { delete that }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE) //TODO { be aware of the conflict strategy }
     suspend fun insertTask(taskTable: TaskTable)
@@ -38,6 +38,10 @@ interface TaskDao {
             "LOWER(title) LIKE '%' || LOWER(:searchQuery) || '%' OR " +
             "LOWER(description) LIKE '%' || LOWER(:searchQuery) || '%'")
     fun searchDatabase(searchQuery : String) : Flow<List<TaskTable>>
+
+
+    @Query("SELECT DISTINCT category FROM task_table WHERE category IS NOT NULL AND category != ''")
+    suspend fun getAllUsedCategories(): List<String>
 
     @Query(
         """

@@ -8,7 +8,7 @@ class PopUpAlarmActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val taskId = intent.getLongExtra(Constants.REMINDER_WORKER_TASK_ID, -1L)
-        val isPopAlarmSelected = intent.getBooleanExtra(Constants.REMINDER_WORKER_ACTIVE, false)
+        val isPopAlarmSelected = intent.getBooleanExtra(Constants.REMINDER_WORKER_HARD_NOTIFICATION, false)
         // Retrieve task details and display a custom UI for the pop-up alarm
         // You can include a button to snooze or dismiss the alarm
     }

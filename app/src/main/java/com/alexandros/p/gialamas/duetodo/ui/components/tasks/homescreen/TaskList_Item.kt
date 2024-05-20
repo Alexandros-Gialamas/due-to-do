@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskItemList(
+fun TaskListItem(
     taskViewModel : TaskViewModel = hiltViewModel(),   // TODO { find better way }
     taskTableList: List<TaskTable> = listOf(),
     onSwipeToDelete: (CrudAction, TaskTable) -> Unit,

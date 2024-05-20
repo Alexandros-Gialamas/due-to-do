@@ -8,18 +8,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import com.alexandros.p.gialamas.duetodo.util.CrudAction
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun DisplaySnackBar(
     snackBarHostState: SnackbarHostState,
+    scope : CoroutineScope,
     onComplete: (CrudAction) -> Unit,
     onUndoClicked: (CrudAction) -> Unit,
     taskTitle: String,
     crudAction: CrudAction,
 ) {
 
-    val scope = rememberCoroutineScope()
+
 
     LaunchedEffect(key1 = crudAction) {
         if (crudAction != CrudAction.NO_ACTION) {

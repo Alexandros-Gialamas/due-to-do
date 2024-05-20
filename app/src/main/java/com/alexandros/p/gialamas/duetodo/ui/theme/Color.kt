@@ -3,15 +3,19 @@ package com.alexandros.p.gialamas.duetodo.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TimePickerColors
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-
 
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -115,12 +119,57 @@ val TextFieldDefaults.myTextFieldColors: TextFieldColors
         unfocusedIndicatorColor = MaterialTheme.colorScheme.myBackgroundColor,
         focusedLeadingIconColor = MaterialTheme.colorScheme.myBackgroundColor,
 
+        )
+
+@OptIn(ExperimentalMaterial3Api::class)
+val TimePickerDefaults.myTimePickerColors: TimePickerColors
+    @Composable
+    get() = colors(
+        clockDialColor = MaterialTheme.colorScheme.myContentColor,
+        selectorColor = MyTheme.SecondGreen,
+        containerColor = MaterialTheme.colorScheme.myBackgroundColor.copy(alpha = 0.8f),
+//        periodSelectorBorderColor = Color.Transparent,
+//        clockDialSelectedContentColor = Color.Transparent,
+//        clockDialUnselectedContentColor = Color.Transparent,
+//        periodSelectorSelectedContainerColor = Color.Transparent,
+//        periodSelectorUnselectedContainerColor = Color.Transparent,
+//        periodSelectorSelectedContentColor = Color.Transparent,
+//        periodSelectorUnselectedContentColor = Color.Transparent,
+//        timeSelectorSelectedContainerColor = Color.Transparent,
+//        timeSelectorUnselectedContainerColor = Color.Transparent,
+//        timeSelectorSelectedContentColor = Color.Transparent,
+//        timeSelectorUnselectedContentColor = Color.Transparent,
+    )
+
+@OptIn(ExperimentalMaterial3Api::class)
+val DatePickerDefaults.myDatePickerColors: DatePickerColors
+    @Composable
+    get() = colors(
+        containerColor = MaterialTheme.colorScheme.myBackgroundColor.copy(alpha = 0.85f),
+        titleContentColor = MaterialTheme.colorScheme.myTextColor,
+        headlineContentColor = MaterialTheme.colorScheme.myTextColor,
+        weekdayContentColor = MaterialTheme.colorScheme.myTextColor,
+        subheadContentColor = MaterialTheme.colorScheme.myTextColor,
+        yearContentColor = MaterialTheme.colorScheme.myTextColor,
+        currentYearContentColor = MaterialTheme.colorScheme.myTextColor,
+        selectedYearContentColor = MaterialTheme.colorScheme.myTextColor,
+//        selectedYearContainerColor = MaterialTheme.colorScheme.myTextColor,
+        dayContentColor = MaterialTheme.colorScheme.myTextColor,
+        disabledDayContentColor = MaterialTheme.colorScheme.myTextColor.copy(alpha = 0.5f),
+        selectedDayContentColor = MaterialTheme.colorScheme.myContentColor,
+//        disabledSelectedDayContentColor = MaterialTheme.colorScheme.myTextColor,
+        selectedDayContainerColor = MyTheme.SecondGreen,
+//        disabledSelectedDayContainerColor = Color.Transparent,
+        todayContentColor = MaterialTheme.colorScheme.myTextColor,
+        todayDateBorderColor = MyTheme.SecondGreen,
+        dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.myTextColor,
+        dayInSelectionRangeContentColor = MaterialTheme.colorScheme.myTextColor,
     )
 
 
 @Composable
 fun Brush.Companion.myBackgroundBrush(radius: Float): Brush {
-    return if (isSystemInDarkTheme()){
+    return if (isSystemInDarkTheme()) {
         Brush.radialGradient(
 
             colors = listOf(
@@ -134,7 +183,7 @@ fun Brush.Companion.myBackgroundBrush(radius: Float): Brush {
             Offset.Unspecified,
             radius = radius
         )
-    }else {
+    } else {
         Brush.radialGradient(
 
             colors = listOf(

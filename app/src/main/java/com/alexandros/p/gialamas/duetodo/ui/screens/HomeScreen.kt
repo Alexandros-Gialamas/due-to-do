@@ -39,6 +39,8 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.CrudAction
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @Composable
@@ -53,6 +55,7 @@ fun HomeScreen(
     LaunchedEffect(key1 = crudAction) {
         taskViewModel.handleDatabaseActions(crudAction = crudAction)
     }
+
 
     val allCategories by taskViewModel.allCategories.collectAsState()
     val allTasks by taskViewModel.allTasks.collectAsState()
@@ -71,6 +74,12 @@ fun HomeScreen(
 
     val snackBarHostState = remember { SnackbarHostState() }
 
+    val dueDate: Long? = taskViewModel.dueDate
+    val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    val formattedDate = dueDate?.let { dateFormat.format(it) } ?: "No Date"
+    val formattedTime = dueDate?.let { timeFormat.format(it) } ?: "No Time"
+
     val mySecondBackgroundColor = Brush.myBackgroundBrush(radius = 6800f / 1.1f)
     val myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor
     val myContentColor = MaterialTheme.colorScheme.myContentColor
@@ -83,10 +92,15 @@ fun HomeScreen(
         taskViewModel.updateSearchTextState(newSearchTextState = searchTextState)
     }
 
+    LaunchedEffect(key1 = allCategories) {
+        taskViewModel.cleanUnusedCategories()
+    }
+
 
 
     DisplaySnackBar(
         snackBarHostState = snackBarHostState,
+        scope = coroutineScope,
         onComplete = { taskViewModel.updateAction(newCrudAction = it) },
         onUndoClicked = { taskViewModel.updateAction(newCrudAction = it) },
         taskTitle = taskViewModel.title,

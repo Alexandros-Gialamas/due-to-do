@@ -22,7 +22,7 @@ fun TaskListDisplay(
             myTextColor = myTextColor
         )
     } else {
-        TaskItemList(
+        TaskListItem(
             taskTableList = tasks,
             navigateToTaskScreen = navigateToTaskScreen,
             onSwipeToDelete = onSwipeToDelete,

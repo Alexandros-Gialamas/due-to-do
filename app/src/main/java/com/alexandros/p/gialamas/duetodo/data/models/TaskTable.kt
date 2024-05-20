@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.alexandros.p.gialamas.duetodo.util.Constants.TASK_TABLE
+import com.alexandros.p.gialamas.duetodo.util.RepeatFrequency
 
 @Entity(
     tableName = TASK_TABLE,
@@ -23,6 +24,8 @@ data class TaskTable(
     val taskPriority: TaskPriority,
     val date: Long = System.currentTimeMillis(),
     val dueDate: Long? = null,
+    val repeatFrequency: RepeatFrequency = RepeatFrequency.NONE,
+    val repeatDate : Long? = null,
     var isPopAlarmSelected: Boolean = false,
     var isCompleted: Boolean = false,   // TODO { find better logic }
     var isPinned: Boolean = false,

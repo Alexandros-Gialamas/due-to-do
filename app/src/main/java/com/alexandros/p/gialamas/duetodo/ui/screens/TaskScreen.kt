@@ -1,6 +1,7 @@
 package com.alexandros.p.gialamas.duetodo.ui.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
@@ -9,13 +10,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
+import androidx.compose.ui.zIndex
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.bottom_bar.BottomBarTaskScreen
 import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.top_bar.TopBarTaskScreen
@@ -30,6 +38,8 @@ import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.CrudAction
 import com.alexandros.p.gialamas.duetodo.util.SettingAction
 import com.alexandros.p.gialamas.duetodo.util.SnackToastMessages
+import java.time.LocalDate
+import java.time.LocalTime
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -38,8 +48,6 @@ fun TaskScreen(
     selectedTask: TaskTable?,
     navigateToHomeScreen: (CrudAction) -> Unit,
     context: Context,
-//    onRemindClicked: (settingAction: Setting_Action) -> Unit,
-//    onLabelClicked: (settingAction: Setting_Action) -> Unit,
 ) {
 
 
@@ -51,8 +59,12 @@ fun TaskScreen(
     val isCompleted = taskViewModel.isCompleted
     val isPinned = taskViewModel.isPinned
     val isPopAlarmSelected = taskViewModel.isPopAlarmSelected
+    val date = taskViewModel.date
+
+    val allCategories by taskViewModel.allCategories.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val mySecondBackgroundColor = Brush.myBackgroundBrush(radius = 6800f / 1.1f)
@@ -65,6 +77,10 @@ fun TaskScreen(
         navigateToHomeScreen(CrudAction.NO_ACTION)
     }
 
+    LaunchedEffect(key1 = allCategories) {
+        taskViewModel.cleanUnusedCategories()
+    }
+
     MaterialTheme(
         shapes = MaterialTheme.shapes.copy(HOME_SCREEN_ROUNDED_CORNERS),
         content = {
@@ -74,6 +90,7 @@ fun TaskScreen(
                     .background(Color.Transparent),
                 containerColor = Color.Transparent,
                 contentColor = myContentColor,
+                snackbarHost = { SnackbarHost(snackBarHostState) },
                 topBar = {
                     TopBarTaskScreen(
                         selectedTask = selectedTask,
@@ -96,27 +113,29 @@ fun TaskScreen(
                     )
                 },
                 bottomBar = {
-                            BottomBarTaskScreen(
-                                onNewCheckListClicked = { /*TODO*/ },
-                                dueDate = dueDate,
-                                onRemindClicked = { },
-                                category = category,
-                                onCategoryClicked = {},
-                                taskPriority = taskPriority,
-                                onTaskPrioritySelected = { taskViewModel.updateTaskPriority(it) },
-                                pin = isPinned,
-                                onPinClicked = { settingAction : SettingAction->
-                                               if (settingAction == SettingAction.SET) {
-                                                   taskViewModel.updateIsPinned(true)
-                                               } else if (settingAction == SettingAction.DISCARD){
-                                                   taskViewModel.updateIsPinned(false)
-                                               }
-                                },
-                                myActivatedColor = myActivatedColor,
-                                myBackgroundColor = myBackgroundColor,
-                                myContentColor = myContentColor,
-                                myTextColor = myTextColor
-                            )
+                        BottomBarTaskScreen(
+                            onNewCheckListClicked = { /*TODO*/ },
+                            dueDate = dueDate,
+                            onDueDateChange = { taskViewModel.updateDueDate(it) },
+                            showToastInvalidDate = { SnackToastMessages.INVALID_TIME.showToast(context)  },
+                            showToastPickADate = { SnackToastMessages.PICK_A_DATE.showToast(context)  },
+                            onRepeatFrequencyChanged = { /*TODO*/ },
+                            context = context,
+                            onRemindClicked = { },
+                            category = category,
+                            taskCategoryList = allCategories,
+                            onCategoryClicked = { taskViewModel.updateCategory(it) },
+                            taskPriority = taskPriority,
+                            onTaskPrioritySelected = { taskViewModel.updateTaskPriority(it) },
+                            pin = isPinned,
+                            onPinClicked = { taskViewModel.updateIsPinned(!isPinned) },
+                            scope = coroutineScope,
+                            keyboardController = keyboardController,
+                            myActivatedColor = myActivatedColor,
+                            myBackgroundColor = myBackgroundColor,
+                            myContentColor = myContentColor,
+                            myTextColor = myTextColor
+                        )
                 },
                 content = { innerPadding ->
                     Column(

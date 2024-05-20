@@ -15,7 +15,7 @@ import com.alexandros.p.gialamas.duetodo.util.SettingAction
 
 @Composable
 fun ActionPin(
-    onPinClicked: (settingAction: SettingAction) -> Unit,
+    onPinClicked: () -> Unit,
     pin: Boolean,
     myActivatedColor: Color,
     myBackgroundColor: Color,
@@ -25,11 +25,7 @@ fun ActionPin(
     IconButton(
         modifier = Modifier
             .rotate(degrees = if (pin) ICON_ROTATION else ICON_NO_ROTATION),
-        onClick = {
-            onPinClicked(
-                if (pin) SettingAction.DISCARD else SettingAction.SET
-            )
-        }
+        onClick = { onPinClicked() }
     ) {
         Icon(
             painter =
@@ -38,7 +34,7 @@ fun ActionPin(
             } else {
                 painterResource(id = R.drawable.ic_pin)
             },
-            contentDescription = stringResource(id = R.string.Reminder_Task_Icon_Description),
+            contentDescription = stringResource(id = R.string.Pinned_Task_Icon_Description),
             tint = if (pin) myActivatedColor else myContentColor
         )
     }

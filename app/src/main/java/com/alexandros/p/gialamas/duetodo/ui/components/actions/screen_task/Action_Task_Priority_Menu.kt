@@ -5,11 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,11 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import com.alexandros.p.gialamas.duetodo.R
+import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
-import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.sort.TaskPriorityItem
 import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
@@ -32,7 +29,7 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_PRIORITY_ITEM_INDICATOR_S
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 
 @Composable
-fun ActionTaskPriority(
+fun ActionTaskPriorityMenu(
     taskPriority: TaskPriority,
     onTaskPrioritySelected: (TaskPriority) -> Unit,
     myBackgroundColor: Color,
@@ -40,10 +37,10 @@ fun ActionTaskPriority(
     myTextColor: Color
 ) {
 
-    var expanded by remember { mutableStateOf(false) }
-    val dropDownBackgroundColor = Brush.myBackgroundBrush(radius = 900 / 1f)
 
-    val dropDownMenuColor = Brush.myBackgroundBrush(radius = 1800 / 0.9f)
+    var expanded by remember { mutableStateOf(false) }
+    val dropDownBackgroundColor = Brush.myBackgroundBrush(radius = 700 / 1f)
+
 
     Column(
         modifier = Modifier,
@@ -75,22 +72,27 @@ fun ActionTaskPriority(
                     TaskPriority.entries.toTypedArray().slice(0..2).forEach { taskPriority ->
 
                         DropdownMenuItem(
+                            modifier = Modifier
+                                .width(60.dp),  // TODO { hardcode value }
                             text = {
-                                TaskPriorityItem(
-                                    taskPriority = taskPriority,
-                                    myBackgroundColor = myBackgroundColor,
-                                    myContentColor = myContentColor,
-                                    myTextColor = myTextColor
+                                Canvas(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .size(TASK_PRIORITY_ITEM_INDICATOR_SIZE),
+                                    onDraw = {
+                                        drawCircle(color = taskPriority.color)
+                                    }
                                 )
                             },
                             onClick = {
                                 expanded = false
                                 onTaskPrioritySelected(taskPriority)
-                            })
-
+                            },
+                        )
                     }
                 }
             )
         }
     )
 }
+
