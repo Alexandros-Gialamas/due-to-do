@@ -9,13 +9,16 @@ It's currently under active development, with new features being added regularly
 *   Task prioritization
 *   Organize tasks into categories
 *   Search Tasks
-*   Basic sorting
+*   Sort tasks by category, date and prioritization.
+*   Linear and Grid layout
+*   Set due dates
 
 ## Planned Enhancements
 
-*   Advanced sorting
-*   Set due dates
-*   Reminders and notifications
+*   Check list
+*   Set reschedule dates (currently working on)
+*   Reminders and notifications (currently working on)
+*   Display overdued tasks
 *   User Authentication
 *   Import/Export database
 *   Customizable themes
