@@ -6,10 +6,15 @@
 
     // Bottom Bar
     <string name="BottomBar_Action_Layout_Icon_Description">Change Layout Of Tasks</string>
+    <string name="BottomBar_Action_OverDueTasks_Icon_Description">Show Overdue Tasks</string>
     <string name="BottomBar_Action_Sort_Description">Sort Tasks</string>
-    <string name="BottomBar_Action_CheckList_Description">Sort Tasks</string>
+    <string name="BottomBar_Action_Category_Selection_Description">Show Selected Category Tasks</string>
+    <string name="BottomBar_Action_Category_Label_Icon_Description">Category</string>
+    <string name="BottomBar_Action_CheckList_Description">Create CheckList</string>
     <string name="VerticalMenu_Action_Delete_All_Description">Delete All Tasks</string>
     <string name="VerticalMenu_Action_Delete_All_Text">Delete All Tasks</string>
+    <string name="Ascending_Text">Ascend</string>
+    <string name="Descending_Text">Descend</string>
 
     <string name="App_Bar_Title_Description">dueToDo</string>
 
@@ -62,15 +67,18 @@
     <string name="Monthly_text">Monthly</string>
     <string name="Yearly_text">Yearly</string>
     <string name="Custom_text">Custom</string>
+    <string name="Minute_1_text">1 Minute</string>
+    <string name="Seconds_30_text">30 Seconds</string>
 
 
-    // Toast/Snack Messages
+    // Toast / Snack Messages
     <string name="Validate_Fields">Please fill at least one field</string>
     <string name="All_Tasks_Deleted_Message">All Tasks Deleted</string>
     <string name="Invalid_Time">Invalid time</string>
     <string name="Pick_a_Date">Pick a date</string>
     <string name="Snack_Bar_Label_OK">OK</string>
     <string name="Snack_Bar_Label_UNDO">UNDO</string>
+    <string name="Reschedule_Request_Error">Something gone wrong. Please reschedule the task!</string>
 
 
 
@@ -80,7 +88,17 @@
     <string name="Delete_Task">Delete \n \'%1$s\'</string>
     <string name="Delete_Task_confirmation">Are you sure that you want to delete \'%1$s\' ?</string>
     <string name="Delete_All_Task">Delete All Tasks?</string>
-    <string name="Delete_All_Task_confirmation">Are you sure that you want to delete all tasks? This crudAction will be irreversible.</string>
+    <string name="Delete_All_Task_confirmation">Are you sure that you want to delete all tasks? This databaseAction will be irreversible.</string>
+
+    // Date/Time Picker
+    <string name="Confirm_Ok">OK</string>
+    <string name="Confirm_Cancel">Cancel</string>
+
+    // Drawer
+    <string name="User_Profile_Image_Description">User Profile Image</string>
 
 
+    // Selected Categories
+    <string name="None">All</string>
+    <string name="Reminders">Reminders</string>
 </resources>

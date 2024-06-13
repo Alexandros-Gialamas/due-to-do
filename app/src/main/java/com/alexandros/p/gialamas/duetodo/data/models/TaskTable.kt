@@ -22,15 +22,15 @@ data class TaskTable(
     val title: String,
     val description: String,
     val taskPriority: TaskPriority,
-    val date: Long = System.currentTimeMillis(),
-    val dueDate: Long? = null,
-    val repeatFrequency: RepeatFrequency = RepeatFrequency.NONE,
-    val repeatDate : Long? = null,
-    var isPopAlarmSelected: Boolean = false,
-    var isCompleted: Boolean = false,   // TODO { find better logic }
-    var isPinned: Boolean = false,
     var category: String = "",
-    val categoryNone: Boolean = true,
-    var categoryReminders: Boolean = false,
+    val createdDate: Long = System.currentTimeMillis(),
+    val dueDate: Long? = null, // schedule task
+    val reScheduleDate : Long? = null, // for schedule repetition
+    val repeatFrequency: RepeatFrequency = RepeatFrequency.NONE,
+    val dialogNotification: Boolean = false,
+    var isChecked: Boolean = false, // for checking list
+    var isPinned: Boolean = false,
+    val categoryNone: Boolean = true, // for sorting purposes
+    var categoryReminders: Boolean = false, // for sorting purposes of scheduled tasks
     val categoryId: Int? = null // foreign key to TaskCategoryTable
 )

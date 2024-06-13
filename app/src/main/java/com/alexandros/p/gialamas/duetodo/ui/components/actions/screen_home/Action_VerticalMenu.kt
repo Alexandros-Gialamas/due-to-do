@@ -26,10 +26,9 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun ActionVerticalMenu(
+    modifier: Modifier = Modifier,
     onDeleteAllTasksClicked: () -> Unit,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -50,7 +49,7 @@ fun ActionVerticalMenu(
                 DropdownMenuItem(
                     text = {
                         Text(
-                            modifier = Modifier
+                            modifier = modifier
                                 .padding(start = LARGE_PADDING),
                             text = stringResource(id = R.string.VerticalMenu_Action_Delete_All_Text),
                             style = typography.titleMedium
@@ -71,8 +70,6 @@ fun ActionVerticalMenu(
 private fun ActionVerticalMenuPreview() {
     ActionVerticalMenu(
         onDeleteAllTasksClicked = {},
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
-        myContentColor = MaterialTheme.colorScheme.myContentColor,
-        myTextColor = MaterialTheme.colorScheme.myTextColor
+        myContentColor = MaterialTheme.colorScheme.myContentColor
     )
 }

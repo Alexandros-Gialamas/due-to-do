@@ -4,12 +4,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import com.alexandros.p.gialamas.duetodo.R
-import com.alexandros.p.gialamas.duetodo.util.CrudAction
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 import com.alexandros.p.gialamas.duetodo.util.Constants.KEYBOARD_DELAY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -17,12 +19,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ActionInsert(
-    onAddClicked: (CrudAction) -> Unit,
+    onAddClicked: (DatabaseAction) -> Unit,
     scope : CoroutineScope,
     keyboardController : SoftwareKeyboardController?,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor
 ) {
 
     IconButton(
@@ -30,7 +30,7 @@ fun ActionInsert(
             scope.launch {
                 keyboardController?.hide()
                 delay(KEYBOARD_DELAY)
-                onAddClicked(CrudAction.INSERT)
+                onAddClicked(DatabaseAction.INSERT)
             }
         }
     ) {

@@ -19,26 +19,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.ui.theme.EMPTY_CONTENT_SCREEN_ICON_SIZE
+import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun TaskListEmpty(
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    modifier: Modifier = Modifier,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Transparent),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .size(EMPTY_CONTENT_SCREEN_ICON_SIZE),
                 painter = painterResource(id = R.drawable.ic_sad_face),
                 contentDescription = stringResource(R.string.Sad_face_Description),
@@ -58,7 +59,6 @@ fun TaskListEmpty(
 @Preview
 fun TaskListEmptyPreview() {
     TaskListEmpty(
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
         myContentColor = MaterialTheme.colorScheme.myContentColor.copy(alpha = 0.6f),
         myTextColor = MaterialTheme.colorScheme.myTextColor.copy(alpha = 0.6f)
     )

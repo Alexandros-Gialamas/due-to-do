@@ -1,7 +1,8 @@
 package com.alexandros.p.gialamas.duetodo.navigation
 
 import android.content.Context
-import androidx.compose.animation.ExperimentalSharedTransitionApi
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -21,22 +22,20 @@ import androidx.navigation.navArgument
 import com.alexandros.p.gialamas.duetodo.ui.screens.HomeScreen
 import com.alexandros.p.gialamas.duetodo.ui.screens.TaskScreen
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
-import com.alexandros.p.gialamas.duetodo.util.CrudAction
 import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN
 import com.alexandros.p.gialamas.duetodo.util.Constants.HOME_SCREEN_ARGUMENT_KEY
 import com.alexandros.p.gialamas.duetodo.util.Constants.TASK_SCREEN
 import com.alexandros.p.gialamas.duetodo.util.Constants.TASK_SCREEN_ARGUMENT_KEY
+import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 import com.alexandros.p.gialamas.duetodo.util.toAction
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun NavigationComposable(
     context: Context,
     navController: NavHostController,
     taskViewModel: TaskViewModel
 ) {
-
-//    SharedTransitionScope {
 
     val screen = remember(navController) { Route }
 
@@ -70,19 +69,19 @@ fun NavigationComposable(
             val action =
                 navBackStackEntry?.arguments?.getString(HOME_SCREEN_ARGUMENT_KEY).toAction()
 
-            var myCrudAction by rememberSaveable { mutableStateOf(CrudAction.NO_ACTION) }
+            var myDatabaseAction by rememberSaveable { mutableStateOf(DatabaseAction.NO_ACTION) }
 
-            LaunchedEffect(key1 = myCrudAction) {
-                if (action != myCrudAction) {
-                    myCrudAction = action
-                    taskViewModel.updateAction(newCrudAction = action)
+            LaunchedEffect(key1 = myDatabaseAction) {
+                if (action != myDatabaseAction) {
+                    myDatabaseAction = action
+                    taskViewModel.updateAction(newDatabaseAction = action)
                 }
             }
 
-            val databaseAction = taskViewModel.crudAction
+            val databaseAction = taskViewModel.databaseAction
 
             HomeScreen(
-                crudAction = databaseAction,
+                databaseAction = databaseAction,
                 navController,
                 context,
                 taskViewModel = taskViewModel,
@@ -132,5 +131,4 @@ fun NavigationComposable(
             )
         }
     }
-//    }
 }

@@ -35,9 +35,11 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.DIALOG_BUTTON_SECOND_BORDER_ST
 import com.alexandros.p.gialamas.duetodo.ui.theme.DIALOG_BUTTON_WIDTH
 import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.HIGH_BORDER_STROKE_ALPHA
+import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_ROUNDED_CORNERS
+import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
@@ -45,14 +47,15 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun DeleteDialog(
+    modifier: Modifier = Modifier,
     title: String,
     message: String,
     openDialog: Boolean,
     closeDialog: () -> Unit,
     onYesClicked: () -> Unit,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
     val dialogBackgroundColor = Brush.myBackgroundBrush(radius = 1800f / 0.9f)
     if (openDialog) {
@@ -63,12 +66,12 @@ fun DeleteDialog(
                 Surface(
                     color = Color.Transparent,
                     shape = TASK_ITEM_ROUNDED_CORNERS,
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth(0.94f)
                         .height(IntrinsicSize.Max),
                     content = {
                         Box(
-                            modifier = Modifier
+                            modifier = modifier
                                 .fillMaxSize()
                                 .background(dialogBackgroundColor)
                                 .border(
@@ -87,13 +90,13 @@ fun DeleteDialog(
                                 ),
                             content = {
                                 Column(
-                                    modifier = Modifier
+                                    modifier = modifier
                                         .padding(horizontal = 24.dp, vertical = 12.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.SpaceBetween,
                                     content = {
                                         Text(
-                                            modifier = Modifier
+                                            modifier = modifier
                                                 .fillMaxWidth()
                                                 .padding(start = 4.dp, end = 4.dp, top = 14.dp),
                                             text = title,  // TODO { Delete Task Title }
@@ -104,7 +107,7 @@ fun DeleteDialog(
                                         )
 
                                         Text(
-                                            modifier = Modifier
+                                            modifier = modifier
                                                 .fillMaxWidth()
                                                 .padding(horizontal = 4.dp, vertical = 12.dp),
                                             text = message,
@@ -114,13 +117,13 @@ fun DeleteDialog(
                                         )
 
                                         Row(
-                                            modifier = Modifier
+                                            modifier = modifier
                                                 .fillMaxWidth()
                                                 .padding(horizontal = 4.dp, vertical = 12.dp),
                                             horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                                             content = {
                                                 OutlinedButton(
-                                                    modifier = Modifier
+                                                    modifier = modifier
                                                         .clip(shape = TASK_ITEM_ROUNDED_CORNERS)
                                                         .width(DIALOG_BUTTON_WIDTH)
                                                         .border(
@@ -149,7 +152,7 @@ fun DeleteDialog(
                                                 }
 
                                                 OutlinedButton(
-                                                    modifier = Modifier
+                                                    modifier = modifier
                                                         .clip(shape = TASK_ITEM_ROUNDED_CORNERS)
                                                         .width(DIALOG_BUTTON_WIDTH)
                                                         .border(
@@ -201,8 +204,5 @@ private fun DisplayAlertDialogPreview() {
         openDialog = true,
         closeDialog = { },
         onYesClicked = {},
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
-        myContentColor = MaterialTheme.colorScheme.myContentColor,
-        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

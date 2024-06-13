@@ -29,18 +29,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.theme.DIALOG_BUTTON_SECOND_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
+import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.MEDIUM_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_SHADOW_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_TONAL_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_PRIORITY_ITEM_INDICATOR_SIZE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TINY_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
@@ -49,13 +53,13 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TaskItem(
+    modifier: Modifier = Modifier,
     taskTable: TaskTable,
 //    animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout: Boolean,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor
 ) {
 
     val surfaceBackgroundColor = Brush.myBackgroundBrush(radius = 1600f / 1.1f)
@@ -63,9 +67,9 @@ fun TaskItem(
 
 
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .clip(TASK_ITEM_ROUNDED_CORNERS)
-            .width(intrinsicSize = IntrinsicSize.Max)
+            .fillMaxWidth()
             .height(intrinsicSize = IntrinsicSize.Min)
             .background(myBackgroundColor)
 //        .background(MaterialTheme.colorScheme.primary)  // TODO { try colors }
@@ -74,14 +78,14 @@ fun TaskItem(
             .border(
                 BorderStroke(
                     FIRST_BORDER_STROKE,
-                   color =
-                   if (isGridLayout) taskTable.taskPriority.color else myContentColor.copy(alpha = LIGHT_BORDER_STROKE_ALPHA)
+                    color =
+                    if (isGridLayout) taskTable.taskPriority.color else myContentColor.copy(alpha = LIGHT_BORDER_STROKE_ALPHA)
                 ),
                 shape = TASK_ITEM_ROUNDED_CORNERS
             )
             .border(
                 BorderStroke(
-                    DIALOG_BUTTON_SECOND_BORDER_STROKE,
+                    SECOND_BORDER_STROKE,
                     brush =
                     surfaceBackgroundColor
                 ),
@@ -95,15 +99,17 @@ fun TaskItem(
             MaterialTheme(
                 content = {
                     Row(
-                        modifier = Modifier
+                        modifier = modifier
                             .padding(EXTRA_LARGE_PADDING),
                         content = {
                             Column(
                                 modifier = Modifier
-                                    .weight(14f),
+                                    .weight(12f),
                                 content = {
+
                                     Text(
-                                        modifier = Modifier,
+                                        modifier = modifier
+                                            .padding(horizontal = LARGE_PADDING),
                                         text = taskTable.title,
                                         color = colorScheme.myTextColor,
                                         style = typography.titleMedium,
@@ -116,12 +122,13 @@ fun TaskItem(
                                     Spacer(modifier = Modifier.height(MEDIUM_PADDING))
 
                                     Text(
-                                        modifier = Modifier
-                                            .padding(bottom = TINY_PADDING)
+                                        modifier = modifier
+                                            .padding(horizontal = LARGE_PADDING, vertical = TINY_PADDING)
                                             .fillMaxWidth(),
                                         text = taskTable.description,
                                         color = colorScheme.myTextColor,
                                         style = typography.bodyMedium,
+                                        fontWeight = FontWeight.ExtraLight,
                                         maxLines = if (isGridLayout) 4 else 2,
                                         softWrap = true,
                                         overflow = TextOverflow.Ellipsis
@@ -131,22 +138,24 @@ fun TaskItem(
                             )
 
                             Box(
-                                modifier = Modifier
+                                modifier = modifier
                                     .padding(end = MEDIUM_PADDING)
                                     .fillMaxWidth()
-                                    .weight(1f)
+                                    .weight(if (!isGridLayout) 1f else 0.1f)
                                     .align(Alignment.CenterVertically),
                                 contentAlignment = Alignment.CenterEnd,
                                 content = {
-                                    Canvas(
-                                        modifier = Modifier
-                                            .size(TASK_PRIORITY_ITEM_INDICATOR_SIZE),
-                                        onDraw = {
-                                            drawCircle(
-                                                color = taskTable.taskPriority.color
-                                            )
-                                        }
-                                    )
+                                    if (!isGridLayout) {
+                                        Canvas(
+                                            modifier = modifier
+                                                .size(TASK_PRIORITY_ITEM_INDICATOR_SIZE),
+                                            onDraw = {
+                                                drawCircle(
+                                                    color = taskTable.taskPriority.color
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
                             )
                         }
@@ -171,7 +180,6 @@ fun TaskItemPreview() {
         navigateToTaskScreen = {},
         myBackgroundColor = colorScheme.myBackgroundColor,
         myContentColor = colorScheme.myContentColor,
-        myTextColor = colorScheme.myTextColor,
         isGridLayout = false
     )
 }

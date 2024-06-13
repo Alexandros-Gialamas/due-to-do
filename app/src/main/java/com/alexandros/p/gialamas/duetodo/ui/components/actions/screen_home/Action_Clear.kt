@@ -19,11 +19,10 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun ActionClear(
+    modifier: Modifier = Modifier,
     textState: String,
     onClearClicked: () -> Unit,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
 ){
 
     val iconVisible = textState.isNotBlank()
@@ -31,7 +30,7 @@ fun ActionClear(
     IconButton(onClick = { onClearClicked() }) {
         if (iconVisible) {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .padding(end = LARGE_PADDING),
                 imageVector = Icons.Filled.Close,
                 contentDescription = stringResource(
@@ -49,8 +48,6 @@ private fun ActionMenuPreview() {
     ActionClear(
         onClearClicked = {},
         textState = "",
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
         myContentColor = MaterialTheme.colorScheme.myContentColor,
-        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

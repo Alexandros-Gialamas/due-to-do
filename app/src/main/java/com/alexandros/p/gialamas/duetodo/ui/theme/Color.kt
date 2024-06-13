@@ -80,6 +80,10 @@ val ColorScheme.myBackgroundColor: Color
     get() = if (isSystemInDarkTheme()) MyTheme.YInMnBlue else MyTheme.MyGreen
 
 
+val ColorScheme.myActivatedColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) MyTheme.MyYellow else MyTheme.MyYellow
+
 // FAB Theme Colors
 val ColorScheme.fabBackgroundColor: Color
     @Composable
@@ -166,6 +170,17 @@ val DatePickerDefaults.myDatePickerColors: DatePickerColors
         dayInSelectionRangeContentColor = MaterialTheme.colorScheme.myTextColor,
     )
 
+
+@Composable
+fun Brush.Companion.myTransparentBrush(radius: Float): Brush {
+    return  Brush.radialGradient(
+        colors = listOf(
+            Color.Transparent,
+            Color.Transparent,
+            Color.Transparent
+        )
+    )
+}
 
 @Composable
 fun Brush.Companion.myBackgroundBrush(radius: Float): Brush {

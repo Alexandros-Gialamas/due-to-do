@@ -1,8 +1,8 @@
 package com.alexandros.p.gialamas.duetodo.util
 
 enum class SearchBarState {
-    OPENED,
-    CLOSED,
+    FOCUSED,
+    TYPING,
     CLEARED,
-    TRIGGERED
+    UNFOCUSED
 }

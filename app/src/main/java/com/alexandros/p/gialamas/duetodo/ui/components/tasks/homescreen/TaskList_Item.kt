@@ -25,6 +25,7 @@ import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
@@ -47,8 +48,9 @@ import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_SMALL_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
-import com.alexandros.p.gialamas.duetodo.util.CrudAction
+import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -56,31 +58,19 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListItem(
+    modifier: Modifier = Modifier,
     taskViewModel : TaskViewModel = hiltViewModel(),   // TODO { find better way }
     taskTableList: List<TaskTable> = listOf(),
-    onSwipeToDelete: (CrudAction, TaskTable) -> Unit,
+    onSwipeToDelete: (DatabaseAction, TaskTable) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout : Boolean,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
-//    searchedText : String TODO{remove?}
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
 ) {
-
-
-//    val filteredTasks = remember(taskTableList) {11
-//        if (searchedText.isNotBlank()) {
-//            taskTableList.sortedBy { it.taskId }.filter { item ->
-//                item.title.contains(searchedText, ignoreCase = true) ||
-//                        item.description.contains(searchedText, ignoreCase = true)
-//            }
-//        }
-//    }
 
     when {
         isGridLayout -> {
             LazyVerticalStaggeredGrid(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
                     .background(Color.Transparent),
                 columns = StaggeredGridCells.Adaptive(180.dp),
@@ -111,7 +101,7 @@ fun TaskListItem(
 
                         ) {
                             Box(
-                                modifier = Modifier
+                                modifier = modifier
                                     .clip(HOME_SCREEN_ROUNDED_CORNERS)
                                     .fillMaxWidth(0.9f)   // TODO { hardcode value }
                                     .background(Color.Transparent)
@@ -120,9 +110,6 @@ fun TaskListItem(
                                     TaskItem(
                                         taskTable = taskTableList[index],
                                         navigateToTaskScreen = navigateToTaskScreen,
-                                        myBackgroundColor = myBackgroundColor,
-                                        myContentColor = myContentColor,
-                                        myTextColor = myTextColor,
                                         isGridLayout = isGridLayout
                                     )
                                 }
@@ -134,7 +121,7 @@ fun TaskListItem(
         }
         else -> {
             LazyColumn(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
                     .background(Color.Transparent),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -152,7 +139,7 @@ fun TaskListItem(
                             taskViewModel.viewModelScope.launch { // TODO { remove scope from here }
                                 delay(400)
                             }
-                            onSwipeToDelete(CrudAction.DELETE, task)
+                            onSwipeToDelete(DatabaseAction.DELETE, task)
                         }
                         val degrees by animateFloatAsState(
                             targetValue =
@@ -192,7 +179,7 @@ fun TaskListItem(
                                 }, // TODO { revisit color }
                                 dismissContent = {
                                     Box(
-                                        modifier = Modifier
+                                        modifier = modifier
                                             .clip(HOME_SCREEN_ROUNDED_CORNERS)
                                             .fillMaxWidth(0.9f)   // TODO { hardcode value }
                                             .background(Color.Transparent)
@@ -201,9 +188,6 @@ fun TaskListItem(
                                             TaskItem(
                                                 taskTable = task,
                                                 navigateToTaskScreen = navigateToTaskScreen,
-                                                myBackgroundColor = myBackgroundColor,
-                                                myContentColor = myContentColor,
-                                                myTextColor = myTextColor,
                                                 isGridLayout = isGridLayout
                                             )
                                         }
@@ -222,12 +206,13 @@ fun TaskListItem(
 
 @Composable
 fun SwipeBackground(
+    modifier: Modifier = Modifier,
     degrees: Float,
     backgroundColor: Color,
     iconColor: Color
 ) { // TODO { revisit color }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip((HOME_SCREEN_ROUNDED_CORNERS))
             .fillMaxSize()
             .background(backgroundColor)
@@ -235,7 +220,7 @@ fun SwipeBackground(
         contentAlignment = Alignment.CenterEnd,
         content = {
             Icon(
-                modifier = Modifier
+                modifier = modifier
                     .rotate(degrees = degrees),
                 imageVector = Icons.Filled.Delete,
                 contentDescription = stringResource(id = R.string.Delete_Task_Icon_Description),

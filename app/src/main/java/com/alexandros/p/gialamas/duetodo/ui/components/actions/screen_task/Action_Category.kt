@@ -1,6 +1,5 @@
 package com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseInOutQuart
 import androidx.compose.animation.core.tween
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.text.KeyboardActions
@@ -52,6 +52,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
@@ -63,6 +65,10 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.SEARCH_BAR_ICON_ALPHA_VALUE
 import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
+import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextFieldColors
 import com.alexandros.p.gialamas.duetodo.util.Constants.KEYBOARD_DELAY
 import kotlinx.coroutines.CoroutineScope
@@ -71,15 +77,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ActionCategory(
+    modifier: Modifier = Modifier,
     category: String,
     taskCategoryList: List<TaskCategoryTable>,
     onCategoryClicked: (selectedCategory: String) -> Unit,
     scope: CoroutineScope,
     keyboardController: SoftwareKeyboardController?,
-    myActivatedColor: Color,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myActivatedColor: Color = MaterialTheme.colorScheme.myActivatedColor,
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
 
     var parentHeight by remember { mutableStateOf(0.dp) }
@@ -88,15 +95,17 @@ fun ActionCategory(
     var newCategory by remember { mutableStateOf("") }
     val dropDownBackgroundColor = myBackgroundColor.copy(alpha = 0.9f)
 
+//    var popupPosition by remember { mutableStateOf(IntOffset.Zero) }
+//    var popupHeight by remember { mutableStateOf(0.dp) }
+//    val configuration = LocalConfiguration.current
 
     Column(
-        modifier = Modifier
-            .height(IntrinsicSize.Min)
-            .width(IntrinsicSize.Min)
+        modifier = modifier
             .onGloballyPositioned { coordinates ->
-                parentHeight = coordinates.size.height.dp
                 parentWidth = coordinates.size.width.dp
+                parentHeight = coordinates.size.height.dp
             },
+        horizontalAlignment = Alignment.Start,
         content = {
 
             IconButton(
@@ -121,9 +130,10 @@ fun ActionCategory(
             }
 
 
-
             DropdownMenu(
                 modifier = DropDownMenuModifier(
+                    modifier = modifier
+                        .fillMaxWidth(0.9f),
                     background = dropDownBackgroundColor,
                     borderOne = myContentColor,
                     borderTwo = myBackgroundColor
@@ -150,7 +160,7 @@ fun ActionCategory(
                         },
                         placeholder = {
                             Text(
-                                modifier = Modifier
+                                modifier = modifier
                                     .alpha(SEARCH_BAR_ICON_ALPHA_VALUE),
                                 text = stringResource(id = R.string.New_Category_Placeholder),
                                 color = myTextColor
@@ -164,9 +174,7 @@ fun ActionCategory(
                                     ActionClear(
                                         textState = newCategory,
                                         onClearClicked = { newCategory = "" },
-                                        myBackgroundColor = myBackgroundColor,
                                         myContentColor = myContentColor,
-                                        myTextColor = myTextColor
                                     )
                                     if (newCategory.isNotBlank()) {
                                         IconButton(
@@ -213,13 +221,13 @@ fun ActionCategory(
 
 
                     LazyVerticalStaggeredGrid(
-                        modifier = Modifier
+                        modifier = modifier
                             .height(
                                 if (parentHeight <= 300.dp) parentHeight else parentHeight / 2
                             )
                             .width(parentWidth * 3)
                             .background(Color.Transparent),
-                        columns = StaggeredGridCells.Fixed(2),
+                        columns = StaggeredGridCells.Adaptive(minSize = 120.dp),
                         horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
                         contentPadding = PaddingValues(LARGE_PADDING), // TODO { paddings }
 
@@ -232,6 +240,7 @@ fun ActionCategory(
                                 LaunchedEffect(key1 = true) {
                                     itemAppear = true
                                 }
+
 
                                 AnimatedVisibility(
                                     visible = itemAppear && expanded,
@@ -246,7 +255,7 @@ fun ActionCategory(
                                         contentAlignment = Alignment.BottomCenter
                                     ) {
                                         DropdownMenuItem(
-                                            modifier = Modifier
+                                            modifier = modifier
                                                 .fillMaxWidth(),
                                             leadingIcon = {
                                                 val pointCategory =
@@ -276,8 +285,7 @@ fun ActionCategory(
                                             },
                                             text = {
                                                 Text(
-                                                    modifier = Modifier
-                                                        .padding(start = LARGE_PADDING),
+                                                    modifier = modifier,
                                                     text = taskCategory.categoryName,
                                                     style = MaterialTheme.typography.bodyMedium,
                                                     textAlign = TextAlign.Justify,
@@ -288,10 +296,6 @@ fun ActionCategory(
                                                 )
                                             },
                                             onClick = {
-                                                Log.d(
-                                                    "ActionCategory",
-                                                    "DropdownMenuItem clicked for category: ${taskCategory.categoryName}"
-                                                )
                                                 scope.launch {
                                                     keyboardController?.hide()
                                                     delay(KEYBOARD_DELAY)
@@ -311,16 +315,16 @@ fun ActionCategory(
 
 
                     DropdownMenuItem(
-                        modifier = Modifier
+                        modifier = modifier
                             .align(alignment = Alignment.End)
                             .padding(start = parentWidth),
                         text = {
                             Text(
-                                modifier = Modifier
-                                    .padding(start = LARGE_PADDING),
+                                modifier = modifier,
                                 text = stringResource(id = R.string.Category_None_Text),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = myTextColor // TODO { revisit }
+                                textAlign = TextAlign.Start,
+                                color = myTextColor
                             )
                         },
                         leadingIcon = {
@@ -361,13 +365,13 @@ fun ActionCategory(
 
 @Composable
 private fun DropDownMenuModifier(
+    modifier: Modifier = Modifier,
     background: Color,
     borderOne: Color,
     borderTwo: Color
-):
-        Modifier = Modifier
+): Modifier = modifier
     .height(IntrinsicSize.Min)
-    .width(IntrinsicSize.Min)
+    .width(IntrinsicSize.Max)
     .clip(HOME_SCREEN_ROUNDED_CORNERS)
     .background(background)
     .border(
@@ -384,10 +388,11 @@ private fun DropDownMenuModifier(
 
 @Composable
 private fun OutlinedTextFieldModifier(
+    modifier: Modifier = Modifier,
     background: Color,
     borderOne: Color,
     borderTwo: Color
-): Modifier = Modifier
+): Modifier = modifier
     .clip(HOME_SCREEN_ROUNDED_CORNERS)
     .fillMaxWidth()
     .background(background)
@@ -405,5 +410,26 @@ private fun OutlinedTextFieldModifier(
         ),
         shape = HOME_SCREEN_ROUNDED_CORNERS
     )
+
+@Composable
+private fun columnModifier(
+    modifier: Modifier = Modifier,
+    background: Color,
+    borderOne: Color,
+    borderTwo: Color
+): Modifier = modifier
+    .clip(HOME_SCREEN_ROUNDED_CORNERS)
+    .background(background)
+    .border(
+        width = FIRST_BORDER_STROKE,
+        color = borderOne.copy(alpha = LIGHT_BORDER_STROKE_ALPHA),
+        shape = HOME_SCREEN_ROUNDED_CORNERS
+    )
+    .border(
+        width = SECOND_BORDER_STROKE,
+        color = borderTwo,
+        shape = HOME_SCREEN_ROUNDED_CORNERS
+    )
+    .padding(LARGE_PADDING)
 
 

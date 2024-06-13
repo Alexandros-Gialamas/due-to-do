@@ -17,9 +17,7 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 @Composable
 fun ActionMainMenu(
     onMenuClicked: () -> Unit,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
 ) {
     IconButton(
         onClick = { onMenuClicked() },
@@ -37,8 +35,6 @@ fun ActionMainMenu(
 private fun ActionMainMenuPreview() {
     ActionMainMenu(
         onMenuClicked = {},
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
         myContentColor = MaterialTheme.colorScheme.myContentColor,
-        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

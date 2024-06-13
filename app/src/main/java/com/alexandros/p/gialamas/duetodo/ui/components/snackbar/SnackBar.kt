@@ -6,8 +6,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import com.alexandros.p.gialamas.duetodo.util.CrudAction
+import androidx.compose.ui.Modifier
+import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -15,21 +15,21 @@ import kotlinx.coroutines.launch
 fun DisplaySnackBar(
     snackBarHostState: SnackbarHostState,
     scope : CoroutineScope,
-    onComplete: (CrudAction) -> Unit,
-    onUndoClicked: (CrudAction) -> Unit,
+    onComplete: (DatabaseAction) -> Unit,
+    onUndoClicked: (DatabaseAction) -> Unit,
     taskTitle: String,
-    crudAction: CrudAction,
+    databaseAction: DatabaseAction,
 ) {
 
 
 
-    LaunchedEffect(key1 = crudAction) {
-        if (crudAction != CrudAction.NO_ACTION) {
+    LaunchedEffect(key1 = databaseAction) {
+        if (databaseAction != DatabaseAction.NO_ACTION) {
             scope.launch {
                 val snackBarResult =
                     snackBarHostState.showSnackbar(
-                        message = setMessage(crudAction = crudAction, taskTitle = taskTitle),
-                        actionLabel = setActionLabel(crudAction),
+                        message = setMessage(databaseAction = databaseAction, taskTitle = taskTitle),
+                        actionLabel = setActionLabel(databaseAction),
                         duration = SnackbarDuration.Short
                     )
 //                if (snackBarResult == SnackbarResult.ActionPerformed && action == Action.DELETE) {
@@ -38,26 +38,26 @@ fun DisplaySnackBar(
 //                    onComplete(Action.NO_ACTION)
 //                }
                 undoDeletedTask(
-                    crudAction = crudAction,
+                    databaseAction = databaseAction,
                     snackBarResult = snackBarResult,
                     onUndoClicked = onUndoClicked
                 )
             }
-            onComplete(CrudAction.NO_ACTION)
+            onComplete(DatabaseAction.NO_ACTION)
         }
     }
 }
 
 
-private fun setMessage(crudAction: CrudAction, taskTitle: String): String {
-    return when (crudAction) {
-        CrudAction.DELETE_ALL -> "All Tasks Deleted" //TODO { skip hardcode }
-        else -> "${crudAction.name} : $taskTitle"  //TODO { better messages }
+private fun setMessage(databaseAction: DatabaseAction, taskTitle: String): String {
+    return when (databaseAction) {
+        DatabaseAction.DELETE_ALL -> "All Tasks Deleted" //TODO { skip hardcode }
+        else -> "${databaseAction.name} : $taskTitle"  //TODO { better messages }
     }
 }
 
-private fun setActionLabel(crudAction: CrudAction): String {
-    return if (crudAction.name == "DELETE") {
+private fun setActionLabel(databaseAction: DatabaseAction): String {
+    return if (databaseAction.name == "DELETE") {
         "UNDO"
     } else {
         "OK"
@@ -65,11 +65,11 @@ private fun setActionLabel(crudAction: CrudAction): String {
 }
 
 private fun undoDeletedTask(
-    crudAction: CrudAction,
+    databaseAction: DatabaseAction,
     snackBarResult: SnackbarResult,
-    onUndoClicked: (CrudAction) -> Unit
+    onUndoClicked: (DatabaseAction) -> Unit
 ) {
-    if (snackBarResult == SnackbarResult.ActionPerformed && crudAction == CrudAction.DELETE) {
-        onUndoClicked(CrudAction.UNDO)
+    if (snackBarResult == SnackbarResult.ActionPerformed && databaseAction == DatabaseAction.DELETE) {
+        onUndoClicked(DatabaseAction.UNDO)
     }
 }

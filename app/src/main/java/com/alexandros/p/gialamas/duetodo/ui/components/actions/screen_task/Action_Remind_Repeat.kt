@@ -31,22 +31,27 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.ONE_TAB_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
+import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.util.RepeatFrequency
 
 @Composable
 fun ActionRemindRepeat(
+    modifier: Modifier = Modifier,
     popUpPosition: IntOffset,
     onRepeatFrequencySelected: (RepeatFrequency) -> Unit,
     initialRepeatFrequency: RepeatFrequency = RepeatFrequency.NONE,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
 
     var selectedRepeatFrequency by remember { mutableStateOf(initialRepeatFrequency) }
 
     Surface(
-        modifier = Modifier,
+        modifier = modifier,
         color = Color.Transparent,
         contentColor = myContentColor,
         content = {
@@ -55,7 +60,7 @@ fun ActionRemindRepeat(
                 offset = popUpPosition,
                 content = {
                     Column(
-                        modifier = ColumnModifier(
+                        modifier = columnModifier(
                             background = myBackgroundColor,
                             borderOne = myContentColor,
                             borderTwo = myBackgroundColor
@@ -64,7 +69,7 @@ fun ActionRemindRepeat(
                         horizontalAlignment = Alignment.Start,
                         content = {
 
-                            Spacer(modifier = Modifier.height(ONE_TAB_PADDING))
+                            Spacer(modifier = modifier.height(ONE_TAB_PADDING))
                             RepeatFrequency.entries.forEach { repeatFrequency ->
                                 RepeatTextItem(
                                     text = stringResource(id = repeatFrequency.displayText),
@@ -86,18 +91,19 @@ fun ActionRemindRepeat(
 
 @Composable
 private fun RepeatTextItem(
+    modifier: Modifier = Modifier,
     onClick : () -> Unit,
     text: String,
     myTextColor: Color
 ){
 
     Row (
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(0.47f)
             .clickable { onClick() },
         content = {
             Text(
-                modifier = Modifier
+                modifier = modifier
                     .clickable { onClick() }
                     .padding(horizontal = ONE_TAB_PADDING),
                 text = text,
@@ -109,16 +115,16 @@ private fun RepeatTextItem(
         }
     )
 
-
-    Spacer(modifier = Modifier.height(ONE_TAB_PADDING))
+    Spacer(modifier = modifier.height(ONE_TAB_PADDING))
 }
 
 @Composable
-private fun ColumnModifier(
+private fun columnModifier(
+    modifier: Modifier = Modifier,
     background: Color,
     borderOne: Color,
     borderTwo: Color
-) : Modifier = Modifier
+) : Modifier = modifier
     .clip(HOME_SCREEN_ROUNDED_CORNERS)
     .background(background)
     .border(

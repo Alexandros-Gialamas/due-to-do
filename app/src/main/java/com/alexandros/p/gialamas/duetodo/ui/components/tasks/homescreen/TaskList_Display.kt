@@ -1,34 +1,25 @@
 package com.alexandros.p.gialamas.duetodo.ui.components.tasks.homescreen
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
-import com.alexandros.p.gialamas.duetodo.util.CrudAction
+import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 
 @Composable
 fun TaskListDisplay(
+    modifier: Modifier = Modifier,
     tasks: List<TaskTable>,
-    onSwipeToDelete: (CrudAction, TaskTable) -> Unit,
+    onSwipeToDelete: (DatabaseAction, TaskTable) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
-    isGridLayout : Boolean,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    isGridLayout : Boolean
 ) {
     if (tasks.isEmpty()) {
-        TaskListEmpty(
-            myBackgroundColor = myBackgroundColor,
-            myContentColor = myContentColor,
-            myTextColor = myTextColor
-        )
+        TaskListEmpty()
     } else {
         TaskListItem(
             taskTableList = tasks,
             navigateToTaskScreen = navigateToTaskScreen,
             onSwipeToDelete = onSwipeToDelete,
-            myBackgroundColor = myBackgroundColor,
-            myContentColor = myContentColor,
-            myTextColor = myTextColor,
             isGridLayout = isGridLayout
         )
     }

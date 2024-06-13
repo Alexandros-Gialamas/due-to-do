@@ -14,6 +14,8 @@ sealed class SnackToastMessages(val stringMessage : Int ) {
    object DELETE_ALL_TASKS : SnackToastMessages( stringMessage = R.string.All_Tasks_Deleted_Message )
    object INVALID_TIME : SnackToastMessages( stringMessage = R.string.Invalid_Time )
    object PICK_A_DATE : SnackToastMessages( stringMessage = R.string.Pick_a_Date )
+   object RESCHEDULE_REQUEST_ERROR : SnackToastMessages( stringMessage = R.string.Reschedule_Request_Error )
+
 
     fun showToast(context: Context) {
         val message = context.getString(stringMessage)
@@ -23,10 +25,10 @@ sealed class SnackToastMessages(val stringMessage : Int ) {
     fun showSnackBar( // TODO { delete or find the logic }
         context: Context,
         snackBarHostState: SnackbarHostState,
-        crudAction: CrudAction,
+        databaseAction: DatabaseAction,
         scope : CoroutineScope
     ){
-        val label = if (crudAction.name == CrudAction.DELETE.toString()) {
+        val label = if (databaseAction.name == DatabaseAction.DELETE.toString()) {
             context.getString(R.string.Snack_Bar_Label_UNDO)
         } else {
             context.getString(R.string.Snack_Bar_Label_OK)

@@ -3,7 +3,6 @@ package com.alexandros.p.gialamas.duetodo.ui.components.app_bars.top_bar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -50,19 +49,20 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextFieldColors
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.util.SearchBarState
 
 @Composable
 fun SearchBarHomeScreen(
-    text: String,
-    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    searchPhrase: String,
+    onSearchPhraseChanged: (phrase : String, searchBarState : SearchBarState) -> Unit,
     onMenuClicked: () -> Unit,
-    onClearClicked: () -> Unit,
+    onClearClicked: (searchBarState : SearchBarState) -> Unit,
     onSearchClicked: (String) -> Unit,
     onDeleteAllTasksClicked: () -> Unit,
-    textState: String,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
 
     var openDialog by remember { mutableStateOf(false) }
@@ -73,33 +73,30 @@ fun SearchBarHomeScreen(
         message = stringResource(id = R.string.Delete_All_Task_confirmation),
         openDialog = openDialog,
         closeDialog = { openDialog = false },
-        onYesClicked = { onDeleteAllTasksClicked() },
-        myBackgroundColor = myBackgroundColor,
-        myContentColor = myContentColor,
-        myTextColor = myTextColor
+        onYesClicked = { onDeleteAllTasksClicked() }
     )
 
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .clip(SCAFFOLD_ROUNDED_CORNERS)
             .height(IntrinsicSize.Max)
             .padding(top = LARGE_PADDING),
         color = Color.Transparent,
         content = {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .background(Color.Transparent),
                 contentAlignment = Alignment.Center,
                 content = {
                     Card(
-                        modifier = Modifier,
+                        modifier = modifier,
                         shape = SCAFFOLD_ROUNDED_CORNERS,
                         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                         elevation = CardDefaults.elevatedCardElevation(),
                         content = {
                             TextField(
-                                modifier = Modifier
+                                modifier = modifier
                                     .fillMaxWidth(0.94f) // TODO { Hardcoded fraction }
                                     .background(myBackgroundColor)
                                     .border(
@@ -116,11 +113,15 @@ fun SearchBarHomeScreen(
                                         ),
                                         shape = SCAFFOLD_ROUNDED_CORNERS
                                     ),
-                                value = text,
-                                onValueChange = { onTextChange(it) },
+                                value = searchPhrase,
+                                onValueChange = { phrase ->
+                                    if (phrase.isNotBlank())
+                                    onSearchPhraseChanged(phrase, SearchBarState.TYPING)
+                                    else
+                                        onSearchPhraseChanged(phrase, SearchBarState.CLEARED) },
                                 placeholder = {
                                     Text(
-                                        modifier = Modifier
+                                        modifier = modifier
                                             .alpha(SEARCH_BAR_ICON_ALPHA_VALUE),
                                         text = stringResource(id = R.string.SearchBar_Placeholder),
                                         color = myTextColor
@@ -134,10 +135,7 @@ fun SearchBarHomeScreen(
                                 leadingIcon = {
 
                                     ActionMainMenu(
-                                        onMenuClicked = { onMenuClicked() },
-                                        myBackgroundColor = myBackgroundColor,
-                                        myContentColor = myContentColor,
-                                        myTextColor = myTextColor
+                                        onMenuClicked = { onMenuClicked() }
                                     )
                                 },
                                 trailingIcon = {
@@ -146,18 +144,14 @@ fun SearchBarHomeScreen(
                                         content = {
 
                                             ActionClear(
-                                                textState = textState,
-                                                onClearClicked = { onClearClicked() },
-                                                myBackgroundColor = myBackgroundColor,
-                                                myContentColor = myContentColor,
-                                                myTextColor = myTextColor
+                                                textState = searchPhrase,
+                                                onClearClicked = {
+                                                    onClearClicked(SearchBarState.CLEARED)
+                                                }
                                             )
 
                                             ActionVerticalMenu(
-                                                onDeleteAllTasksClicked = { openDialog = true },
-                                                myBackgroundColor = myBackgroundColor,
-                                                myContentColor = myContentColor,
-                                                myTextColor = myTextColor
+                                                onDeleteAllTasksClicked = { openDialog = true }
                                             )
                                         }
                                     )
@@ -168,7 +162,7 @@ fun SearchBarHomeScreen(
                                 ),
                                 keyboardActions = KeyboardActions(
                                     onSearch = {
-                                        onSearchClicked(text)
+                                        onSearchClicked(searchPhrase)
                                         keyboardController?.hide()
                                     }
                                 ),
@@ -181,19 +175,15 @@ fun SearchBarHomeScreen(
     )
 }
 
-@Composable
-@Preview
-private fun SearchBarHomeScreenPreview() {
-    SearchBarHomeScreen(
-        text = "Search",
-        onTextChange = {},
-        onClearClicked = {},
-        onSearchClicked = {},
-        onMenuClicked = {},
-        onDeleteAllTasksClicked = {},
-        textState = "",
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
-        myContentColor = MaterialTheme.colorScheme.myContentColor,
-        myTextColor = MaterialTheme.colorScheme.myTextColor
-    )
-}
+//@Composable
+//@Preview
+//private fun SearchBarHomeScreenPreview() {
+//    SearchBarHomeScreen(
+//        searchPhrase = "Search",
+//        onSearchPhraseChanged ={ search, searchBarState -> "search",},
+//        onClearClicked = {},
+//        onSearchClicked = {},
+//        onMenuClicked = {},
+//        onDeleteAllTasksClicked = {},
+//    )
+//}

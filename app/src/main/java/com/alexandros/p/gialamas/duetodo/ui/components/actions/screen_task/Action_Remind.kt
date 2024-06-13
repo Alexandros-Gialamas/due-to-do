@@ -41,6 +41,10 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
+import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.util.RepeatFrequency
 import com.alexandros.p.gialamas.duetodo.util.CustomDateIcon
 import java.text.SimpleDateFormat
@@ -56,6 +60,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActionReminder(
+    modifier: Modifier = Modifier,
     onRemindClicked: () -> Unit,
     dueDate: Long?,
     onDueDateChanged: (Long?) -> Unit,
@@ -65,10 +70,10 @@ fun ActionReminder(
     onRepeatFrequencyChanged: (RepeatFrequency) -> Unit,
 //    onRepeatChange: (String) -> Unit,
 //    showRepeat : Boolean = true,
-    myActivatedColor: Color,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myActivatedColor: Color = MaterialTheme.colorScheme.myActivatedColor,
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
 
     val calendar = Calendar.getInstance()
@@ -76,12 +81,12 @@ fun ActionReminder(
     val formattedDate = if (dueDate != null) {
         SimpleDateFormat("dd MMM", Locale.getDefault()).format(calendar.time)
     } else {
-        "Set Date"
+        "Set Date"  // TODO { hard code value }
     }
     val formattedTime = if (dueDate != null) {
         SimpleDateFormat("hh:mm a", Locale.getDefault()).format(calendar.time)
     } else {
-        "Set Time"
+        "Set Time"   // TODO { hard code value }
     }
 
     var parentHeight by remember { mutableStateOf(0.dp) }
@@ -138,15 +143,12 @@ fun ActionReminder(
                 onDueDateChanged(zonedDateTime.toInstant().toEpochMilli())
                 showTimePicker = false
             },
-            myBackgroundColor = myBackgroundColor,
-            myContentColor = myContentColor,
-            myTextColor = myTextColor
         )
     }
 
 
     Column(
-        modifier = Modifier,
+        modifier = modifier,
         content = {
             IconButton(
                 onClick = {
@@ -186,7 +188,7 @@ fun ActionReminder(
                                     isRepeatExpanded = false
                                     showDatePicker = true
                                 }) {
-                                CustomDateIcon(iconSize = 24.dp, myContentColor = myContentColor)
+                                CustomDateIcon(hasArrowUp = false, hasArrowDown = false, myContentColor = myContentColor)
                             }
                         },
                         text = {
@@ -251,7 +253,7 @@ fun ActionReminder(
                     Column(
                         content = {
                             DropdownMenuItem(
-                                modifier = Modifier
+                                modifier = modifier
                                     .onGloballyPositioned { coordinates ->
                                         popupPosition = IntOffset(
                                             (coordinates.positionInWindow().x.toInt()
@@ -275,7 +277,7 @@ fun ActionReminder(
                                 text = {
 
                                     Text(
-                                        text = stringResource(id = repeatFrequency.displayText),  // TODO { hardcode value }
+                                        text = stringResource(id = repeatFrequency.displayText),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = myTextColor
                                     )
@@ -314,11 +316,12 @@ fun ActionReminder(
 
 @Composable
 private fun DropDownMenuModifier(
+    modifier: Modifier = Modifier,
     background: Color,
     borderOne: Color,
     borderTwo: Color
 ):
-        Modifier = Modifier
+        Modifier = modifier
     .height(IntrinsicSize.Min)
     .width(IntrinsicSize.Min)
     .clip(HOME_SCREEN_ROUNDED_CORNERS)

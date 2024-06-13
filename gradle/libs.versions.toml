@@ -1,9 +1,13 @@
 [versions]
 accompanistNavigationAnimation = "0.18.0"
-agp = "8.3.2"
+accompanistPermissions = "0.33.1-alpha"
+activityKtx = "1.9.0"
+agp = "8.4.1"
 annotations = "23.0.0"
+core = "0.9.0"
 daggerCompiler = "2.48"
 daggerCompilerVersion = "2.48.1"
+datastorePreferences = "1.1.1"
 datastorePreferencesAndroid = "1.1.0.0"
 foundation = "1.6.7"
 hiltAndroid = "2.44"
@@ -37,7 +41,10 @@ material3Android = "1.2.1"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-datastore-preferences-android = { module = "androidx.datastore:datastore-preferences-android", version.ref = "datastorePreferencesAndroid" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
@@ -58,6 +65,7 @@ androidx-room-runtime-v260 = { module = "androidx.room:room-runtime", version.re
 androidx-work-multiprocess = { module = "androidx.work:work-multiprocess", version.ref = "workMultiprocess" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workMultiprocess" }
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+core = { module = "io.github.vanpra.compose-material-dialogs:core", version.ref = "core" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompiler" }
 dagger-compiler-v2481 = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompilerVersion" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }

@@ -18,15 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
-import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.ONE_TAB_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextFieldColors
-import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun DisplayTask(
+    modifier: Modifier = Modifier,
     title: String,
     onTitleChange: (String) -> Unit,
     category: String,
@@ -35,12 +32,10 @@ fun DisplayTask(
     onDescriptionChange: (String) -> Unit,
     taskPriority: TaskPriority,
     onTaskPriorityChange: (TaskPriority) -> Unit,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color   // TODO { remove parameters }
+    // TODO { revisit check parameters }
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(Color.Transparent)
             .padding(ONE_TAB_PADDING),
         content = {
@@ -65,7 +60,7 @@ fun DisplayTask(
 
 
             OutlinedTextField(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
                     .background(color = Color.Transparent),
                 value = description,
@@ -95,8 +90,5 @@ fun DisplayTaskPreview() {
         onDescriptionChange = {},
         taskPriority = TaskPriority.MEDIUM,
         onTaskPriorityChange = {},
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
-        myContentColor = MaterialTheme.colorScheme.myContentColor,
-        myTextColor = MaterialTheme.colorScheme.myTextColor
     )
 }

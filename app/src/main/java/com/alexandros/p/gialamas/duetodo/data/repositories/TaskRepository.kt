@@ -38,12 +38,28 @@ class TaskRepository @Inject constructor(private val taskDao : TaskDao){
     }
 
 
-    fun sortByLowPriority() : Flow<List<TaskTable>> {
-        return taskDao.sortByLowPriority()
+    fun sortByCategoryDateASC(category : String) : Flow<List<TaskTable>> {
+        return taskDao.sortByCategoryDateASC(category)
     }
 
-    fun sortByHighPriority() : Flow<List<TaskTable>> {
-        return taskDao.sortByHighPriority()
+    fun sortByCategoryDateDESC(category : String) : Flow<List<TaskTable>> {
+        return taskDao.sortByCategoryDateDESC(category)
+    }
+
+    fun sortByCategoryLowPriorityDateASC(category : String) : Flow<List<TaskTable>> {
+        return taskDao.sortByCategoryLowPriorityDateASC(category)
+    }
+
+    fun sortByCategoryLowPriorityDateDESC(category : String) : Flow<List<TaskTable>> {
+        return taskDao.sortByCategoryLowPriorityDateDESC(category)
+    }
+
+    fun sortByCategoryHighPriorityDateASC(category : String) : Flow<List<TaskTable>> {
+        return taskDao.sortByCategoryHighPriorityDateASC(category)
+    }
+
+    fun sortByCategoryHighPriorityDateDESC(category : String) : Flow<List<TaskTable>> {
+        return taskDao.sortByCategoryHighPriorityDateDESC(category)
     }
 
     val getLowPriorityTasks : Flow<List<TaskTable>> = taskDao.getLowPriorityTasks()
@@ -52,13 +68,9 @@ class TaskRepository @Inject constructor(private val taskDao : TaskDao){
 
     val getHighPriorityTasks : Flow<List<TaskTable>> = taskDao.getHighPriorityTasks()
 
-    fun getTasksDueAfter(currentTime: Long): Flow<List<TaskTable>>{
-        return taskDao.getTasksDueAfter(currentTime = currentTime)
-    }
 
-
-    fun getTasksDueBetween(startDate: Long, endDate: Long): Flow<List<TaskTable>> {
-        return taskDao.getTasksDueBetween(startDate = startDate, endDate = endDate)
+    fun getOverDueTasks(currentDate: Long): Flow<List<TaskTable>> {
+        return taskDao.getOverDueTasks(currentDate = currentDate)
     }
 
 }

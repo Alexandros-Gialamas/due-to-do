@@ -146,6 +146,15 @@ dependencies {
     ksp (libs.hilt.compiler)
 
     // DataStore Preferences
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.androidx.datastore.preferences)
+
+    // Permissions
+    implementation(libs.accompanist.permissions)
+
+    // Accompanist permission library
+    implementation (libs.accompanist.permissions)
+
+    // Compose Material Dialogs "Core"
+    implementation (libs.core)
 
 }

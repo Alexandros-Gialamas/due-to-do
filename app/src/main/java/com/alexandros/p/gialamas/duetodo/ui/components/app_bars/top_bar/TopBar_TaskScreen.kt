@@ -2,6 +2,7 @@ package com.alexandros.p.gialamas.duetodo.ui.components.app_bars.top_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -24,19 +25,21 @@ import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task.Actio
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task.ActionUpdate
 import com.alexandros.p.gialamas.duetodo.ui.components.dialogs.DeleteDialog
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
-import com.alexandros.p.gialamas.duetodo.util.CrudAction
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
+import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarTaskScreen(
+    modifier: Modifier = Modifier,
     selectedTask: TaskTable?,
-    navigateToHomeScreen: (CrudAction) -> Unit,
+    navigateToHomeScreen: (DatabaseAction) -> Unit,
     scope: CoroutineScope,
     keyboardController: SoftwareKeyboardController?,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
 
     var openDialog by remember { mutableStateOf(false) }
@@ -50,24 +53,18 @@ fun TopBarTaskScreen(
             message = stringResource(id = R.string.Delete_Task_confirmation, selectedTask.title),
             openDialog = openDialog,
             closeDialog = { openDialog = false },
-            onYesClicked = { navigateToHomeScreen(CrudAction.DELETE) },
-            myBackgroundColor = myBackgroundColor,
-            myContentColor = myContentColor,
-            myTextColor = myTextColor
+            onYesClicked = { navigateToHomeScreen(DatabaseAction.DELETE) }
         )
     }
 
 
 
     TopAppBar(
-        modifier = Modifier
+        modifier = modifier
             .background(mySecondBackgroundColor),
         navigationIcon = {
             ActionBack(
-                onBackClicked = navigateToHomeScreen,
-                myBackgroundColor = myBackgroundColor,
-                myContentColor = myContentColor,
-                myTextColor = myTextColor
+                onBackClicked = navigateToHomeScreen
             )
         },
         title = {
@@ -88,28 +85,15 @@ fun TopBarTaskScreen(
 
             if (taskExist) {
 
-                ActionDelete(
-                    onDeleteClicked = { openDialog = true },
-                    myBackgroundColor = myBackgroundColor,
-                    myContentColor = myContentColor,
-                    myTextColor = myTextColor
-                )
+                ActionDelete( onDeleteClicked = { openDialog = true } )
 
-                ActionUpdate(
-                    onUpdateClicked = navigateToHomeScreen,
-                    myBackgroundColor = myBackgroundColor,
-                    myContentColor = myContentColor,
-                    myTextColor = myTextColor
-                )
+                ActionUpdate( onUpdateClicked = navigateToHomeScreen )
 
             } else {
                 ActionInsert(
                     onAddClicked = navigateToHomeScreen,
                     scope = scope,
-                    keyboardController = keyboardController,
-                    myBackgroundColor = myBackgroundColor,
-                    myContentColor = myContentColor,
-                    myTextColor = myTextColor
+                    keyboardController = keyboardController
                 )
             }
         }

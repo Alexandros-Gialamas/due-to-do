@@ -43,29 +43,104 @@ interface TaskDao {
     @Query("SELECT DISTINCT category FROM task_table WHERE category IS NOT NULL AND category != ''")
     suspend fun getAllUsedCategories(): List<String>
 
+
     @Query(
         """
-            SELECT * FROM task_table ORDER BY
+       SELECT * FROM task_table 
+        WHERE (:category = 'allOrNoCategories' AND categoryNone = 1) 
+        OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
+        OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
+        ORDER BY
+        CASE
+            WHEN taskPriority LIKE 'N%' THEN 1
+        END,
+        createdDate ASC
+        """
+    )
+    fun sortByCategoryDateASC(category : String) : Flow<List<TaskTable>>
+
+    @Query(
+        """
+        SELECT * FROM task_table 
+        WHERE (:category = 'allOrNoCategories' AND categoryNone = 1) 
+        OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
+        OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
+        ORDER BY
+        CASE
+            WHEN taskPriority LIKE 'N%' THEN 1
+        END,
+        createdDate DESC
+        """
+    )
+    fun sortByCategoryDateDESC(category : String) : Flow<List<TaskTable>>
+
+    @Query(
+        """
+        SELECT * FROM task_table 
+        WHERE (:category = 'allOrNoCategories' AND categoryNone = 1) 
+        OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
+        OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
+        ORDER BY
         CASE
             WHEN taskPriority LIKE 'L%' THEN 1
             WHEN taskPriority LIKE 'M%' THEN 2
             WHEN taskPriority LIKE 'H%' THEN 3
-        END
+        END,
+        createdDate ASC
         """
     )
-    fun sortByLowPriority() : Flow<List<TaskTable>>
+    fun sortByCategoryLowPriorityDateASC(category : String) : Flow<List<TaskTable>>
 
     @Query(
         """
-            SELECT * FROM task_table ORDER BY
+       SELECT * FROM task_table 
+        WHERE (:category = 'allOrNoCategories' AND categoryNone = 1) 
+        OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
+        OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
+        ORDER BY
+        CASE
+            WHEN taskPriority LIKE 'L%' THEN 1
+            WHEN taskPriority LIKE 'M%' THEN 2
+            WHEN taskPriority LIKE 'H%' THEN 3
+        END,
+        createdDate DESC
+        """
+    )
+    fun sortByCategoryLowPriorityDateDESC(category : String) : Flow<List<TaskTable>>
+
+    @Query(
+        """
+       SELECT * FROM task_table 
+        WHERE (:category = 'allOrNoCategories' AND categoryNone = 1) 
+        OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
+        OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
+        ORDER BY
         CASE
             WHEN taskPriority LIKE 'H%' THEN 1
             WHEN taskPriority LIKE 'M%' THEN 2
             WHEN taskPriority LIKE 'L%' THEN 3
-        END
+        END,
+        createdDate ASC
         """
     )
-    fun sortByHighPriority(): Flow<List<TaskTable>>
+    fun sortByCategoryHighPriorityDateASC(category : String) : Flow<List<TaskTable>>
+
+    @Query(
+        """
+        SELECT * FROM task_table 
+        WHERE (:category = 'allOrNoCategories' AND categoryNone = 1) 
+        OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
+        OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates') 
+        ORDER BY
+        CASE
+            WHEN taskPriority LIKE 'H%' THEN 1
+            WHEN taskPriority LIKE 'M%' THEN 2
+            WHEN taskPriority LIKE 'L%' THEN 3
+        END,
+        createdDate DESC
+        """
+    )
+    fun sortByCategoryHighPriorityDateDESC(category : String): Flow<List<TaskTable>>
 
 
     @Query("SELECT * FROM task_table WHERE taskPriority LIKE 'L%'")
@@ -77,9 +152,8 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE taskPriority LIKE 'H%'")
     fun getHighPriorityTasks() : Flow<List<TaskTable>>
 
-    @Query("SELECT * FROM task_table WHERE dueDate > :currentTime ORDER BY dueDate ASC")
-    fun getTasksDueAfter(currentTime: Long): Flow<List<TaskTable>>
+    @Query("SELECT * FROM task_table WHERE dueDate >= :currentDate")
+    fun getOverDueTasks(currentDate: Long): Flow<List<TaskTable>>
 
-    @Query("SELECT * FROM task_table WHERE dueDate BETWEEN :startDate AND :endDate")
-    fun getTasksDueBetween(startDate: Long, endDate: Long): Flow<List<TaskTable>>
+
 }

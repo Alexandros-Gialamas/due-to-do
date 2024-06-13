@@ -28,6 +28,7 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,8 +54,12 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_ROUNDED_CORNERS
+import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
+import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myDatePickerColors
+import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTimePickerColors
 import java.time.LocalTime
 import java.util.Calendar
@@ -62,6 +67,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateTimePickerDialog(
+    modifier: Modifier = Modifier,
     timeState: TimePickerState,
     dateState: DatePickerState,
     layoutConfiguration: Configuration,
@@ -71,9 +77,8 @@ fun DateTimePickerDialog(
     onSetTimeConfirm: () -> Unit,
     showToastPickADate: () -> Unit,
     showToastInvalidDate: () -> Unit,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor
 ) {
 
     val currentCalendar = Calendar.getInstance().apply {
@@ -90,13 +95,13 @@ fun DateTimePickerDialog(
             Surface(
                 color = Color.Transparent,
                 shape = TASK_ITEM_ROUNDED_CORNERS,
-                modifier = Modifier
+                modifier = modifier
 //                    .animateContentSize(TweenSpec(durationMillis = 400, easing = EaseInOutSine))
                     .fillMaxWidth(if (isDatePickerShowed) 1f else 0.94f)
                     .wrapContentHeight(Alignment.Bottom),
                 content = {
                     Box(
-                        modifier = Modifier
+                        modifier = modifier
                             .animateContentSize(TweenSpec(durationMillis = 150, easing = { 1f }))
                             .background(
                                 if (isDatePickerShowed) dateDialogBackgroundColor else timeDialogBackgroundColor
@@ -117,7 +122,7 @@ fun DateTimePickerDialog(
                             ),
                         content = {
                             Column(
-                                modifier = Modifier
+                                modifier = modifier
                                     .padding(
                                         horizontal = if (!isDatePickerShowed) 24.dp else 0.dp,
                                         vertical = if (!isDatePickerShowed) 12.dp else 0.dp
@@ -129,7 +134,7 @@ fun DateTimePickerDialog(
                                     when {
                                         isDatePickerShowed -> {
                                             DatePicker(
-                                                modifier = Modifier
+                                                modifier = modifier
                                                     .wrapContentSize(align = Alignment.BottomStart),
                                                 state = dateState,
                                                 colors = DatePickerDefaults.myDatePickerColors,
@@ -157,13 +162,13 @@ fun DateTimePickerDialog(
                                     }
 
                                     Row(
-                                        modifier = Modifier
+                                        modifier = modifier
                                             .fillMaxWidth()
                                             .padding(horizontal = 4.dp, vertical = 12.dp),
                                         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
                                         content = {
                                             OutlinedButton(
-                                                modifier = Modifier
+                                                modifier = modifier
                                                     .clip(shape = TASK_ITEM_ROUNDED_CORNERS)
                                                     .width(DIALOG_BUTTON_WIDTH)
                                                     .border(
@@ -192,7 +197,7 @@ fun DateTimePickerDialog(
                                             }
 
                                             OutlinedButton(
-                                                modifier = Modifier
+                                                modifier = modifier
                                                     .clip(shape = TASK_ITEM_ROUNDED_CORNERS)
                                                     .width(DIALOG_BUTTON_WIDTH)
                                                     .border(

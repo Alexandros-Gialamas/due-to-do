@@ -9,8 +9,12 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
-import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_KEY
+import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_CATEGORY_KEY
+import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_DATE_KEY
+import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_PRIORITY_KEY
 import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_NAME
+import com.alexandros.p.gialamas.duetodo.util.DateSortOrder
+import com.alexandros.p.gialamas.duetodo.util.SelectedCategoryState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
@@ -27,18 +31,32 @@ class DataStoreRepository @Inject constructor(
 ) {
 
     private object PreferenceKeys {
-        val sortStateKey = stringPreferencesKey(name = PREFERENCE_KEY)
+        val prioritySortStateKey = stringPreferencesKey(name = PREFERENCE_PRIORITY_KEY)
+        val dateSortStateKey = stringPreferencesKey(name = PREFERENCE_DATE_KEY)
+        val categoryStateKey = stringPreferencesKey(name = PREFERENCE_CATEGORY_KEY)
     }
 
     private val dataStore = context.dataStore
 
-    suspend fun persistSortState(taskPriority: TaskPriority) {
+    suspend fun persistPrioritySortState(taskPriority: TaskPriority) {
         dataStore.edit { preference ->
-            preference[PreferenceKeys.sortStateKey] = taskPriority.name
+            preference[PreferenceKeys.prioritySortStateKey] = taskPriority.name
         }
     }
 
-    val readSortState: Flow<String> = dataStore.data
+    suspend fun persistDateSortState(dateSortOrder : DateSortOrder) {
+        dataStore.edit { preference ->
+            preference[PreferenceKeys.dateSortStateKey] = dateSortOrder.name
+        }
+    }
+
+    suspend fun persistCategoryState(category : String) {
+        dataStore.edit { preference ->
+            preference[PreferenceKeys.categoryStateKey] = category
+        }
+    }
+
+    val readPrioritySortState: Flow<String> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -46,9 +64,34 @@ class DataStoreRepository @Inject constructor(
                 throw exception
             }
         }.map { preferences ->
-            val sortState = preferences[PreferenceKeys.sortStateKey] ?: TaskPriority.NONE.name
-            sortState
+            val prioritySortState = preferences[PreferenceKeys.prioritySortStateKey] ?: TaskPriority.NONE.name
+            prioritySortState
         }
+
+    val readDateSortState: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }.map { preferences ->
+            val dateSortState = preferences[PreferenceKeys.dateSortStateKey] ?: DateSortOrder.ASCENDING.name
+            dateSortState
+        }
+
+    val readCategoryState: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }.map { preferences ->
+            val categoryState = preferences[PreferenceKeys.categoryStateKey] ?: SelectedCategoryState.NONE.categoryName
+            categoryState
+        }
+
 }
 
 

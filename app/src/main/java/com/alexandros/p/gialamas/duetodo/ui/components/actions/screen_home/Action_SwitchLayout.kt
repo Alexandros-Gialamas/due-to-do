@@ -17,9 +17,7 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 fun ActionSwitchLayout(
     onLayoutClicked: () -> Unit,
     isGridLayout : Boolean,
-    myBackgroundColor: Color,
-    myContentColor: Color,
-    myTextColor: Color
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor
 ) {
 
     val columnView = painterResource(id = R.drawable.ic_column_view)
@@ -42,8 +40,6 @@ private fun ActionSwitchLayoutPreview() {
     ActionSwitchLayout(
         onLayoutClicked = {},
         isGridLayout = true,
-        myBackgroundColor = MaterialTheme.colorScheme.myBackgroundColor,
-        myContentColor = MaterialTheme.colorScheme.myContentColor,
-        myTextColor = MaterialTheme.colorScheme.myTextColor
+        myContentColor = MaterialTheme.colorScheme.myContentColor
     )
 }

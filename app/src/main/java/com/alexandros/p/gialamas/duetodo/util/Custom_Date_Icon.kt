@@ -14,6 +14,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,7 +30,9 @@ const val MONTH_TEXT = "NOVEMBER"
 @Composable
 fun CustomDateIcon(
     modifier: Modifier = Modifier,
-    iconSize : Dp,
+    iconSize : Dp = 24.dp,
+    hasArrowUp : Boolean,
+    hasArrowDown : Boolean,
     cornerRadius: Dp = 3.dp,
     strokeWidthPercent: Float = 0.05f,
     myContentColor : Color,
@@ -37,15 +40,70 @@ fun CustomDateIcon(
     Box(
         contentAlignment = Alignment.Center,
         content = {
-            Column (
+            Column(
                 modifier.padding(vertical = 2.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
-                    CustomDateIconTextItem(text = DAY_TEXT, fontSize = 3.sp, myContextColor = myContentColor)
-                    CustomDateIconTextItem(text = DATE_TEXT, fontSize = 7.sp, myContextColor = myContentColor)
-                    CustomDateIconTextItem(text = MONTH_TEXT, fontSize = 2.sp, myContextColor = myContentColor)
+                    CustomDateIconTextItem(
+                        text = DAY_TEXT,
+                        fontSize = 3.sp,
+                        myContextColor = myContentColor
+                    )
+                    CustomDateIconTextItem(
+                        text = DATE_TEXT,
+                        fontSize = 7.sp,
+                        myContextColor = myContentColor
+                    )
+                    CustomDateIconTextItem(
+                        text = MONTH_TEXT,
+                        fontSize = 2.sp,
+                        myContextColor = myContentColor
+                    )
                 }
             )
+
+            if (hasArrowUp){
+                Canvas(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 36.dp) // Adjust padding as needed
+                        .size(iconSize / 2),       // Make the arrow smaller than the icon
+                ) {
+                    val arrowColor = myContentColor
+                    val arrowPath = Path().apply {
+                        moveTo(size.width / 2, 0f)
+                        lineTo(0f, size.height)
+                        lineTo(size.width, size.height)
+                        close()
+                    }
+                    drawPath(
+                        path = arrowPath,
+                        color = arrowColor
+                    )
+                }
+        }
+
+
+            if (hasArrowDown) {
+                Canvas(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(top = 36.dp) // Adjust padding as needed
+                        .size(iconSize / 2),       // Make the arrow smaller than the icon
+                ) {
+                    val arrowPath = Path().apply {
+                        moveTo(size.width / 2, size.height)
+                        lineTo(0f, 0f)
+                        lineTo(size.width, 0f)
+                        close()
+                    }
+                    drawPath(
+                        path = arrowPath,
+                        color = myContentColor
+                    )
+                }
+            }
+
             Canvas(
                 modifier = modifier
                     .size(iconSize),
