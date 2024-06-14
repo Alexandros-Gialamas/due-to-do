@@ -5,8 +5,7 @@
 
 dueToDo is a to-do list app designed to help users manage their tasks effectively. \
 It's currently under active development, with new features being added regularly. \
-The app aims to provide a user-friendly and intuitive experience for organizing, \
-set reminders and prioritizing tasks.
+The app aims to provide a user-friendly and intuitive experience for organizing, set reminders and prioritizing tasks.
 
 </div>
 
@@ -51,13 +50,28 @@ set reminders and prioritizing tasks.
 
    ## Screenshots
 
-| Feature                    | Screenshot                                                                                             |
-| :------------------------- | :--------------------------------------------------------------------------------------------------- |
-| Main Screen (Grid Layout)   | <img src="app/images/photo_ui_grid.jpg" width="300">                                                    |
-| Category Selection         | <img src="app/images/photo_ui_category_select.jpg" width="300">                                          |
-| Sorting Options            | <img src="app/images/photo_sort.jpg" width="300">                                                        |
-| Task Search                | <img src="app/images/photo_search.jpg" width="300">                                                      |
-| New Task Creation          | <img src="app/images/photo_new_task.jpg" width="300">                                                    |
-| Create New Category        | <img src="app/images/photo_create_category.jpg" width="300">                                            |
+
+<div align="center">
+
+| Main Screen (Grid Layout)                                                                           | Category Selection                                                                         |
+| :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| <img src="app/images/photo_ui_grid.jpg" width="250" />                                          | <img src="app/images/photo_ui_category_select.jpg" width="250" />                              |
+
+&nbsp;
+
+| Sorting Options                                                                               | Task Search                                                                             |
+| :------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| <img src="app/images/photo_sort.jpg" width="250" />                                              | <img src="app/images/photo_search.jpg" width="250" />                                        |
+
+&nbsp;
+
+| New Task Creation                                                                             | Create New Category                                                                   |
+| :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| <img src="app/images/photo_new_task.jpg" width="250" />                                          | <img src="app/images/photo_create_category.jpg" width="250" />                              |
+
+</div>
+
+
+
 
 
