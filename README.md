@@ -24,8 +24,8 @@ The app aims to provide a user-friendly and intuitive experience for organizing,
 ### Planned Enhancements
 
 *   Checklists
-*   Set reschedule dates (currently working on)
-*   Reminders and notifications (currently working on)
+*   Implement functionality for rescheduling task due dates (in progress)
+*   Implement reminders and notifications for tasks (in progress)
 *   Display overdue tasks
 *   User authentication
 *   Import/export database
