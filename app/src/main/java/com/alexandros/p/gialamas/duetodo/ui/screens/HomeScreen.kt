@@ -184,7 +184,7 @@ fun HomeScreen(
                                             taskViewModel.updateSearchBarState(it)
                                         },
                                         onSearchClicked = { searchQuery ->
-//                                            taskViewModel.searchDatabase(searchQuery)
+//                                            taskViewModel.searchDatabase(searchQuery)  // TODO { check this }
                                         },
                                         onDeleteAllTasksClicked = {
                                             taskViewModel.updateAction(
@@ -268,11 +268,6 @@ fun HomeScreen(
                                         prioritySortState = prioritySortState,
                                         dateSortState = dateSortState,
                                         categoryState = categoryState,
-                                        onSwipeToDelete = { action, task ->
-                                            taskViewModel.updateAction(newDatabaseAction = action)
-                                            taskViewModel.updateDisplayTaskFields(selectedTask = task)
-                                            snackBarHostState.currentSnackbarData?.dismiss()
-                                        },
                                         isGridLayout = isGridLayout
                                     )
                                 }

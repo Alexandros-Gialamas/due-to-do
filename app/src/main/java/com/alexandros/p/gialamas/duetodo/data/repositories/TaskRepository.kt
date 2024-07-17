@@ -15,6 +15,10 @@ class TaskRepository @Inject constructor(private val taskDao : TaskDao){
         return taskDao.getSelectedTask(taskId = taskId)
     }
 
+    suspend fun getTaskForSchedule(taskId : Int) : TaskTable {
+        return taskDao.getTaskForSchedule(taskId)
+    }
+
 
     suspend fun insertTask(taskTable: TaskTable) {
         taskDao.insertTask(taskTable = taskTable)

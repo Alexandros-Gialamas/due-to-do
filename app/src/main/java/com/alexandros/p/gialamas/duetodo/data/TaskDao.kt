@@ -18,6 +18,9 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE taskId=:taskId")
     fun getSelectedTask(taskId : Int) : Flow<TaskTable>
 
+    @Query("SELECT * FROM task_table WHERE taskId=:taskId")
+    suspend fun getTaskForSchedule(taskId : Int) : TaskTable
+
 
     @Query("SELECT * FROM task_table WHERE category = :category COLLATE NOCASE")
     fun getTasksByCategory(category: String): Flow<List<TaskTable>>   // TODO { delete that }

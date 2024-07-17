@@ -9,7 +9,6 @@ import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 fun TaskListDisplay(
     modifier: Modifier = Modifier,
     tasks: List<TaskTable>,
-    onSwipeToDelete: (DatabaseAction, TaskTable) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout : Boolean
 ) {
@@ -19,7 +18,6 @@ fun TaskListDisplay(
         TaskListItem(
             taskTableList = tasks,
             navigateToTaskScreen = navigateToTaskScreen,
-            onSwipeToDelete = onSwipeToDelete,
             isGridLayout = isGridLayout
         )
     }

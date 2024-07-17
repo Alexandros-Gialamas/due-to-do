@@ -34,7 +34,6 @@ fun TaskListSearchedAndSorted(
     categoryState: RequestState<String>,
     searchBarState: SearchBarState,
     searchPhrase : String,
-    onSwipeToDelete: (DatabaseAction, TaskTable) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout: Boolean
 ) {
@@ -99,7 +98,6 @@ fun TaskListSearchedAndSorted(
 
     TaskListDisplay(
         tasks = tasksToDisplay,
-        onSwipeToDelete = onSwipeToDelete,
         navigateToTaskScreen = navigateToTaskScreen,
         isGridLayout = isGridLayout
     )

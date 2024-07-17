@@ -60,16 +60,8 @@ class UpdateTaskUseCase @Inject constructor(
         // Clear Past Due Dates
         clearPastDueDatesUseCase(viewModel,dueDate)
 
-
-
-        val taskForSchedule = updateTask.copy()
+        val taskForSchedule = taskRepository.getTaskForSchedule(updateTask.taskId)
         reminderRepository.scheduleReminder(taskForSchedule,viewModel.viewModelScope,viewModel)
-
-//        viewModel.getSelectedTask(updateTask.taskId)
-//        val taskForScheduling = viewModel.selectedTask.value
-//        taskForScheduling?.let {
-//            reminderRepository.scheduleReminder(
-//                task = taskForScheduling, scope = viewModel.viewModelScope, viewModel = viewModel) }
 
     }
 }

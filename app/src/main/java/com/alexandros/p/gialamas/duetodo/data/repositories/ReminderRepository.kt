@@ -185,7 +185,7 @@ class ReminderRepository @Inject constructor(
             val duration = if (task.dueDate != null && task.dueDate > System.currentTimeMillis()) {
                 task.dueDate.minus(System.currentTimeMillis())
             } else {
-                task.reScheduleDate?.minus(System.currentTimeMillis())   // TODO { i have to return here  } ?: return
+                task.reScheduleDate?.minus(System.currentTimeMillis()) ?: return
             }
             workRequestBuilder
                 .setInitialDelay(duration!!, TimeUnit.MILLISECONDS)  // TODO { asserted value }
@@ -195,8 +195,6 @@ class ReminderRepository @Inject constructor(
 
             if (duration < 0) {
                 scope.launch(Dispatchers.IO) {
-//                    val newDueDate = task.reScheduleDate
-//                    val newRescheduleDate = scheduleRepeatRequest(task.reScheduleDate)
                     val updateTask = task.copy(
                         dueDate = task.reScheduleDate,
                         reScheduleDate = task.reScheduleDate?.let { task.dueDate?.let { it1 ->
