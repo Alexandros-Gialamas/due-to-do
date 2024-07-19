@@ -49,8 +49,6 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
-import com.alexandros.p.gialamas.duetodo.util.DateSortOrder
-import com.alexandros.p.gialamas.duetodo.util.RequestState
 import com.alexandros.p.gialamas.duetodo.util.SearchBarState
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
@@ -89,8 +87,6 @@ fun HomeScreen(
     )
 
 
-
-
     LaunchedEffect(key1 = databaseAction) {
         taskViewModel.handleDatabaseActions(databaseAction = databaseAction)
     }
@@ -101,13 +97,15 @@ fun HomeScreen(
     val prioritySortState by taskViewModel.prioritySortState.collectAsState()
     val dateSortState by taskViewModel.dateSortState.collectAsState()
     val categoryState by taskViewModel.categoryState.collectAsState()
+    val getOverDueTasks by taskViewModel.getOverDueTasks().collectAsState(emptyList())
     val allTasksASC by taskViewModel.sortByCategoryDateASC(categoryState).collectAsState(emptyList())
     val allTasksDESC by taskViewModel.sortByCategoryDateDESC(categoryState).collectAsState(emptyList())
     val categoryLowTaskPriorityASCDateSort by taskViewModel.sortByCategoryLowPriorityDateASC(categoryState).collectAsState(emptyList())
     val categoryLowTaskPriorityDESCDateSort by taskViewModel.sortByCategoryLowPriorityDateDESC(categoryState).collectAsState(emptyList())
     val categoryHighTaskPriorityASCDateSort by taskViewModel.sortByCategoryHighPriorityDateASC(categoryState).collectAsState(emptyList())
     val categoryHighTaskPriorityDESCDateSort by taskViewModel.sortByCategoryHighPriorityDateDESC(categoryState).collectAsState(emptyList())
-    val isGridLayout by taskViewModel.isGridLayout.collectAsState()
+    val isGridLayoutState by taskViewModel.isGridLayoutState.collectAsState()
+    val showOverdueTasksState by taskViewModel.showOverdueTasksState.collectAsState()
 
     val searchBarState: SearchBarState = taskViewModel.searchBarState
     val searchTextState: String = taskViewModel.searchTextState
@@ -216,17 +214,20 @@ fun HomeScreen(
                                 onDateSortClicked = { dateOrder ->
                                     taskViewModel.persistDateSortState(dateOrder)
                                 },
-                                onLayoutClicked = { taskViewModel.enableGridLayout() },
+                                onLayoutClicked = { taskViewModel.persistIsGridLayoutState(it) },
                                 onNewCheckListClicked = {
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                    }
+                                    }  // TODO { for test purposes }
                                 },
                                 prioritySortState = prioritySortState,
                                 dateSortOrder = dateSortState,
                                 categoryState = categoryState,
-                                isGridLayout = isGridLayout,
+                                isGridLayout = isGridLayoutState,
+                                showOverdueTasksState = showOverdueTasksState,
+                                areOverdueTasksState = getOverDueTasks.isNotEmpty(),
+                                onShowOverdueTasksClicked = { taskViewModel.persistShowOverdueTasksState(it) }
                             )
                         },
                         content = { paddingValues ->
@@ -255,6 +256,7 @@ fun HomeScreen(
                                                     LayoutDirection.Ltr
                                                 )
                                             ),
+                                        getOverdueTasks = getOverDueTasks,
                                         taskTableListASC = allTasksASC,
                                         taskTableListDESC = allTasksDESC,
                                         navigateToTaskScreen = navigateToTaskScreen,
@@ -268,7 +270,8 @@ fun HomeScreen(
                                         prioritySortState = prioritySortState,
                                         dateSortState = dateSortState,
                                         categoryState = categoryState,
-                                        isGridLayout = isGridLayout
+                                        isGridLayout = isGridLayoutState,
+                                        showOverdueTasksState = showOverdueTasksState
                                     )
                                 }
                             )

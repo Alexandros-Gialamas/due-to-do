@@ -58,7 +58,7 @@ class UpdateTaskUseCase @Inject constructor(
         // Clean Unused Categories
         taskCategoryRepository.cleanUnusedCategories()
         // Clear Past Due Dates
-        clearPastDueDatesUseCase(viewModel,dueDate)
+//        clearPastDueDatesUseCase(viewModel,dueDate)
 
         val taskForSchedule = taskRepository.getTaskForSchedule(updateTask.taskId)
         reminderRepository.scheduleReminder(taskForSchedule,viewModel.viewModelScope,viewModel)

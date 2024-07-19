@@ -1,8 +1,5 @@
 package com.alexandros.p.gialamas.duetodo.util
 
-import androidx.compose.ui.res.stringResource
-import com.alexandros.p.gialamas.duetodo.R
-
 object Constants {
 
     // Selected Category State
@@ -25,6 +22,8 @@ object Constants {
     const val PREFERENCE_PRIORITY_KEY = "priority_sort_state"
     const val PREFERENCE_DATE_KEY = "date_sort_state"
     const val PREFERENCE_CATEGORY_KEY = "category_state"
+    const val PREFERENCE_SHOW_OVERDUE_TASKS_KEY = "show_overdue_tasks_state"
+    const val PREFERENCE_IS_GRID_LAYOUT_KEY = "is_grid_layout_state"
 
 
     const val REMINDER_WORKER_TASK_ID = "task_id"

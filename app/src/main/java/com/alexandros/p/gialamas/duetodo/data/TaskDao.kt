@@ -37,11 +37,6 @@ interface TaskDao {
     @Query("DELETE FROM task_table")
     suspend fun deleteAllTasks()
 
-    @Query("SELECT * FROM task_table WHERE " +
-            "LOWER(title) LIKE '%' || LOWER(:searchQuery) || '%' OR " +
-            "LOWER(description) LIKE '%' || LOWER(:searchQuery) || '%'")
-    fun searchDatabase(searchQuery : String) : Flow<List<TaskTable>>
-
 
     @Query("SELECT DISTINCT category FROM task_table WHERE category IS NOT NULL AND category != ''")
     suspend fun getAllUsedCategories(): List<String>
@@ -146,16 +141,19 @@ interface TaskDao {
     fun sortByCategoryHighPriorityDateDESC(category : String): Flow<List<TaskTable>>
 
 
-    @Query("SELECT * FROM task_table WHERE taskPriority LIKE 'L%'")
-    fun getLowPriorityTasks() : Flow<List<TaskTable>>
-
-    @Query("SELECT * FROM task_table WHERE taskPriority LIKE 'M%'")
-    fun getMediumPriorityTasks() : Flow<List<TaskTable>>
-
-    @Query("SELECT * FROM task_table WHERE taskPriority LIKE 'H%'")
-    fun getHighPriorityTasks() : Flow<List<TaskTable>>
-
-    @Query("SELECT * FROM task_table WHERE dueDate >= :currentDate")
+    @Query(
+        """
+        SELECT * FROM task_table 
+        WHERE dueDate <= :currentDate
+        ORDER BY
+        CASE
+            WHEN taskPriority LIKE 'H%' THEN 1
+            WHEN taskPriority LIKE 'M%' THEN 2
+            WHEN taskPriority LIKE 'L%' THEN 3
+        END,
+        dueDate ASC
+        """
+    )
     fun getOverDueTasks(currentDate: Long): Flow<List<TaskTable>>
 
 

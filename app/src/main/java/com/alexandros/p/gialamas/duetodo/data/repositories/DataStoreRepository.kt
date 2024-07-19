@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.IOException
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -11,8 +12,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_CATEGORY_KEY
 import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_DATE_KEY
+import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_IS_GRID_LAYOUT_KEY
 import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_PRIORITY_KEY
 import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_NAME
+import com.alexandros.p.gialamas.duetodo.util.Constants.PREFERENCE_SHOW_OVERDUE_TASKS_KEY
 import com.alexandros.p.gialamas.duetodo.util.DateSortOrder
 import com.alexandros.p.gialamas.duetodo.util.SelectedCategoryState
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -34,6 +37,8 @@ class DataStoreRepository @Inject constructor(
         val prioritySortStateKey = stringPreferencesKey(name = PREFERENCE_PRIORITY_KEY)
         val dateSortStateKey = stringPreferencesKey(name = PREFERENCE_DATE_KEY)
         val categoryStateKey = stringPreferencesKey(name = PREFERENCE_CATEGORY_KEY)
+        val showOverdueTasksStateKey = booleanPreferencesKey(name = PREFERENCE_SHOW_OVERDUE_TASKS_KEY)
+        val isGridLayoutStateKey = booleanPreferencesKey(name = PREFERENCE_IS_GRID_LAYOUT_KEY)
     }
 
     private val dataStore = context.dataStore
@@ -55,6 +60,19 @@ class DataStoreRepository @Inject constructor(
             preference[PreferenceKeys.categoryStateKey] = category
         }
     }
+
+    suspend fun persistShowOverDueTasksState(showOverDueTasks : Boolean) {
+        dataStore.edit { preference ->
+            preference[PreferenceKeys.showOverdueTasksStateKey] = showOverDueTasks
+        }
+    }
+
+    suspend fun persistIsGridLayoutState(isGridLayout : Boolean) {
+        dataStore.edit { preference ->
+            preference[PreferenceKeys.isGridLayoutStateKey] = isGridLayout
+        }
+    }
+
 
     val readPrioritySortState: Flow<String> = dataStore.data
         .catch { exception ->
@@ -90,6 +108,30 @@ class DataStoreRepository @Inject constructor(
         }.map { preferences ->
             val categoryState = preferences[PreferenceKeys.categoryStateKey] ?: SelectedCategoryState.NONE.categoryName
             categoryState
+        }
+
+    val readShowOverdueTasksState: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }.map { preferences ->
+            val overdueTasksState = preferences[PreferenceKeys.showOverdueTasksStateKey] ?: false
+            overdueTasksState
+        }
+
+    val readIsGridLayoutState: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }.map { preferences ->
+            val isGridLayoutState = preferences[PreferenceKeys.isGridLayoutStateKey] ?: false
+            isGridLayoutState
         }
 
 }

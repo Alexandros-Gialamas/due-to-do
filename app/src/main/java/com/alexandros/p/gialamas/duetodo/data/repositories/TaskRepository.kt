@@ -37,11 +37,6 @@ class TaskRepository @Inject constructor(private val taskDao : TaskDao){
     }
 
 
-    fun searchDatabase(searchQuery : String) : Flow<List<TaskTable>>{
-        return taskDao.searchDatabase(searchQuery = searchQuery)
-    }
-
-
     fun sortByCategoryDateASC(category : String) : Flow<List<TaskTable>> {
         return taskDao.sortByCategoryDateASC(category)
     }
@@ -65,12 +60,6 @@ class TaskRepository @Inject constructor(private val taskDao : TaskDao){
     fun sortByCategoryHighPriorityDateDESC(category : String) : Flow<List<TaskTable>> {
         return taskDao.sortByCategoryHighPriorityDateDESC(category)
     }
-
-    val getLowPriorityTasks : Flow<List<TaskTable>> = taskDao.getLowPriorityTasks()
-
-    val getMediumPriorityTasks : Flow<List<TaskTable>> = taskDao.getMediumPriorityTasks()
-
-    val getHighPriorityTasks : Flow<List<TaskTable>> = taskDao.getHighPriorityTasks()
 
 
     fun getOverDueTasks(currentDate: Long): Flow<List<TaskTable>> {

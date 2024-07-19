@@ -157,15 +157,6 @@ class TaskViewModel @Inject constructor(
     }
 
 
-    //  UI Visual Operations
-    private val _isGridLayout: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isGridLayout: StateFlow<Boolean> = _isGridLayout
-
-    fun enableGridLayout() {
-        _isGridLayout.value = !_isGridLayout.value
-    }
-
-
     // Task CRUD Operations
     var databaseAction by mutableStateOf(DatabaseAction.NO_ACTION)
         private set
@@ -263,7 +254,6 @@ class TaskViewModel @Inject constructor(
 
             DatabaseAction.UPDATE -> {
                 updateTask()
-//                selectedTask.value?.let { reminderRepository.scheduleReminder(it, viewModelScope,this) }
             }
 
             DatabaseAction.DELETE -> {
@@ -329,24 +319,6 @@ class TaskViewModel @Inject constructor(
     }
 
 
-//    private val _searchedTasks =
-//        MutableStateFlow<RequestState<List<TaskTable>>>(RequestState.Idle)
-//    val searchedTasks: StateFlow<RequestState<List<TaskTable>>> = _searchedTasks
-//    fun searchDatabase(searchQuery: String) {
-//        _searchedTasks.value = RequestState.Loading
-//        try {
-//            viewModelScope.launch {
-//                taskRepository.searchDatabase(searchQuery).collect { searchedTasks ->
-//                    _searchedTasks.value = RequestState.Success(searchedTasks)
-//                }
-//            }
-//        } catch (e: Exception) {
-//            _searchedTasks.value = RequestState.Error(e)
-//        }
-//        searchBarState = SearchBarState.TRIGGERED
-//    }
-
-
     // Sorting Tasks and Persist state
     fun sortByCategoryLowPriorityDateASC(categoryState: RequestState<String>): Flow<List<TaskTable>> =
         when (categoryState) {
@@ -384,6 +356,11 @@ class TaskViewModel @Inject constructor(
             else -> flowOf(emptyList())
         }
 
+    fun getOverDueTasks(currentDate: Long = System.currentTimeMillis()): Flow<List<TaskTable>> =
+        taskRepository.getOverDueTasks(currentDate = currentDate)
+
+
+
     private val _prioritySortState =
         MutableStateFlow<RequestState<TaskPriority>>(RequestState.Idle)
     val prioritySortState: StateFlow<RequestState<TaskPriority>> = _prioritySortState
@@ -396,12 +373,15 @@ class TaskViewModel @Inject constructor(
         MutableStateFlow<RequestState<String>>(RequestState.Idle)
     val categoryState: StateFlow<RequestState<String>> = _categoryState
 
-    var customCategoryName by mutableStateOf("")
-        private set
+    private val _showOverdueTasksState =
+        MutableStateFlow<RequestState<Boolean>>(RequestState.Idle)
+    val showOverdueTasksState: StateFlow<RequestState<Boolean>> = _showOverdueTasksState
 
-    fun updateCustomCategoryName(customName: String) {
-        customCategoryName = customName
-    }
+    private val _isGridLayoutState =
+        MutableStateFlow<RequestState<Boolean>>(RequestState.Idle)
+    val isGridLayoutState: StateFlow<RequestState<Boolean>> = _isGridLayoutState
+
+
 
     private fun readPrioritySortState() {
         _prioritySortState.value = RequestState.Loading
@@ -451,6 +431,34 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+    private fun readShowOverdueTasksState() {
+        _showOverdueTasksState.value = RequestState.Loading
+        try {
+            viewModelScope.launch {
+                dataStoreRepository.readShowOverdueTasksState.map { it }
+                    .collect { showOverdueTasks ->
+                        _showOverdueTasksState.value = RequestState.Success(showOverdueTasks)
+                    }
+            }
+        } catch (e: Exception) {
+            _showOverdueTasksState.value = RequestState.Error(e)
+        }
+    }
+
+    private fun readIsGridLayoutState() {
+        _isGridLayoutState.value = RequestState.Loading
+        try {
+            viewModelScope.launch {
+                dataStoreRepository.readIsGridLayoutState.map { it }
+                    .collect { isGridLayout ->
+                        _isGridLayoutState.value = RequestState.Success(isGridLayout)
+                    }
+            }
+        } catch (e: Exception) {
+            _isGridLayoutState.value = RequestState.Error(e)
+        }
+    }
+
 
     fun persistPrioritySortState(taskPriority: TaskPriority) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -467,6 +475,18 @@ class TaskViewModel @Inject constructor(
     fun persistCategoryState(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.persistCategoryState(category = category)
+        }
+    }
+
+    fun persistShowOverdueTasksState(showOverdueTasks: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistShowOverDueTasksState(showOverDueTasks = showOverdueTasks)
+        }
+    }
+
+    fun persistIsGridLayoutState(isGridLayout: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistIsGridLayoutState(isGridLayout = isGridLayout)
         }
     }
 
@@ -538,6 +558,8 @@ class TaskViewModel @Inject constructor(
         readPrioritySortState()
         readDateSortState()
         readCategorySortState()
+        readIsGridLayoutState()
+        readShowOverdueTasksState()
     }
 
 }

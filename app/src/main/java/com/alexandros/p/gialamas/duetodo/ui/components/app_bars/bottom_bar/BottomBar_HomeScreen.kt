@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
+import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionTaskCategorySelect
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.ActionCheckList
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionOverDueTasks
@@ -40,8 +41,11 @@ fun BottomBarHomeScreen(
     prioritySortState: RequestState<TaskPriority>,
     dateSortOrder: RequestState<DateSortOrder>,
     categoryState: RequestState<String>,
-    isGridLayout: Boolean,
-    onLayoutClicked: () -> Unit,
+    isGridLayout: RequestState<Boolean>,
+    showOverdueTasksState: RequestState<Boolean>,
+    areOverdueTasksState: Boolean,
+    onLayoutClicked: (Boolean) -> Unit,
+    onShowOverdueTasksClicked: (Boolean) -> Unit,
     onNewCheckListClicked: () -> Unit,
     myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
     myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
@@ -70,11 +74,13 @@ fun BottomBarHomeScreen(
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
 
-                    ActionSwitchLayout(
-                        onLayoutClicked = onLayoutClicked,
-                        isGridLayout = isGridLayout,
-                        myContentColor = myContentColor,
-                    )
+                    if (isGridLayout is RequestState.Success) {
+                        ActionSwitchLayout(
+                            onLayoutClicked = { onLayoutClicked(!isGridLayout.data) },
+                            isGridLayout = isGridLayout.data,
+                            myContentColor = myContentColor,
+                        )
+                    }
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
 
@@ -97,10 +103,14 @@ fun BottomBarHomeScreen(
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
 
-                    ActionOverDueTasks(
-                        onOverDueClicked = { /*TODO { Implement logic }*/ },
-                        overDued = false  // TODO { Implement logic }
-                    )
+                    if (showOverdueTasksState is RequestState.Success){
+                        ActionOverDueTasks(
+                            onShowOverdueTasksClicked = { onShowOverdueTasksClicked(!showOverdueTasksState.data) },
+                            areOverdueTasksState = areOverdueTasksState,
+                            showOverdueTasksState = showOverdueTasksState.data
+                        )
+                }
+
 
                 }
             )
