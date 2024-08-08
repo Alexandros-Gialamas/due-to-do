@@ -2,6 +2,8 @@ package com.alexandros.p.gialamas.duetodo.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material3.CheckboxColors
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.DatePickerDefaults
@@ -93,6 +95,18 @@ val ColorScheme.fabContentColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) MyTheme.MyBrown else MyTheme.MyCharcoal
 
+
+// CheckBox Theme Colors
+val CheckboxDefaults.myCheckBoxColors: CheckboxColors
+    @Composable
+    get() = colors(
+        checkedColor = MyTheme.SecondGreen,
+        disabledCheckedColor = MyTheme.MyCloud,
+        disabledUncheckedColor = MyTheme.MyCloud,
+        checkmarkColor = MyTheme.MyCloud,
+        uncheckedColor = MyTheme.MyCloud,
+        disabledIndeterminateColor = MyTheme.MyCloud
+    )
 
 // TextFields Theme Colors
 val TextFieldDefaults.myTextFieldColors: TextFieldColors

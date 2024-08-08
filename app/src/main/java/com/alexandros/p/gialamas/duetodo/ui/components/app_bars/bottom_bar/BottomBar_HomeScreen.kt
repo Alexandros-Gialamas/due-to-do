@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
-import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionTaskCategorySelect
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.ActionCheckList
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionOverDueTasks
@@ -46,7 +45,7 @@ fun BottomBarHomeScreen(
     areOverdueTasksState: Boolean,
     onLayoutClicked: (Boolean) -> Unit,
     onShowOverdueTasksClicked: (Boolean) -> Unit,
-    onNewCheckListClicked: () -> Unit,
+//    onNewCheckListClicked: () -> Unit,
     myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
     myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
 ) {
@@ -65,12 +64,12 @@ fun BottomBarHomeScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 content = {
 
-                    Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
+//                    Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
 
-                    ActionCheckList(
-                        onNewCheckListClicked = onNewCheckListClicked,
-                        myContentColor = myContentColor,
-                    )
+//                    ActionCheckList(
+//                        onCheckListClicked = onNewCheckListClicked,
+//                        myContentColor = myContentColor,
+//                    )
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
 

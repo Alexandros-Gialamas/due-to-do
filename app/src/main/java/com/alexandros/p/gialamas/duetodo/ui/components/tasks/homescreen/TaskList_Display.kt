@@ -2,6 +2,7 @@ package com.alexandros.p.gialamas.duetodo.ui.components.tasks.homescreen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.alexandros.p.gialamas.duetodo.data.models.CheckListItem
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 
@@ -9,6 +10,8 @@ import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 fun TaskListDisplay(
     modifier: Modifier = Modifier,
     tasks: List<TaskTable>,
+    isCheckList: Boolean,
+    onCheckListClicked: () -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout : Boolean
 ) {
@@ -18,7 +21,9 @@ fun TaskListDisplay(
         TaskListItem(
             taskTableList = tasks,
             navigateToTaskScreen = navigateToTaskScreen,
-            isGridLayout = isGridLayout
+            isGridLayout = isGridLayout,
+            isCheckList = isCheckList,
+            onCheckListClicked = { onCheckListClicked() }
         )
     }
 }

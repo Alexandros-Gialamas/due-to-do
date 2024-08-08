@@ -1,20 +1,23 @@
 package com.alexandros.p.gialamas.duetodo.ui.components.tasks.homescreen
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -26,13 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
-import com.alexandros.p.gialamas.duetodo.ui.theme.DIALOG_BUTTON_SECOND_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
@@ -44,20 +48,20 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_SHADOW_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_TONAL_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_PRIORITY_ITEM_INDICATOR_SIZE
 import com.alexandros.p.gialamas.duetodo.ui.theme.TINY_PADDING
-import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundBrush
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
+import com.alexandros.p.gialamas.duetodo.ui.theme.myCheckBoxColors
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+
 @Composable
 fun TaskItem(
     modifier: Modifier = Modifier,
     taskTable: TaskTable,
-//    animatedVisibilityScope: AnimatedVisibilityScope,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout: Boolean,
+    onCheckedChange: () -> Unit,
     myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
     myContentColor: Color = MaterialTheme.colorScheme.myContentColor
 ) {
@@ -72,9 +76,6 @@ fun TaskItem(
             .fillMaxWidth()
             .height(intrinsicSize = IntrinsicSize.Min)
             .background(myBackgroundColor)
-//        .background(MaterialTheme.colorScheme.primary)  // TODO { try colors }
-//        .background(MyTheme.SecondGreen)
-//        .padding(vertical = 8.dp, horizontal = 24.dp)
             .border(
                 BorderStroke(
                     FIRST_BORDER_STROKE,
@@ -121,19 +122,90 @@ fun TaskItem(
 
                                     Spacer(modifier = Modifier.height(MEDIUM_PADDING))
 
-                                    Text(
-                                        modifier = modifier
-                                            .padding(horizontal = LARGE_PADDING, vertical = TINY_PADDING)
-                                            .fillMaxWidth(),
-                                        text = taskTable.description,
-                                        color = colorScheme.myTextColor,
-                                        style = typography.bodyMedium,
-                                        fontWeight = FontWeight.ExtraLight,
-                                        maxLines = if (isGridLayout) 4 else 2,
-                                        softWrap = true,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
+                                    if (taskTable.isChecklist) {
+                                        taskTable.checkListItem?.forEach { checkListTask ->
+                                        Row(
+                                            modifier = modifier
+                                                .fillMaxWidth(),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.SpaceAround,
+                                            content = {
+                                                Box(
+                                                    modifier = modifier,
+                                                    contentAlignment = Alignment.CenterStart,
+                                                    content = {
+                                                        Icon(
+                                                            painter = painterResource(id = R.drawable.ic_drag_indicator),
+                                                            contentDescription = stringResource(id = R.string.CheckList_Drag_Icon_Description)
+                                                        )
+                                                    }
+                                                )
+                                                Box(
+                                                    modifier = modifier,
+                                                    contentAlignment = Alignment.CenterStart,
+                                                    content = {
+                                                        Checkbox(
+                                                            checked = checkListTask.isCompleted,
+                                                            onCheckedChange = { onCheckedChange() },
+                                                            colors = CheckboxDefaults.myCheckBoxColors
+                                                        )
+                                                    }
+                                                )
+                                                Box(
+                                                    modifier = modifier
+                                                        .weight(3f),
+                                                    contentAlignment = Alignment.CenterEnd,
+                                                    content = {
+                                                        Text(
+                                                            modifier = modifier
+                                                                .padding(
+                                                                    horizontal = LARGE_PADDING,
+                                                                    vertical = TINY_PADDING
+                                                                )
+                                                                .fillMaxWidth(),
+                                                            text = checkListTask.taskDescription,
+                                                            color = colorScheme.myTextColor,
+                                                            style = typography.bodyMedium,
+                                                            fontWeight = FontWeight.ExtraLight,
+                                                            maxLines = if (isGridLayout) 4 else 2,
+                                                            softWrap = true,
+                                                            overflow = TextOverflow.Ellipsis
+                                                        )
+                                                    }
+                                                )
 
+                                            }
+                                        )
+                                    }
+//                                        IconButton(
+//                                            onClick = { /*TODO*/ }
+//                                        ) {
+//                                            Icon(
+//                                                imageVector = Icons.Filled.Add,
+//                                                contentDescription = stringResource(
+//                                                    id = R.string.CheckList_Add_Item_Icon_Description
+//                                                )
+//                                            )
+//                                        }
+                                    } else {
+
+                                        Text(
+                                            modifier = modifier
+                                                .padding(
+                                                    horizontal = LARGE_PADDING,
+                                                    vertical = TINY_PADDING
+                                                )
+                                                .fillMaxWidth(),
+                                            text = taskTable.description,
+                                            color = colorScheme.myTextColor,
+                                            style = typography.bodyMedium,
+                                            fontWeight = FontWeight.ExtraLight,
+                                            maxLines = if (isGridLayout) 4 else 2,
+                                            softWrap = true,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                    }
                                 }
                             )
 
@@ -175,11 +247,13 @@ fun TaskItemPreview() {
             taskId = 0,
             title = "Go to Gym",
             description = "Tomorrow at 5 pm i will expect to be at my cardio exercises",
-            taskPriority = TaskPriority.MEDIUM
+            taskPriority = TaskPriority.MEDIUM,
+            checkListItem = emptyList()
         ),
         navigateToTaskScreen = {},
         myBackgroundColor = colorScheme.myBackgroundColor,
         myContentColor = colorScheme.myContentColor,
-        isGridLayout = false
+        isGridLayout = false,
+        onCheckedChange = {}
     )
 }

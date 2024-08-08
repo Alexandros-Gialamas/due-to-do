@@ -4,5 +4,8 @@ import javax.inject.Inject
 
 class GetTaskUseCases @Inject constructor(
     val insertTaskUseCase: InsertTaskUseCase,
-    val updateTaskUseCase: UpdateTaskUseCase
+    val updateTaskUseCase: UpdateTaskUseCase,
+    val deleteTaskUseCase: DeleteTaskUseCase,
+    val deleteAllTasksUseCase: DeleteAllTasksUseCase,
+    val cleanUnusedCategoriesUseCase: CleanUnusedCategoriesUseCase
 )

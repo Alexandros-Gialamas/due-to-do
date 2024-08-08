@@ -37,6 +37,8 @@ import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 fun TaskListItem(
     modifier: Modifier = Modifier,
     taskTableList: List<TaskTable> = listOf(),
+    isCheckList: Boolean,
+    onCheckListClicked: () -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout: Boolean,
 ) {
@@ -68,7 +70,9 @@ fun TaskListItem(
                                 TaskItem(
                                     taskTable = taskTableList[index],
                                     navigateToTaskScreen = navigateToTaskScreen,
-                                    isGridLayout = isGridLayout
+                                    isGridLayout = isGridLayout,
+                                    onCheckedChange = { onCheckListClicked() }
+
                                 )
                             }
                         )
@@ -105,7 +109,9 @@ fun TaskListItem(
                                 TaskItem(
                                     taskTable = task,
                                     navigateToTaskScreen = navigateToTaskScreen,
-                                    isGridLayout = isGridLayout
+                                    isGridLayout = isGridLayout,
+                                    onCheckedChange = { onCheckListClicked() },
+
                                 )
                             }
                         )

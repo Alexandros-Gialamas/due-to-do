@@ -9,18 +9,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexandros.p.gialamas.duetodo.R
-import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 
 @Composable
 fun ActionCheckList(
-    onNewCheckListClicked: () -> Unit,
+    onCheckListClicked: () -> Unit,
+    isChecklist: Boolean,
     myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
 ) {
     IconButton(
-        onClick = { onNewCheckListClicked() },
+        onClick = { onCheckListClicked() },
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_check_list),
@@ -34,7 +32,8 @@ fun ActionCheckList(
 @Preview
 private fun ActionCheckListPreview() {
     ActionCheckList(
-        onNewCheckListClicked = {},
-        myContentColor = MaterialTheme.colorScheme.myContentColor
+        onCheckListClicked = {},
+        myContentColor = MaterialTheme.colorScheme.myContentColor,
+        isChecklist = false
     )
 }

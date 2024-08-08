@@ -1,6 +1,7 @@
 package com.alexandros.p.gialamas.duetodo.usecases
 
 import androidx.lifecycle.viewModelScope
+import com.alexandros.p.gialamas.duetodo.data.models.CheckListItem
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.data.repositories.ReminderRepository
@@ -8,7 +9,6 @@ import com.alexandros.p.gialamas.duetodo.data.repositories.TaskCategoryRepositor
 import com.alexandros.p.gialamas.duetodo.data.repositories.TaskRepository
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.RepeatFrequency
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class UpdateTaskUseCase @Inject constructor(
@@ -33,6 +33,7 @@ class UpdateTaskUseCase @Inject constructor(
         categoryReminders: Boolean,
         isPinned: Boolean,
         isChecked: Boolean,
+        checkListItem: List<CheckListItem>,
     ) {
 
         // Create a new Category if is not existing already
@@ -51,7 +52,8 @@ class UpdateTaskUseCase @Inject constructor(
             dialogNotification = dialogNotification,
             categoryReminders = categoryReminders,
             isPinned = isPinned,
-            isChecked = isChecked,
+            isChecklist = isChecked,
+            checkListItem = checkListItem
         )
 
         updateTask.let { taskRepository.updateTask(it) }
@@ -60,8 +62,10 @@ class UpdateTaskUseCase @Inject constructor(
         // Clear Past Due Dates
 //        clearPastDueDatesUseCase(viewModel,dueDate)
 
-        val taskForSchedule = taskRepository.getTaskForSchedule(updateTask.taskId)
-        reminderRepository.scheduleReminder(taskForSchedule,viewModel.viewModelScope,viewModel)
+        updateTask.dueDate?.let {
+            val taskForSchedule = updateTask.taskId.let { taskRepository.getTaskForSchedule(it) }
+            reminderRepository.scheduleReminder(taskForSchedule,viewModel.viewModelScope,viewModel)
+        }
 
     }
 }

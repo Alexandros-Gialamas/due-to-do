@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexandros.p.gialamas.duetodo.data.models.CheckListItem
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
@@ -64,12 +65,23 @@ class TaskViewModel @Inject constructor(
         private set
     var dialogNotification by mutableStateOf(false)
         private set
-    var isChecked by mutableStateOf(false)
+    var isChecklist by mutableStateOf(false)
         private set
     var isPinned by mutableStateOf(false)
         private set
     var categoryReminders by mutableStateOf(false)
         private set
+    var categoryNone by mutableStateOf(true)
+        private set
+    var categoryId by mutableStateOf<Int?>(null)
+        private set
+    var taskDescription by mutableStateOf("")
+        private set
+    var isCompleted by mutableStateOf(false)
+        private set
+    var checkListItems by mutableStateOf(listOf(CheckListItem("",false)))
+        private set
+
 
     // Update Task values
     fun updateTitle(newTitle: String) {
@@ -110,8 +122,8 @@ class TaskViewModel @Inject constructor(
         dialogNotification = newDialogNotification
     }
 
-    fun updateIsChecked(isCompleted: Boolean) {
-        isChecked = isCompleted
+    fun updateIsCheckList(newIsChecklist: Boolean) {
+        isChecklist = newIsChecklist
     }
 
     fun updateIsPinned(pinned: Boolean) {
@@ -120,6 +132,26 @@ class TaskViewModel @Inject constructor(
 
     fun updateCategoryReminders(newCategoryReminder: Boolean) {
         categoryReminders = newCategoryReminder
+    }
+
+    fun updateCategoryNone(newCategoryNone: Boolean) {
+        categoryNone = newCategoryNone
+    }
+
+    fun updateCategoryId(newCategoryId: Int?) {
+        categoryId = newCategoryId
+    }
+
+    fun updateTaskDescription(newTaskDescription: String) {
+        taskDescription = newTaskDescription
+    }
+
+    fun updateIsCompleted(newIsCompleted: Boolean) {
+        isCompleted = newIsCompleted
+    }
+
+    fun updateCheckListItems(newCheckListItems: List<CheckListItem>) {
+        checkListItems = newCheckListItems
     }
 
 
@@ -137,8 +169,11 @@ class TaskViewModel @Inject constructor(
             repeatFrequency = selectedTask.repeatFrequency
             dialogNotification = selectedTask.dialogNotification
             isPinned = selectedTask.isPinned
-            isChecked = selectedTask.isChecked
+            isChecklist = selectedTask.isChecklist
             categoryReminders = selectedTask.categoryReminders
+            checkListItems = selectedTask.checkListItem
+//            categoryNone = selectedTask.categoryNone
+//            categoryId = selectedTask.categoryId
 
         } else {
             taskId = 0
@@ -146,13 +181,17 @@ class TaskViewModel @Inject constructor(
             description = ""
             taskPriority = TaskPriority.LOW
             category = ""
+//            createdDate = System.currentTimeMillis()
             dueDate = null
             reScheduleDate = null
             repeatFrequency = RepeatFrequency.NONE
             dialogNotification = false
-            isChecked = false
+            isChecklist = false
             isPinned = false
             categoryReminders = false
+            checkListItems = emptyList()
+//            categoryNone = true
+//            categoryId = null
         }
     }
 
@@ -166,7 +205,7 @@ class TaskViewModel @Inject constructor(
     }
 
     fun validateFields(): Boolean {
-        return title.isNotBlank() || description.isNotBlank()
+        return if (isChecklist) title.isNotBlank() || taskDescription.isNotBlank() else title.isNotBlank() || description.isNotBlank()
     } //TODO { Only Title is enough }
 
     private fun insertTask() {
@@ -184,7 +223,12 @@ class TaskViewModel @Inject constructor(
                 dialogNotification = dialogNotification,
                 categoryReminders = categoryReminders,
                 isPinned = isPinned,
-                isChecked = isChecked
+                isChecked = isChecklist,
+                checkListItem = checkListItems
+//                createdDate = createdDate,
+//                taskId = taskId,
+//                categoryNone = categoryNone,
+//                categoryId = categoryId
             )
         }
     }
@@ -207,42 +251,48 @@ class TaskViewModel @Inject constructor(
                     dialogNotification = dialogNotification,
                     categoryReminders = categoryReminders,
                     isPinned = isPinned,
-                    isChecked = isChecked
+                    isChecked = isChecklist,
+                    checkListItem = checkListItems
                 )
         }
     }
 
     private fun deleteTask() {
         viewModelScope.launch(Dispatchers.IO) {
-            val task = TaskTable(
+            getTaskUseCases.deleteTaskUseCase(
+                viewModel = this@TaskViewModel,
                 taskId = taskId,
                 title = title,
                 description = description,
                 taskPriority = taskPriority,
+                category = category,
                 createdDate = createdDate,
                 dueDate = dueDate,
+                reScheduleDate = reScheduleDate,
+                repeatFrequency = repeatFrequency,
                 dialogNotification = dialogNotification,
-                isChecked = isChecked,
-                isPinned = isPinned,
-                category = category,
                 categoryReminders = categoryReminders,
+                isChecked = isChecklist,
+                isPinned = isPinned,
+                categoryNone = categoryNone,
+                categoryId = categoryId,
+                checkListItem = checkListItems
             )
-            task.let { taskRepository.deleteTask(it) }
-            cleanUnusedCategories()
         }
+        cleanUnusedCategories()
     }
 
     private fun deleteAllTasks() {
         viewModelScope.launch(Dispatchers.IO) {
-            taskRepository.deleteAllTasks()
-            cleanUnusedCategories()
+            getTaskUseCases.deleteAllTasksUseCase()
         }
+        cleanUnusedCategories()
     }
 
     // Clean Unused Categories
     fun cleanUnusedCategories() {
         viewModelScope.launch(Dispatchers.IO) {
-            taskCategoryRepository.cleanUnusedCategories()
+            getTaskUseCases.cleanUnusedCategoriesUseCase()
         }
     }
 
@@ -265,7 +315,9 @@ class TaskViewModel @Inject constructor(
             }
 
             DatabaseAction.UNDO -> {
-                insertTask()
+                viewModelScope.launch(Dispatchers.IO) {
+                    getTaskUseCases.deleteTaskUseCase.undoDeletion(this@TaskViewModel)
+                }
             }
 
             else -> {
@@ -328,19 +380,28 @@ class TaskViewModel @Inject constructor(
 
     fun sortByCategoryLowPriorityDateDESC(categoryState: RequestState<String>): Flow<List<TaskTable>> =
         when (categoryState) {
-            is RequestState.Success -> taskRepository.sortByCategoryLowPriorityDateDESC(categoryState.data)
+            is RequestState.Success -> taskRepository.sortByCategoryLowPriorityDateDESC(
+                categoryState.data
+            )
+
             else -> flowOf(emptyList())
         }
 
     fun sortByCategoryHighPriorityDateASC(categoryState: RequestState<String>): Flow<List<TaskTable>> =
         when (categoryState) {
-            is RequestState.Success -> taskRepository.sortByCategoryHighPriorityDateASC(categoryState.data)
+            is RequestState.Success -> taskRepository.sortByCategoryHighPriorityDateASC(
+                categoryState.data
+            )
+
             else -> flowOf(emptyList())
         }
 
     fun sortByCategoryHighPriorityDateDESC(categoryState: RequestState<String>): Flow<List<TaskTable>> =
         when (categoryState) {
-            is RequestState.Success -> taskRepository.sortByCategoryHighPriorityDateDESC(categoryState.data)
+            is RequestState.Success -> taskRepository.sortByCategoryHighPriorityDateDESC(
+                categoryState.data
+            )
+
             else -> flowOf(emptyList())
         }
 
@@ -358,7 +419,6 @@ class TaskViewModel @Inject constructor(
 
     fun getOverDueTasks(currentDate: Long = System.currentTimeMillis()): Flow<List<TaskTable>> =
         taskRepository.getOverDueTasks(currentDate = currentDate)
-
 
 
     private val _prioritySortState =
@@ -380,7 +440,6 @@ class TaskViewModel @Inject constructor(
     private val _isGridLayoutState =
         MutableStateFlow<RequestState<Boolean>>(RequestState.Idle)
     val isGridLayoutState: StateFlow<RequestState<Boolean>> = _isGridLayoutState
-
 
 
     private fun readPrioritySortState() {

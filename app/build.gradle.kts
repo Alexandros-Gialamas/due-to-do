@@ -157,4 +157,10 @@ dependencies {
     // Compose Material Dialogs "Core"
     implementation (libs.core)
 
+    // Gson
+    implementation (libs.gson)
+
+    //ComposeReorderable
+    implementation(libs.reorderable.v096)
+
 }

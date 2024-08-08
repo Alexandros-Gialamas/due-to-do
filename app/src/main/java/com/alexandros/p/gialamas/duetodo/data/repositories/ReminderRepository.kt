@@ -217,4 +217,12 @@ class ReminderRepository @Inject constructor(
 
     }
 
+    internal fun cancelScheduledTask(taskId: Int?){
+        taskId.let { workManager.cancelUniqueWork("reminder_$it") }
+    }
+
+    internal fun cancelAllScheduledTask(){
+        workManager.cancelAllWork()
+    }
+
 }

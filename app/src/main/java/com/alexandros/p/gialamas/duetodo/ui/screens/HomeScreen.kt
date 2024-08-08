@@ -105,6 +105,7 @@ fun HomeScreen(
     val categoryHighTaskPriorityASCDateSort by taskViewModel.sortByCategoryHighPriorityDateASC(categoryState).collectAsState(emptyList())
     val categoryHighTaskPriorityDESCDateSort by taskViewModel.sortByCategoryHighPriorityDateDESC(categoryState).collectAsState(emptyList())
     val isGridLayoutState by taskViewModel.isGridLayoutState.collectAsState()
+    val isCheckList = taskViewModel.isChecklist
     val showOverdueTasksState by taskViewModel.showOverdueTasksState.collectAsState()
 
     val searchBarState: SearchBarState = taskViewModel.searchBarState
@@ -215,12 +216,12 @@ fun HomeScreen(
                                     taskViewModel.persistDateSortState(dateOrder)
                                 },
                                 onLayoutClicked = { taskViewModel.persistIsGridLayoutState(it) },
-                                onNewCheckListClicked = {
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                    }  // TODO { for test purposes }
-                                },
+//                                onNewCheckListClicked = {
+//
+//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+//                                    }  // TODO { for test purposes }
+//                                },
                                 prioritySortState = prioritySortState,
                                 dateSortOrder = dateSortState,
                                 categoryState = categoryState,
@@ -271,7 +272,9 @@ fun HomeScreen(
                                         dateSortState = dateSortState,
                                         categoryState = categoryState,
                                         isGridLayout = isGridLayoutState,
-                                        showOverdueTasksState = showOverdueTasksState
+                                        showOverdueTasksState = showOverdueTasksState,
+                                        isCheckList = isCheckList,
+                                        onCheckListClicked = { taskViewModel.updateIsCheckList(!isCheckList) }
                                     )
                                 }
                             )

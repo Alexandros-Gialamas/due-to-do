@@ -18,6 +18,11 @@
 
     <string name="App_Bar_Title_Description">dueToDo</string>
 
+    // Check List
+    <string name="CheckList_Drag_Icon_Description">Drag Entry</string>
+    <string name="CheckList_Add_Item_Icon_Description">Add Entry</string>
+    <string name="CheckList_Delete_Item_Icon_Description">Delete Entry</string>
+
 
     // Search Bar
     <string name="SearchBar_Placeholder">Search your tasks</string>

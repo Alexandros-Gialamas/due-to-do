@@ -5,25 +5,26 @@ import com.alexandros.p.gialamas.duetodo.data.models.CheckListItem
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.data.repositories.ReminderRepository
-import com.alexandros.p.gialamas.duetodo.data.repositories.TaskCategoryRepository
 import com.alexandros.p.gialamas.duetodo.data.repositories.TaskRepository
 import com.alexandros.p.gialamas.duetodo.ui.viewmodels.TaskViewModel
 import com.alexandros.p.gialamas.duetodo.util.RepeatFrequency
 import javax.inject.Inject
 
-class InsertTaskUseCase @Inject constructor(
+class DeleteTaskUseCase @Inject constructor(
     private val taskRepository: TaskRepository,
-    private val taskCategoryRepository: TaskCategoryRepository,
     private val reminderRepository: ReminderRepository,
-    private val createNewCategoryUseCase: CreateNewCategoryUseCase,
-    private val clearPastDueDatesUseCase: ClearPastDueDatesUseCase
+    private val cancelScheduledTaskOperationUseCase: CancelScheduledTaskOperationUseCase
 ) {
+    lateinit var undoTask: TaskTable
+
     suspend operator fun invoke(
         viewModel: TaskViewModel,
+        taskId: Int,
         title: String,
         description: String,
         taskPriority: TaskPriority,
         category: String,
+        createdDate : Long,
         dueDate: Long?,
         reScheduleDate: Long?,
         repeatFrequency: RepeatFrequency,
@@ -31,47 +32,43 @@ class InsertTaskUseCase @Inject constructor(
         categoryReminders: Boolean,
         isPinned: Boolean,
         isChecked: Boolean,
+        categoryNone: Boolean,
+        categoryId: Int?,
         checkListItem: List<CheckListItem>
-//        createdDate: Long,
-//        taskId: Int,
-//        categoryNone: Boolean,
-//        categoryId: Int?
     ) {
-
-        // Create a new Category if is not existing already
-        createNewCategoryUseCase(category)
-
-        val newTask = TaskTable(
+        val task = TaskTable(
+            taskId = taskId,
             title = title,
             description = description,
             taskPriority = taskPriority,
             category = category,
+            createdDate = createdDate,
             dueDate = dueDate,
             reScheduleDate = reScheduleDate,
             repeatFrequency = repeatFrequency,
             dialogNotification = dialogNotification,
             categoryReminders = categoryReminders,
-            isPinned = isPinned,
             isChecklist = isChecked,
+            isPinned = isPinned,
+            categoryNone = categoryNone,
+            categoryId = categoryId,
             checkListItem = checkListItem
-//            createdDate = createdDate,
-//            taskId = taskId,
-//            categoryNone = categoryNone,
-//            categoryId = categoryId
-
         )
 
-        newTask.let { taskRepository.insertTask(it) }
-        // Clean Unused Categories
-        taskCategoryRepository.cleanUnusedCategories()
-        // Clear Past Due Dates
-//        clearPastDueDatesUseCase(viewModel,dueDate)
+        undoTask = task.copy()
 
+        cancelScheduledTaskOperationUseCase(taskId)
 
-        newTask.dueDate?.let {
-            val taskForSchedule = newTask.taskId.let { taskRepository.getTaskForSchedule(it) }
-            reminderRepository.scheduleReminder(taskForSchedule,viewModel.viewModelScope,viewModel)
-        }
+        task.let { taskRepository.deleteTask(it) }
 
     }
+
+    suspend fun undoDeletion(viewModel: TaskViewModel){
+        undoTask?.let { taskRepository.insertTask(it) }
+        undoTask?.dueDate?.let {
+            val taskForSchedule = undoTask.taskId.let { taskRepository.getTaskForSchedule(it) }
+            reminderRepository.scheduleReminder(taskForSchedule,viewModel.viewModelScope,viewModel)
+        }
+    }
+
 }

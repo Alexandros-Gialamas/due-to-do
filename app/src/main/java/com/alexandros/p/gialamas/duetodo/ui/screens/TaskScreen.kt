@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -22,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.LayoutDirection
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
@@ -50,10 +52,13 @@ fun TaskScreen(
     val description: String = taskViewModel.description
     val taskPriority = taskViewModel.taskPriority
     val dueDate: Long? = taskViewModel.dueDate
-    val isChecked = taskViewModel.isChecked
+    val isCheckList = taskViewModel.isChecklist
     val isPinned = taskViewModel.isPinned
     val isPopAlarmSelected = taskViewModel.dialogNotification
     val creationDate = taskViewModel.createdDate
+    val checkListItems = taskViewModel.checkListItems
+    val taskDescription = taskViewModel.taskDescription
+    val isCompleted = taskViewModel.isCompleted
 
     val allCategories by taskViewModel.allCategories.collectAsState()
 
@@ -67,6 +72,7 @@ fun TaskScreen(
     BackHandler(true) {
         navigateToHomeScreen(DatabaseAction.NO_ACTION)
     }
+
 
     LaunchedEffect(key1 = allCategories) {
         taskViewModel.cleanUnusedCategories()
@@ -116,7 +122,8 @@ fun TaskScreen(
                         title = title,
                         description = description,
                         selectedTask = selectedTask,
-                        onNewCheckListClicked = { /*TODO*/ },
+                        onCheckListClicked = { taskViewModel.updateIsCheckList(!isCheckList) },
+                        isCheckList = isCheckList,
                         dueDate = dueDate,
                         onDueDateChange = { taskViewModel.updateDueDate(it) },
                         showToastInvalidDate = { SnackToastMessages.INVALID_TIME.showToast(context) },
@@ -145,6 +152,7 @@ fun TaskScreen(
                                 start = paddingValues.calculateStartPadding(LayoutDirection.Ltr)
                             )
                             .background(mySecondBackgroundColor),
+//                            .clickable { LocalFocusManager.current.clearFocus() } ,  // TODO { check focus }
                         content = {
                             DisplayTask(
                                 title = title,
@@ -163,6 +171,14 @@ fun TaskScreen(
                                         newTaskPriority = it
                                     )
                                 },
+                                isCheckList = isCheckList,
+                                onCheckedChange = { taskViewModel.updateIsCompleted(!isCompleted) },
+                                checkListItems = checkListItems,
+                                updateCheckListItems = { taskViewModel.updateCheckListItems(it) },
+                                viewModel = taskViewModel,
+                                taskDescription = taskDescription,
+                                isCompleted = isCompleted,
+                                onTaskDescriptionChange = { taskViewModel.updateTaskDescription(it)}
                             )
                         }
                     )

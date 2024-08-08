@@ -1,16 +1,11 @@
 package com.alexandros.p.gialamas.duetodo.ui.components.app_bars.bottom_bar
 
-import android.content.ClipDescription
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -24,8 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
@@ -44,10 +37,8 @@ import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task.Actio
 import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.MEDIUM_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.ONE_TAB_PADDING
-import com.alexandros.p.gialamas.duetodo.ui.theme.myActivatedColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
-import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
 import com.alexandros.p.gialamas.duetodo.util.DatabaseAction
 import com.alexandros.p.gialamas.duetodo.util.RepeatFrequency
 import com.alexandros.p.gialamas.duetodo.util.RequestState
@@ -61,7 +52,8 @@ fun BottomBarTaskScreen(
     title: String,
     description: String,
     selectedTask: TaskTable?,
-    onNewCheckListClicked: () -> Unit,
+    onCheckListClicked: () -> Unit,
+    isCheckList: Boolean,
     dueDate: Long?,
     onDueDateChange: (Long?) -> Unit,
     onRemindClicked: () -> Unit,
@@ -107,8 +99,9 @@ fun BottomBarTaskScreen(
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
 
                     ActionCheckList(
-                        onNewCheckListClicked = onNewCheckListClicked,
-                        myContentColor = myContentColor
+                        onCheckListClicked = onCheckListClicked,
+                        myContentColor = myContentColor,
+                        isChecklist = isCheckList,
                     )
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))

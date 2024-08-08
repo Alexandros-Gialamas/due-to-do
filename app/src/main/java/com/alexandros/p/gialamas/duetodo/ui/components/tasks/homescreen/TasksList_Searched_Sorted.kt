@@ -27,6 +27,8 @@ fun TaskListSearchedAndSorted(
     searchPhrase : String,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     isGridLayout: RequestState<Boolean>,
+    isCheckList: Boolean,
+    onCheckListClicked: () -> Unit,
 ) {
 
 
@@ -92,7 +94,9 @@ fun TaskListSearchedAndSorted(
         TaskListDisplay(
             tasks = tasksToDisplay,
             navigateToTaskScreen = navigateToTaskScreen,
-            isGridLayout = isGridLayout.data
+            isGridLayout = isGridLayout.data,
+            isCheckList = isCheckList,
+            onCheckListClicked = { onCheckListClicked() }
         )
     }
 }
