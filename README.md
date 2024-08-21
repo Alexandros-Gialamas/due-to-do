@@ -21,7 +21,7 @@ New features and enhancements are continually being added to further improve use
 *   Task sorting by category and priority
 *   Linear and Grid layout options
 *   Due date setting for tasks
-*   Display of overdue tasks for better task management
+*   Notify of overdue tasks for better task management
 *   Notifications to keep users updated
 
 ### Planned Enhancements
