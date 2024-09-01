@@ -49,6 +49,7 @@ interface TaskDao {
         OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
         OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
         ORDER BY
+        isPinned DESC,
         CASE
             WHEN taskPriority LIKE 'N%' THEN 1
         END,
@@ -64,6 +65,7 @@ interface TaskDao {
         OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
         OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
         ORDER BY
+        isPinned DESC,
         CASE
             WHEN taskPriority LIKE 'N%' THEN 1
         END,
@@ -79,6 +81,7 @@ interface TaskDao {
         OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
         OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
         ORDER BY
+        isPinned DESC,
         CASE
             WHEN taskPriority LIKE 'L%' THEN 1
             WHEN taskPriority LIKE 'M%' THEN 2
@@ -96,6 +99,7 @@ interface TaskDao {
         OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
         OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
         ORDER BY
+        isPinned DESC,
         CASE
             WHEN taskPriority LIKE 'L%' THEN 1
             WHEN taskPriority LIKE 'M%' THEN 2
@@ -113,6 +117,7 @@ interface TaskDao {
         OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
         OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates')
         ORDER BY
+        isPinned DESC,
         CASE
             WHEN taskPriority LIKE 'H%' THEN 1
             WHEN taskPriority LIKE 'M%' THEN 2
@@ -130,6 +135,7 @@ interface TaskDao {
         OR (:category = 'tasksWithDueDates' AND categoryReminders = 1) 
         OR (category = :category AND :category != 'allOrNoCategories' AND :category != 'tasksWithDueDates') 
         ORDER BY
+        isPinned DESC,
         CASE
             WHEN taskPriority LIKE 'H%' THEN 1
             WHEN taskPriority LIKE 'M%' THEN 2
@@ -146,6 +152,7 @@ interface TaskDao {
         SELECT * FROM task_table 
         WHERE dueDate <= :currentDate
         ORDER BY
+        isPinned DESC,
         CASE
             WHEN taskPriority LIKE 'H%' THEN 1
             WHEN taskPriority LIKE 'M%' THEN 2

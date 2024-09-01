@@ -75,11 +75,11 @@ class TaskViewModel @Inject constructor(
         private set
     var categoryId by mutableStateOf<Int?>(null)
         private set
-    var taskDescription by mutableStateOf("")
+    var listItemDescription by mutableStateOf("")
         private set
     var isCompleted by mutableStateOf(false)
         private set
-    var checkListItems by mutableStateOf(listOf(CheckListItem("",false)))
+    var checkListItems by mutableStateOf(listOf(CheckListItem("", false)))
         private set
 
 
@@ -124,6 +124,28 @@ class TaskViewModel @Inject constructor(
 
     fun updateIsCheckList(newIsChecklist: Boolean) {
         isChecklist = newIsChecklist
+        when {
+            isChecklist -> {
+                val descriptionLines = description.split("\n")
+                descriptionLines.forEachIndexed() { index, line ->
+                    if (index == 0 || line.isNotBlank()) {
+                    val newList = checkListItems.toMutableList()
+                    newList.add(CheckListItem(line, isCompleted))
+                    checkListItems = newList
+                }
+            }
+                updateDescription("")
+            }
+            else -> {
+                val combineCheckListItems =
+                    checkListItems.filter { it.listItemDescription.isNotBlank() }
+                        .joinToString("\n") { it.listItemDescription }
+                updateDescription(combineCheckListItems)
+                val newList = checkListItems.toMutableList()
+                newList.clear()
+                checkListItems = newList
+            }
+        }
     }
 
     fun updateIsPinned(pinned: Boolean) {
@@ -142,8 +164,8 @@ class TaskViewModel @Inject constructor(
         categoryId = newCategoryId
     }
 
-    fun updateTaskDescription(newTaskDescription: String) {
-        taskDescription = newTaskDescription
+    fun updateListItemDescription(newListItemDescription: String) {
+        listItemDescription = newListItemDescription
     }
 
     fun updateIsCompleted(newIsCompleted: Boolean) {
@@ -205,7 +227,7 @@ class TaskViewModel @Inject constructor(
     }
 
     fun validateFields(): Boolean {
-        return if (isChecklist) title.isNotBlank() || taskDescription.isNotBlank() else title.isNotBlank() || description.isNotBlank()
+        return if (isChecklist) title.isNotBlank() || listItemDescription.isNotBlank() else title.isNotBlank() || description.isNotBlank()
     } //TODO { Only Title is enough }
 
     private fun insertTask() {

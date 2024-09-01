@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.Dp
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionTaskCategorySelect
-import com.alexandros.p.gialamas.duetodo.ui.components.actions.ActionCheckList
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionOverDueTasks
-import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionSort
+import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionSortByPriority
+import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionSortByDate
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_home.ActionSwitchLayout
 import com.alexandros.p.gialamas.duetodo.ui.theme.MEDIUM_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
@@ -45,7 +45,6 @@ fun BottomBarHomeScreen(
     areOverdueTasksState: Boolean,
     onLayoutClicked: (Boolean) -> Unit,
     onShowOverdueTasksClicked: (Boolean) -> Unit,
-//    onNewCheckListClicked: () -> Unit,
     myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
     myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
 ) {
@@ -83,11 +82,16 @@ fun BottomBarHomeScreen(
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
 
-                    ActionSort(
+                    ActionSortByDate(
                         dateSortOrder = dateSortOrder,
+                        onDateSortClicked = onDateSortClicked
+                    )
+
+                    Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
+
+                    ActionSortByPriority(
                         onPrioritySortClicked = onPrioritySortClicked,
                         prioritySortState = prioritySortState,
-                        onDateSortClicked = onDateSortClicked
                     )
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))

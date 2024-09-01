@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
@@ -77,6 +78,7 @@ fun ActionTaskPriorityMenu(
                         color = myBackgroundColor,
                         shape = HOME_SCREEN_ROUNDED_CORNERS
                     ),
+                offset = DpOffset(x = (-60).dp, y = (0).dp),
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 content = {
@@ -84,7 +86,7 @@ fun ActionTaskPriorityMenu(
 
                         DropdownMenuItem(
                             modifier = modifier
-                                .fillMaxWidth(), // TODO { hardcode value }
+                                .fillMaxWidth(),
                             leadingIcon = {
                                 Canvas(
                                     modifier = modifier

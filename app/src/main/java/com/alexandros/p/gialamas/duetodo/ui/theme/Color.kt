@@ -1,5 +1,6 @@
 package com.alexandros.p.gialamas.duetodo.ui.theme
 
+import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.CheckboxColors

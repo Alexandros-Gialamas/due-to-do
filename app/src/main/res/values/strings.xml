@@ -7,7 +7,8 @@
     // Bottom Bar
     <string name="BottomBar_Action_Layout_Icon_Description">Change Layout Of Tasks</string>
     <string name="BottomBar_Action_OverDueTasks_Icon_Description">Show Overdue Tasks</string>
-    <string name="BottomBar_Action_Sort_Description">Sort Tasks</string>
+    <string name="BottomBar_Action_Sort_By_Priority_Description">Sort Tasks By Priority</string>
+    <string name="BottomBar_Action_Sort_By_Date_Description">Sort Tasks By Date</string>
     <string name="BottomBar_Action_Category_Selection_Description">Show Selected Category Tasks</string>
     <string name="BottomBar_Action_Category_Label_Icon_Description">Category</string>
     <string name="BottomBar_Action_CheckList_Description">Create CheckList</string>
@@ -22,6 +23,12 @@
     <string name="CheckList_Drag_Icon_Description">Drag Entry</string>
     <string name="CheckList_Add_Item_Icon_Description">Add Entry</string>
     <string name="CheckList_Delete_Item_Icon_Description">Delete Entry</string>
+    <string name="CheckList_Add_Item_Icon_Button">Add Item</string>
+    <string name="CheckList_Expand_Checked_Items_Description">Expand/Collapse checked items list</string>
+    <string name="CheckList_Checked_Item_Count">Checked Item</string>
+    <string name="CheckList_Checked_Items_Count">Checked Items</string>
+    <string name="CheckList_More_Item_Count">More Item</string>
+    <string name="CheckList_More_Items_Count">More Items</string>
 
 
     // Search Bar

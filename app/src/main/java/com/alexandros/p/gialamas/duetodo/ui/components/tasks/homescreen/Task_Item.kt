@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -27,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -34,15 +37,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_LARGE_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.theme.EXTRA_SMALL_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.FIRST_BORDER_STROKE
+import com.alexandros.p.gialamas.duetodo.ui.theme.HOME_SCREEN_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.LARGE_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.LIGHT_BORDER_STROKE_ALPHA
 import com.alexandros.p.gialamas.duetodo.ui.theme.MEDIUM_PADDING
+import com.alexandros.p.gialamas.duetodo.ui.theme.MyTheme
 import com.alexandros.p.gialamas.duetodo.ui.theme.SECOND_BORDER_STROKE
+import com.alexandros.p.gialamas.duetodo.ui.theme.SMALL_PADDING
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_ROUNDED_CORNERS
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_SHADOW_ELEVATION
 import com.alexandros.p.gialamas.duetodo.ui.theme.TASK_ITEM_TONAL_ELEVATION
@@ -53,6 +62,10 @@ import com.alexandros.p.gialamas.duetodo.ui.theme.myBackgroundColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myCheckBoxColors
 import com.alexandros.p.gialamas.duetodo.ui.theme.myContentColor
 import com.alexandros.p.gialamas.duetodo.ui.theme.myTextColor
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -63,12 +76,12 @@ fun TaskItem(
     isGridLayout: Boolean,
     onCheckedChange: () -> Unit,
     myBackgroundColor: Color = MaterialTheme.colorScheme.myBackgroundColor,
-    myContentColor: Color = MaterialTheme.colorScheme.myContentColor
+    myContentColor: Color = MaterialTheme.colorScheme.myContentColor,
+    myTextColor: Color = MaterialTheme.colorScheme.myTextColor
 ) {
 
     val surfaceBackgroundColor = Brush.myBackgroundBrush(radius = 1600f / 1.1f)
-
-
+    val countIsCompleted = taskTable.checkListItem.count { it.isCompleted }
 
     Surface(
         modifier = modifier
@@ -108,131 +121,307 @@ fun TaskItem(
                                     .weight(12f),
                                 content = {
 
-                                    Text(
-                                        modifier = modifier
-                                            .padding(horizontal = LARGE_PADDING),
-                                        text = taskTable.title,
-                                        color = colorScheme.myTextColor,
-                                        style = typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        maxLines = if (isGridLayout) 2 else 1,
-                                        softWrap = true,
-                                        overflow = TextOverflow.Ellipsis
+                                    ShowTaskItemTitle(
+                                        taskTable = taskTable,
+                                        isGridLayout = isGridLayout
                                     )
 
                                     Spacer(modifier = Modifier.height(MEDIUM_PADDING))
 
                                     if (taskTable.isChecklist) {
-                                        taskTable.checkListItem?.forEach { checkListTask ->
-                                        Row(
-                                            modifier = modifier
-                                                .fillMaxWidth(),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.SpaceAround,
-                                            content = {
-                                                Box(
-                                                    modifier = modifier,
-                                                    contentAlignment = Alignment.CenterStart,
-                                                    content = {
-                                                        Icon(
-                                                            painter = painterResource(id = R.drawable.ic_drag_indicator),
-                                                            contentDescription = stringResource(id = R.string.CheckList_Drag_Icon_Description)
-                                                        )
-                                                    }
-                                                )
-                                                Box(
-                                                    modifier = modifier,
-                                                    contentAlignment = Alignment.CenterStart,
-                                                    content = {
-                                                        Checkbox(
-                                                            checked = checkListTask.isCompleted,
-                                                            onCheckedChange = { onCheckedChange() },
-                                                            colors = CheckboxDefaults.myCheckBoxColors
-                                                        )
-                                                    }
-                                                )
-                                                Box(
-                                                    modifier = modifier
-                                                        .weight(3f),
-                                                    contentAlignment = Alignment.CenterEnd,
-                                                    content = {
-                                                        Text(
-                                                            modifier = modifier
-                                                                .padding(
-                                                                    horizontal = LARGE_PADDING,
-                                                                    vertical = TINY_PADDING
-                                                                )
-                                                                .fillMaxWidth(),
-                                                            text = checkListTask.taskDescription,
-                                                            color = colorScheme.myTextColor,
-                                                            style = typography.bodyMedium,
-                                                            fontWeight = FontWeight.ExtraLight,
-                                                            maxLines = if (isGridLayout) 4 else 2,
-                                                            softWrap = true,
-                                                            overflow = TextOverflow.Ellipsis
-                                                        )
-                                                    }
-                                                )
 
-                                            }
+                                        ShowCheckListItem(
+                                            taskTable = taskTable,
+                                            onCheckedChange = onCheckedChange
+                                        )
+
+                                        ShowMoreItemsText(taskTable = taskTable)
+
+                                        ShowCheckedItemsText(
+                                            taskTable = taskTable,
+                                            countIsCompleted = countIsCompleted
+                                        )
+                                    } else {
+                                        ShowTaskItem(
+                                            taskTable = taskTable,
+                                            isGridLayout = isGridLayout
                                         )
                                     }
-//                                        IconButton(
-//                                            onClick = { /*TODO*/ }
-//                                        ) {
-//                                            Icon(
-//                                                imageVector = Icons.Filled.Add,
-//                                                contentDescription = stringResource(
-//                                                    id = R.string.CheckList_Add_Item_Icon_Description
-//                                                )
-//                                            )
-//                                        }
-                                    } else {
 
-                                        Text(
-                                            modifier = modifier
-                                                .padding(
-                                                    horizontal = LARGE_PADDING,
-                                                    vertical = TINY_PADDING
-                                                )
-                                                .fillMaxWidth(),
-                                            text = taskTable.description,
-                                            color = colorScheme.myTextColor,
-                                            style = typography.bodyMedium,
-                                            fontWeight = FontWeight.ExtraLight,
-                                            maxLines = if (isGridLayout) 4 else 2,
-                                            softWrap = true,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-
+                                    if (taskTable.dueDate != null) {
+                                        ShowReminderText(taskTable = taskTable)
                                     }
                                 }
                             )
 
-                            Box(
-                                modifier = modifier
-                                    .padding(end = MEDIUM_PADDING)
-                                    .fillMaxWidth()
-                                    .weight(if (!isGridLayout) 1f else 0.1f)
-                                    .align(Alignment.CenterVertically),
-                                contentAlignment = Alignment.CenterEnd,
+                            Column(
+                                modifier = modifier,
+                                verticalArrangement = Arrangement.SpaceBetween,
+                                horizontalAlignment = Alignment.End,
                                 content = {
                                     if (!isGridLayout) {
-                                        Canvas(
-                                            modifier = modifier
-                                                .size(TASK_PRIORITY_ITEM_INDICATOR_SIZE),
-                                            onDraw = {
-                                                drawCircle(
-                                                    color = taskTable.taskPriority.color
-                                                )
-                                            }
-                                        )
+                                        ShowPriorityIndicatorIcon(taskTable = taskTable)
+                                    }
+                                    if (taskTable.isPinned) {
+                                        ShowPinnedIndicatorIcon()
                                     }
                                 }
                             )
                         }
                     )
                 }
+            )
+        }
+    )
+}
+
+@Composable
+private fun ShowTaskItemTitle(
+    modifier: Modifier = Modifier,
+    taskTable: TaskTable,
+    isGridLayout: Boolean
+) {
+    Text(
+        modifier = modifier
+            .padding(horizontal = MEDIUM_PADDING),
+        text = taskTable.title,
+        color = colorScheme.myTextColor,
+        style = typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        maxLines = if (isGridLayout) 2 else 1,
+        softWrap = true,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+private fun ShowTaskItem(
+    modifier: Modifier = Modifier,
+    taskTable: TaskTable,
+    isGridLayout: Boolean
+) {
+    Text(
+        modifier = modifier
+            .padding(
+                horizontal = LARGE_PADDING,
+                vertical = TINY_PADDING
+            )
+            .fillMaxWidth(),
+        text = taskTable.description,
+        color = colorScheme.myTextColor,
+        style = typography.bodyMedium,
+        fontWeight = FontWeight.ExtraLight,
+        maxLines = if (isGridLayout) 4 else 2,
+        softWrap = true,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+
+@Composable
+private fun ShowCheckListItem(
+    modifier: Modifier = Modifier,
+    taskTable: TaskTable,
+    onCheckedChange: () -> Unit
+) {
+    taskTable.checkListItem.filter { !it.isCompleted }.take(4)
+        ?.forEach { checkListTask ->
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp)
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                content = {
+                    Box(
+                        modifier = modifier,
+                        contentAlignment = Alignment.CenterStart,
+                        content = {
+                            Checkbox(
+                                modifier = modifier
+                                    .size(MEDIUM_PADDING),
+                                checked = checkListTask.isCompleted,
+                                onCheckedChange = { onCheckedChange() },
+                                colors = CheckboxDefaults.myCheckBoxColors
+                            )
+                        }
+                    )
+                    Box(
+                        modifier = modifier
+                            .weight(3f),
+                        contentAlignment = Alignment.CenterEnd,
+                        content = {
+                            Text(
+                                modifier = modifier
+                                    .padding(
+                                        horizontal = EXTRA_LARGE_PADDING,
+                                        vertical = TINY_PADDING
+                                    )
+                                    .fillMaxWidth(),
+                                text = checkListTask.listItemDescription,
+                                color = colorScheme.myTextColor,
+                                style = typography.bodyMedium,
+                                fontWeight = FontWeight.ExtraLight,
+                                maxLines = 2,
+                                softWrap = true,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    )
+                }
+            )
+        }
+}
+
+@Composable
+private fun ShowMoreItemsText(
+    modifier: Modifier = Modifier,
+    taskTable: TaskTable,
+    myFadedTextColor: Color = MaterialTheme.colorScheme.myTextColor.copy(alpha = 0.7f)
+) {
+    if (taskTable.isChecklist && taskTable.checkListItem.size > 4) {
+        val countItems = taskTable.checkListItem.size - 4
+        Text(
+            modifier = modifier
+                .padding(start = LARGE_PADDING),
+            text = if (countItems > 1)
+                "$countItems ${stringResource(id = R.string.CheckList_More_Items_Count)}" else
+                "$countItems ${stringResource(id = R.string.CheckList_More_Item_Count)}",
+            style = typography.bodySmall.copy(fontSize = 10.sp),
+            fontWeight = FontWeight.ExtraLight,
+            softWrap = true,
+            overflow = TextOverflow.Ellipsis,
+            color = myFadedTextColor
+        )
+    }
+}
+
+@Composable
+private fun ShowCheckedItemsText(
+    modifier: Modifier = Modifier,
+    taskTable: TaskTable,
+    countIsCompleted: Int,
+    myFadedTextColor: Color = MaterialTheme.colorScheme.myTextColor.copy(alpha = 0.7f)
+) {
+    if (taskTable.isChecklist && countIsCompleted > 0) {
+        Text(
+            modifier = modifier
+                .padding(start = LARGE_PADDING),
+            text = if (countIsCompleted > 1)
+                "$countIsCompleted ${stringResource(id = R.string.CheckList_Checked_Items_Count)}" else
+                "$countIsCompleted ${stringResource(id = R.string.CheckList_Checked_Item_Count)}",
+            style = typography.bodySmall.copy(fontSize = 10.sp),
+            fontWeight = FontWeight.ExtraLight,
+            softWrap = true,
+            overflow = TextOverflow.Ellipsis,
+            color = myFadedTextColor
+        )
+    }
+}
+
+@Composable
+private fun ShowPriorityIndicatorIcon(
+    modifier: Modifier = Modifier,
+    taskTable: TaskTable,
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.TopEnd,
+        content = {
+            Canvas(
+                modifier = modifier
+                    .size(TASK_PRIORITY_ITEM_INDICATOR_SIZE),
+                onDraw = {
+                    drawCircle(
+                        color = taskTable.taskPriority.color
+                    )
+                }
+            )
+        }
+    )
+}
+
+@Composable
+private fun ShowReminderText(
+    modifier: Modifier = Modifier,
+    taskTable: TaskTable,
+    myFadedBackgroundColor: Color = MyTheme.MyCharcoal.copy(alpha = 0.2f),
+    myFadedContentColor: Color = MaterialTheme.colorScheme.myContentColor.copy(alpha = 0.9f),
+    myFadedTextColor: Color = MaterialTheme.colorScheme.myTextColor.copy(alpha = 0.9f)
+) {
+    Box(
+        modifier = modifier
+            .padding(start = SMALL_PADDING)
+            .background(color = myFadedBackgroundColor, shape = RoundedCornerShape(8.dp))
+            .padding(EXTRA_SMALL_PADDING),
+        contentAlignment = Alignment.BottomStart,
+        content = {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                content = {
+
+                    Icon(
+                        modifier = modifier
+                            .size(16.dp),
+                        painter = if (taskTable.reScheduleDate != null)
+                            painterResource(id = R.drawable.ic_repeat) else
+                            painterResource(id = R.drawable.ic_alarm),
+                        contentDescription = null,  // TODO { description }
+                        tint = myFadedContentColor
+                    )
+
+                    Text(
+                        modifier = modifier
+                            .padding(start = SMALL_PADDING),
+                        text = "${taskTable.dueDate?.let { formatDate(it) }}",
+                        style = typography.bodySmall.copy(fontSize = 10.sp),
+                        fontWeight = FontWeight.ExtraLight,
+                        softWrap = true,
+                        overflow = TextOverflow.Ellipsis,
+                        color = myFadedTextColor
+                    )
+                }
+            )
+        }
+    )
+}
+
+private fun formatDate(timestamp: Long): String {
+    val dateFormat = SimpleDateFormat("MMM, d", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+    val date = Date(timestamp)
+    val formattedDate = dateFormat.format(date)
+    val formattedTime = timeFormat.format(date)
+    val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
+
+    return if (year.toInt() != currentYear) {
+        "$formattedDate, $year, $formattedTime"
+    } else {
+        "$formattedDate, $formattedTime"
+    }
+}
+
+@Composable
+private fun ShowPinnedIndicatorIcon(
+    modifier: Modifier = Modifier,
+    myFadedContentColor: Color = MaterialTheme.colorScheme.myContentColor.copy(alpha = 0.7f)
+) {
+    Box(
+        modifier = modifier
+            .fillMaxHeight(),
+        contentAlignment = Alignment.BottomEnd,
+        content = {
+            Icon(
+                modifier = modifier
+                    .size(16.dp)
+                    .rotate(45f),
+                painter = painterResource(id = R.drawable.ic_pinned),
+                contentDescription = null,  // TODO { description }
+                tint = myFadedContentColor
             )
         }
     )

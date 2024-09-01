@@ -42,7 +42,7 @@ data class TaskTable(
 )
 
 data class CheckListItem(
-    var taskDescription: String,
+    var listItemDescription: String,
     var isCompleted: Boolean = false
 )
 

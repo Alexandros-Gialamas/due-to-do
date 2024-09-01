@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -23,9 +22,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.LayoutDirection
+import com.alexandros.p.gialamas.duetodo.data.models.CheckListItem
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
 import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.bottom_bar.BottomBarTaskScreen
 import com.alexandros.p.gialamas.duetodo.ui.components.app_bars.top_bar.TopBarTaskScreen
@@ -57,7 +56,7 @@ fun TaskScreen(
     val isPopAlarmSelected = taskViewModel.dialogNotification
     val creationDate = taskViewModel.createdDate
     val checkListItems = taskViewModel.checkListItems
-    val taskDescription = taskViewModel.taskDescription
+    val listItemDescription = taskViewModel.listItemDescription
     val isCompleted = taskViewModel.isCompleted
 
     val allCategories by taskViewModel.allCategories.collectAsState()
@@ -122,8 +121,17 @@ fun TaskScreen(
                         title = title,
                         description = description,
                         selectedTask = selectedTask,
-                        onCheckListClicked = { taskViewModel.updateIsCheckList(!isCheckList) },
-                        isCheckList = isCheckList,
+                        onCheckListClicked = {
+                            when {
+                                selectedTask?.checkListItem?.isEmpty() == true
+                                        || (checkListItems.isNotEmpty()
+                                        && checkListItems.last().listItemDescription.isBlank())-> {
+                                    val newList = checkListItems + CheckListItem("", false)
+                                    taskViewModel.updateCheckListItems(newList)
+                                }
+                            }
+                            taskViewModel.updateIsCheckList(!isCheckList)
+                        },
                         dueDate = dueDate,
                         onDueDateChange = { taskViewModel.updateDueDate(it) },
                         showToastInvalidDate = { SnackToastMessages.INVALID_TIME.showToast(context) },
@@ -140,6 +148,8 @@ fun TaskScreen(
                         onPinClicked = { taskViewModel.updateIsPinned(!isPinned) },
                         scope = coroutineScope,
                         keyboardController = keyboardController,
+                        isCheckList = isCheckList,
+                        checkListItems = checkListItems
                     )
                 },
                 content = { paddingValues ->
@@ -176,9 +186,13 @@ fun TaskScreen(
                                 checkListItems = checkListItems,
                                 updateCheckListItems = { taskViewModel.updateCheckListItems(it) },
                                 viewModel = taskViewModel,
-                                taskDescription = taskDescription,
+                                listItemDescription = listItemDescription,
                                 isCompleted = isCompleted,
-                                onTaskDescriptionChange = { taskViewModel.updateTaskDescription(it)}
+                                onListItemDescriptionChange = {
+                                    taskViewModel.updateListItemDescription(
+                                        it
+                                    )
+                                }
                             )
                         }
                     )

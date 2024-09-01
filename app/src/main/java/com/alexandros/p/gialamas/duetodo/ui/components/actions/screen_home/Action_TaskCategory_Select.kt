@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import com.alexandros.p.gialamas.duetodo.R
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
@@ -54,7 +56,7 @@ fun ActionTaskCategorySelect(
     var expanded by remember { mutableStateOf(false) }
     val noCategorySelected =
         (categoryState is RequestState.Success && categoryState.data == SelectedCategoryState.NONE.categoryName)
-    val dropDownBackgroundColor = Brush.myBackgroundBrush(radius = 1200 / 1f)
+    val dropDownBackgroundColor = Brush.myBackgroundBrush(radius = 1300f)
 
     IconButton(
         onClick = { expanded = !expanded },
@@ -79,6 +81,7 @@ fun ActionTaskCategorySelect(
                     color = myBackgroundColor,
                     shape = HOME_SCREEN_ROUNDED_CORNERS
                 ),
+            offset = DpOffset(x = (-68).dp, y = (0).dp),
             expanded = expanded,
             onDismissRequest = { expanded = false },
             content = {

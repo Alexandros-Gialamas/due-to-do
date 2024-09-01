@@ -3,6 +3,7 @@ package com.alexandros.p.gialamas.duetodo.ui.components.app_bars.bottom_bar
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -24,10 +25,11 @@ import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.alexandros.p.gialamas.duetodo.data.models.CheckListItem
 import com.alexandros.p.gialamas.duetodo.data.models.TaskCategoryTable
 import com.alexandros.p.gialamas.duetodo.data.models.TaskPriority
 import com.alexandros.p.gialamas.duetodo.data.models.TaskTable
-import com.alexandros.p.gialamas.duetodo.ui.components.actions.ActionCheckList
+import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task.ActionCheckList
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task.ActionCategory
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task.ActionInsert
 import com.alexandros.p.gialamas.duetodo.ui.components.actions.screen_task.ActionPin
@@ -54,6 +56,7 @@ fun BottomBarTaskScreen(
     selectedTask: TaskTable?,
     onCheckListClicked: () -> Unit,
     isCheckList: Boolean,
+    checkListItems: List<CheckListItem>,
     dueDate: Long?,
     onDueDateChange: (Long?) -> Unit,
     onRemindClicked: () -> Unit,
@@ -77,16 +80,11 @@ fun BottomBarTaskScreen(
     val editedBackgroundColor = myBackgroundColor.copy(alpha = 0.9f)
     val taskExist = selectedTask != null
 
-    var popupPosition by remember { mutableStateOf(IntOffset.Zero) }
-    var popupHeight by remember { mutableStateOf(0.dp) }
-    var parentHeight by remember { mutableStateOf(0.dp) }
-    var parentWidth by remember { mutableStateOf(0.dp) }
-    val configuration = LocalConfiguration.current
 
     TopAppBar(
         modifier = modifier
             .background(Color.Transparent)
-            .height(Dp.Unspecified),  // TODO { changed to higher bar }
+            .height(Dp.Unspecified),
         title = {},
         colors = TopAppBarDefaults.topAppBarColors(editedBackgroundColor),
         navigationIcon = {
@@ -100,8 +98,8 @@ fun BottomBarTaskScreen(
 
                     ActionCheckList(
                         onCheckListClicked = onCheckListClicked,
+                        isCheckList = isCheckList,
                         myContentColor = myContentColor,
-                        isChecklist = isCheckList,
                     )
 
                     Spacer(modifier = modifier.padding(start = MEDIUM_PADDING))
@@ -144,10 +142,15 @@ fun BottomBarTaskScreen(
 
                     Spacer(modifier = modifier.padding(start = ONE_TAB_PADDING))
 
-                    if (title.isNotBlank() || description.isNotBlank()) {
-                        if (taskExist){
+                    if (
+                        (isCheckList && (title.isNotBlank()
+                                || checkListItems.any { it.listItemDescription.isNotBlank() }))
+                        || (!isCheckList && (title.isNotBlank()
+                                || description.isNotBlank()))
+                    ) {
+                        if (taskExist) {
                             ActionUpdate(onUpdateClicked = navigateToHomeScreen)
-                        }else {
+                        } else {
                             ActionInsert(
                                 onAddClicked = navigateToHomeScreen,
                                 scope = scope,
