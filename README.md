@@ -1,7 +1,7 @@
 # dueToDo - A To-Do List App
 
 <div align="start">
-<img src="app/images/photo_ui_linear.jpg" width="300" align="right" hspace="20">
+<img src="app/images/photo_ui_linear_layout.jpg" width="300" align="right" hspace="20">
 
 dueToDo is a to-do list application designed to assist users in managing their tasks effectively. \
 The application offers a user-friendly and intuitive interface for creating tasks, setting reminders, categorizing, and prioritizing tasks. \
@@ -53,21 +53,21 @@ New features and enhancements are continually being added to further improve use
 
 <div align="center">
 
-| Main Screen (Grid Layout)                                                                           | Category Selection                                                                         |
+| Main Screen (Grid Layout)                                                                      | Filter By Category                                                                         |
 | :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
-| <img src="app/images/photo_ui_grid.jpg" width="250" />                                          | <img src="app/images/photo_ui_category_select.jpg" width="250" />                              |
+| <img src="app/images/photo_ui_grid_layout.jpg" width="250" />                                  | <img src="app/images/photo_filter_by_category.jpg" width="250" />                          |
 
 &nbsp;
 
-| Sorting Options                                                                               | Task Search                                                                             |
+| Checklist Task                                                                               | Task Search                                                                              |
 | :------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------- |
-| <img src="app/images/photo_sort.jpg" width="250" />                                              | <img src="app/images/photo_search.jpg" width="250" />                                        |
+| <img src="app/images/photo_checklist_task.jpg" width="250" />                                | <img src="app/images/photo_search.jpg" width="250" />                                    |
 
 &nbsp;
 
-| New Task Creation                                                                             | Create New Category                                                                   |
+| Overdue Tasks                                                                                  | Create New Category                                                                        |
 | :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
-| <img src="app/images/photo_new_task.jpg" width="250" />                                          | <img src="app/images/photo_create_category.jpg" width="250" />                              |
+| <img src="app/images/photo_overdue_tasks.jpg" width="250" />                                   | <img src="app/images/photo_create_category.jpg" width="250" />                             |
 
 </div>
 
