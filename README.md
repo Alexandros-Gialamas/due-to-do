@@ -1,11 +1,11 @@
-# dueToDo - A To-Do List App (Under Development)
+# dueToDo - A To-Do List App
 
 <div align="start">
 <img src="app/images/photo_ui_linear.jpg" width="300" align="right" hspace="20">
 
-dueToDo is a to-do list app designed to help users manage their tasks effectively. \
-It's currently under active development, with new features being added regularly. \
-The app aims to provide a user-friendly and intuitive experience for organizing, set reminders and prioritizing tasks.
+dueToDo is a to-do list application designed to assist users in managing their tasks effectively. \
+The application offers a user-friendly and intuitive interface for creating tasks, setting reminders, categorizing, and prioritizing tasks. \
+New features and enhancements are continually being added to further improve user experience and functionality.
 
 </div>
 
@@ -13,23 +13,23 @@ The app aims to provide a user-friendly and intuitive experience for organizing,
 
 ### Current Features
 
-*   Create, edit and delete tasks
-*   Task prioritization
-*   Organize tasks into categories
-*   Search Tasks
-*   Sort tasks by category, date and priority.
-*   Linear and Grid layouts
-*   Set due dates
+*   Task creation, editing, and deletion
+*   Checklists for task management
+*   Task prioritization for efficient task handling
+*   Task organization into categories for better clarity
+*   Task search functionality
+*   Task sorting by category and priority
+*   Linear and Grid layout options
+*   Due date setting for tasks
+*   Notify of overdue tasks for better task management
+*   Notifications to keep users updated
 
 ### Planned Enhancements
 
-*   Checklists
-*   Implement functionality for rescheduling task due dates (in progress)
-*   Implement reminders and notifications for tasks (in progress)
-*   Display overdue tasks
-*   User authentication
-*   Import/export database
-*   Customizable themes
+*   Rescheduling and repeating of task due dates
+*   User Interface design for notifications
+*   'Notify Later' functionality for notifications
+*   Refinement of Dark Theme
 
 ## Technologies Used
 
